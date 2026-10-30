@@ -12,7 +12,7 @@ def uno(day):
     url = BASE.format(y=day.year, m=day.month, d=day.day)
     for k in range(3):
         try:
-            with rasterio.open(url) as src:
+            with rasterio.Env(GDAL_HTTP_TIMEOUT=30, GDAL_HTTP_MAX_RETRY=2), rasterio.open(url) as src:
                 r = {}
                 for n, b in AREAS.items():
                     a = src.read(1, window=from_bounds(*b, transform=src.transform)).astype(float)
@@ -30,7 +30,11 @@ res = {}
 with ThreadPoolExecutor(12) as ex:
     for i, (d, r) in enumerate(ex.map(uno, faltan)):
         if r: res[d] = r
-        if i % 250 == 0: print(i, d.date(), r)
+        if i % 250 == 0:
+            print(i, d.date(), r, flush=True)
+            if res:   # guardado parcial: una ejecución lenta no pierde lo descargado
+                tmp = pd.DataFrame.from_dict(res, orient="index"); tmp.index.name = "fecha"
+                pd.concat([hecho, tmp]).sort_index().round(2).to_csv(prev)
 new = pd.DataFrame.from_dict(res, orient="index"); new.index.name = "fecha"
 D = pd.concat([hecho, new]).sort_index(); D = D[~D.index.duplicated(keep="last")]
 D.round(2).to_csv(prev); print("total días:", len(D), D.index.min(), D.index.max()); print(D.describe().round(2))

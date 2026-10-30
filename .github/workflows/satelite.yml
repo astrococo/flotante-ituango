@@ -1,6 +1,8 @@
 name: Análisis satelital de la cola
 
 on:
+  schedule:
+    - cron: "23 13 3 * *"   # día 3 de cada mes, 08:23 hora de Colombia
   workflow_dispatch:
     inputs:
       modo:
@@ -36,8 +38,10 @@ jobs:
           set -o pipefail
           mkdir -p satelite/datos/satelite
           cd satelite
-          python -u ${{ github.event.inputs.modo }}.py 2>&1 | tee datos/satelite/registro_${{ github.event.inputs.modo }}.txt
+          python -u ${{ github.event.inputs.modo || 'series' }}.py 2>&1 | tee datos/satelite/registro_${{ github.event.inputs.modo || 'series' }}.txt
           cd ..
+          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
+          if [ "${{ github.event.inputs.modo || 'series' }}" = "series" ]; then python satelite/publicar.py; fi
           true
       - name: Guardar resultados
         if: always()
@@ -47,5 +51,5 @@ jobs:
           [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
           git add datos/satelite
           git diff --cached --quiet && exit 0
-          git commit -m "Satélite: ${{ github.event.inputs.modo }} $(date -u '+%F %H:%M')"
+          git commit -m "Satélite: ${{ github.event.inputs.modo || 'series' }} $(date -u '+%F %H:%M')"
           for i in 1 2 3 4 5; do git pull --rebase origin main && git push && break; sleep $((i*7)); done
