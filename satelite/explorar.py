@@ -26,7 +26,7 @@ for it in sorted(items, key=lambda x: x.datetime):
     fr = float(ok.sum() / max(1, (scl > 0).sum()))
     rows.append(dict(id=it.id, fecha=it.datetime.strftime("%Y-%m-%d"), tile=it.properties.get("s2:mgrs_tile"), nube_escena=it.properties.get("eo:cloud_cover"),
                      cobertura=round(cover, 3), validos=round(fr, 3), agua=round(float((scl == 6).sum() / max(1, ok.sum())), 3)))
-    if cover > 0.95 and fr > 0.3:
+    if fr > 0.3:
         agua += (scl == 6); nval += ok
 df = pd.DataFrame(rows); df.to_csv(f"{OUT}/escenas.csv", index=False)
 print(df.groupby(df.fecha.str[:4]).agg(n=("id", "size"), claras=("validos", lambda s: int((s > 0.7).sum()))))
@@ -36,7 +36,7 @@ img = (np.nan_to_num(freq) * 255).astype("uint8"); Image.fromarray(img).save(f"{
 json.dump(dict(bbox=bbox, shape=list(ref), transform=list(tr)[:6], crs=str(crs)), open(f"{OUT}/grilla.json", "w"))
 # composiciones RGB de las escenas más claras (una por año y por semestre)
 df["sem"] = df.fecha.str[:4] + "-" + np.where(df.fecha.str[5:7].astype(int) <= 6, "1", "2")
-best = df[(df.cobertura > 0.95)].sort_values("validos", ascending=False).groupby("sem").head(1).sort_values("fecha")
+best = df[(df.validos > 0.8)].sort_values("validos", ascending=False).groupby("sem").head(2).sort_values("fecha")
 sel = {r.id for r in best.itertuples()}
 for it in items:
     if it.id not in sel: continue
