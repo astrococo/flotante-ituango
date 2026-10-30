@@ -1,9 +1,17 @@
-CHIRPS falló cola Error tokenizing data. C error: Expected 1 fields in line 5, saw 3
-
-CHIRPS falló media Error tokenizing data. C error: Expected 1 fields in line 5, saw 3
-
-POWER falló barrera 'DataFrame' object has no attribute 'MO'
-POWER falló olaya 'DataFrame' object has no attribute 'MO'
-POWER falló sabanalarga 'DataFrame' object has no attribute 'MO'
-POWER falló pintada 'DataFrame' object has no attribute 'MO'
-sin datos de lluvia
+cola primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n    <meta name="description" content="">\n    <title>dlauth</title>\n    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">\n    <link rel="stylesheet" href="https://use.fontawes'
+CHIRPS falló cola no se reconocieron filas
+media primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n    <meta name="description" content="">\n    <title>dlauth</title>\n    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">\n    <link rel="stylesheet" href="https://use.fontawes'
+CHIRPS falló media no se reconocieron filas
+POWER barrera 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
+POWER olaya 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
+POWER sabanalarga 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
+POWER pintada 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
+       power_barrera  power_olaya  power_sabanalarga  power_pintada
+count        2855.00      2855.00            2855.00        2855.00
+mean            5.63         5.72               5.63           5.69
+std             8.30         8.53               8.30           6.70
+min             0.00         0.00               0.00           0.00
+25%             0.80         0.98               0.80           1.24
+50%             3.20         3.25               3.20           3.67
+75%             7.50         7.54               7.50           8.00
+max           170.50       186.97             170.50         109.77
