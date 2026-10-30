@@ -1,0 +1,9 @@
+CHIRPS falló cola Error tokenizing data. C error: Expected 1 fields in line 5, saw 3
+
+CHIRPS falló media Error tokenizing data. C error: Expected 1 fields in line 5, saw 3
+
+POWER falló barrera 'DataFrame' object has no attribute 'MO'
+POWER falló olaya 'DataFrame' object has no attribute 'MO'
+POWER falló sabanalarga 'DataFrame' object has no attribute 'MO'
+POWER falló pintada 'DataFrame' object has no attribute 'MO'
+sin datos de lluvia
