@@ -1,0 +1,46 @@
+name: Archivar pronóstico de HydroForecast
+
+# Guarda cada día el pronóstico de caudal de 90 días y el caudal observado de
+# HydroForecast Ituango. Sirve como respaldo de la página y para evaluar, más
+# adelante, cuánto aporta el pronóstico de caudal al pronóstico de extracción.
+on:
+  schedule:
+    - cron: "17 11 * * *"   # 06:17 hora de Colombia
+    - cron: "17 23 * * *"   # 18:17 hora de Colombia
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: archivar-hydroforecast
+  cancel-in-progress: false
+
+jobs:
+  archivar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar pronóstico y caudal observado
+        env:
+          API: https://jdguarnizor-hydroforecast-ituango.hf.space
+        run: |
+          set -euo pipefail
+          mkdir -p datos/hf
+          dia=$(TZ=America/Bogota date +%F)
+          curl -fsS --retry 3 --retry-delay 20 --max-time 60 "$API/api/forecast/quarterly_outlook" -o /tmp/q.json
+          curl -fsS --retry 3 --retry-delay 20 --max-time 60 "$API/api/observed/daily?days=120" -o /tmp/o.json
+          # validar: JSON con al menos 7 filas
+          python3 -c "import json,sys; q=json.load(open('/tmp/q.json')); o=json.load(open('/tmp/o.json')); assert len(q['data'])>=7 and len(o['data'])>=7, 'respuesta incompleta'"
+          cp /tmp/q.json "datos/hf/pronostico_${dia}.json"
+          cp /tmp/q.json datos/hf/ultimo.json
+          cp /tmp/o.json datos/hf/observado.json
+      - name: Guardar en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/hf
+          git diff --cached --quiet && echo "Sin cambios" && exit 0
+          git commit -m "Archivo HydroForecast $(TZ=America/Bogota date '+%F %H:%M')"
+          git push

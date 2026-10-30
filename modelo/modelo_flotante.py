@@ -9,7 +9,7 @@ Uso rápido:
     from modelo_flotante import cargar_extraccion, pronosticar
     ext = cargar_extraccion("DatosExtracción.xlsx")
     q   = serie_diaria_sitiopresa   # pd.Series indexada por fecha (observado + pronóstico)
-    fc  = pronosticar(ext, q, json.load(open("params_v2.json")))
+    fc  = pronosticar(ext, q, json.load(open("params_v21.json")))
 
 Router opcional para HydroForecast (ver al final): GET /api/flotante/pronostico
 """
@@ -97,6 +97,19 @@ def pronosticar(ext: pd.DataFrame, q_sitiopresa: pd.Series, params: dict) -> pd.
     fc["total_p50"] = fc.mf_p50 + fc.ma_p50
     fc["total_esperado"] = fc.mf_esperado + fc.ma_esperado
     return fc
+
+
+def factor_paros(ext: pd.DataFrame, col: str, semanas: int = 104) -> float:
+    """Razón entre el volumen medio de todas las semanas y el de las semanas con operación
+    normal, en las últimas `semanas` semanas completas. Multiplica el valor esperado para
+    incluir la frecuencia histórica de paros (el pronóstico se calibra con operación normal)."""
+    last = ext.index[ext.reportado == 1].max()
+    W = pd.DataFrame({"y": ext.loc[:last, col].fillna(0).resample("W-SUN").sum(),
+                      "op": ext.loc[:last, "op"].resample("W-SUN").min(),
+                      "n": ext.loc[:last, "op"].resample("W-SUN").size()})
+    W = W[(W.n == 7) & (W.index <= last)].tail(semanas)
+    act = W[W.op == 1].y.mean()
+    return float(min(1.0, W.y.mean() / act)) if act > 0 else 1.0
 
 
 # ------------------------------------------------------------------ router FastAPI opcional

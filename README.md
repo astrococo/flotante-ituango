@@ -31,7 +31,7 @@ Plataforma web para analizar y pronosticar la extracción de **material flotante
 - Rachas de 7 o más días sin extracción ("sin operación") y de 10 o más sin mecanizado ("mecanizado detenido") se excluyen solo como objetivo al ajustar el modelo.
 - Sitio Presa faltante se estima como 1,049·Olaya + 30 (r = 0,998).
 
-## Modelo (v2)
+## Modelo (v2.1)
 
 ```
 a(h)  = k · a1 · exp(−(h−1)/τ)
@@ -39,20 +39,27 @@ f(h)  = [a(h)·L8 + (1−a(h))·LT] · clip(√exp(b0 + Σ βl·x(h−l)), 0,7, 
 P50   = (f+50)·q50(h) − 50          E = (f+50)·r̄(h) − 50
 ```
 
-L8 = mediana de las últimas 8 semanas con operación; LT = mediana desde jul-2020; x = exceso semanal de caudal Sitio Presa sobre el umbral; k = peso de persistencia elegido con el error de las últimas 52 semanas. Parámetros en [`modelo/params_v2.json`](modelo/params_v2.json); implementación de referencia en Python en [`modelo/modelo_flotante.py`](modelo/modelo_flotante.py), que incluye un router opcional para FastAPI (`/api/flotante/pronostico`) para integrarlo en el backend de HydroForecast.
+Valor esperado con paros = E × (media de todas las semanas / media de semanas con operación, últimas 104 semanas).
+
+Se comparó contra modelos solo de extracción y modelos con caudal (ver [AUDITORIA.md](AUDITORIA.md)): la base son los registros de extracción y el caudal entra como ajuste acotado; mejora de forma significativa las macrófitas y no cambia de forma medible el material flotante. L8 = mediana de las últimas 8 semanas con operación; LT = mediana desde jul-2020; x = exceso semanal de caudal Sitio Presa sobre el umbral; k = peso de persistencia elegido con el error de las últimas 52 semanas. Parámetros en [`modelo/params_v21.json`](modelo/params_v21.json); implementación de referencia en Python en [`modelo/modelo_flotante.py`](modelo/modelo_flotante.py), que incluye un router opcional para FastAPI (`/api/flotante/pronostico`) para integrarlo en el backend de HydroForecast.
 
 ## Actualizar
 
-- **Uso diario:** abrir la página, ir a *Datos* y cargar el Excel nuevo. El pronóstico se recalcula al instante (solo en esa sesión).
-- **Actualizar la versión publicada:** reemplazar los datos incluidos en `index.html` (bloque `<script id="payload">`) con el archivo nuevo y volver a publicar. Se recomienda recalibrar el modelo cada trimestre.
+- **Datos de extracción (para todos):** en GitHub, abra la carpeta `datos/`, use *Add file › Upload files* y suba el Excel nuevo con el nombre exacto `DatosExtraccion.xlsx` (reemplaza al anterior). La página lo lee al abrir; GitHub Pages tarda 1–2 minutos en publicarlo.
+- **Prueba rápida (solo para usted):** en la pestaña *Datos* cargue el Excel; se procesa en el navegador y no se guarda.
+- **Caudal:** automático. La página consulta HydroForecast al abrir. El GitHub Action `archivar-hydroforecast` guarda dos veces al día el pronóstico y el caudal observado en `datos/hf/`; si la API no responde, la página usa ese archivo.
+- **Modelo:** recalibrar cada trimestre con `modelo/modelo_flotante.py`.
 
 ## Archivos
 
 ```
-index.html                      aplicación (datos incluidos)
+index.html                      aplicación (datos de respaldo incluidos)
+datos/DatosExtraccion.xlsx      Excel de extracción que la página lee al abrir
+datos/hf/                       archivo diario del pronóstico y caudal de HydroForecast
+.github/workflows/              tarea programada que llena datos/hf/
 vendor/                         Chart.js 4.4.1 y SheetJS 0.18.5
 modelo/modelo_flotante.py       depuración + pronóstico + router FastAPI
-modelo/params_v2.json           parámetros, cuantiles y métricas del backtest
+modelo/params_v21.json          parámetros, cuantiles y métricas del backtest
 datos/extraccion_caudal_depurado.csv   serie diaria depurada con caudales y régimen
 datos/pronostico_v2_respaldo.csv       pronóstico de referencia (respaldo)
 AUDITORIA.md                    informe de auditoría

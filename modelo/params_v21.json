@@ -317,7 +317,8 @@
    "v1": 1076,
    "v2": 1034,
    "sin_caudal": 1074
-  }
+  },
+  "usa_caudal": true
  },
  "ma_tot": {
   "qc": 1000,
@@ -637,7 +638,22 @@
    "v1": 1254,
    "v2": 1276,
    "sin_caudal": 1303
-  }
+  },
+  "usa_caudal": true
  },
- "version": "2.0 (30-oct-2026)"
+ "version": "2.1 (30-oct-2026)",
+ "aviso_creciente": {
+  "umbral": 2100,
+  "semanas": 8,
+  "factor_mf": [
+   1.26,
+   1.52
+  ],
+  "factor_ma": [
+   0.72,
+   0.92
+  ],
+  "eventos": 11
+ },
+ "factor_paros_ventana": 104
 }
