@@ -33,14 +33,18 @@ jobs:
           GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
           CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif"
         run: |
+          set -o pipefail
+          mkdir -p satelite/datos/satelite
           cd satelite
-          python ${{ github.event.inputs.modo }}.py
+          python -u ${{ github.event.inputs.modo }}.py 2>&1 | tee datos/satelite/registro_${{ github.event.inputs.modo }}.txt
           cd ..
-          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
+          true
       - name: Guardar resultados
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
           git pull --rebase origin main
           git add datos/satelite
           git diff --cached --quiet && exit 0
