@@ -1,0 +1,6 @@
+pystac-client==0.8.5
+planetary-computer==1.0.0
+rasterio==1.4.3
+numpy==2.1.3
+pandas==2.2.3
+pillow==11.0.0

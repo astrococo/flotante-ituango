@@ -1,0 +1,48 @@
+name: Análisis satelital de la cola
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "explorar | series"
+        required: true
+        default: "explorar"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: satelite
+  cancel-in-progress: false
+
+jobs:
+  satelite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        run: pip install -r satelite/requirements.txt
+      - name: Ejecutar
+        env:
+          GDAL_HTTP_MAX_RETRY: "5"
+          GDAL_HTTP_RETRY_DELAY: "3"
+          GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+          CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif"
+        run: |
+          cd satelite
+          python ${{ github.event.inputs.modo }}.py
+          cd ..
+          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
+      - name: Guardar resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add datos/satelite
+          git diff --cached --quiet && exit 0
+          git commit -m "Satélite: ${{ github.event.inputs.modo }} $(date -u '+%F %H:%M')"
+          git push
