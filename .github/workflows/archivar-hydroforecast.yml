@@ -48,4 +48,4 @@ jobs:
           git add datos/hf
           git diff --cached --quiet && echo "Sin cambios" && exit 0
           git commit -m "Archivo HydroForecast $(TZ=America/Bogota date '+%F %H:%M')"
-          git push
+          for i in 1 2 3 4 5; do git pull --rebase origin main && git push && break; sleep $((i*7)); done

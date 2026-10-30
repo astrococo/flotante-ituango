@@ -45,8 +45,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
-          git pull --rebase origin main
           git add datos/satelite
           git diff --cached --quiet && exit 0
           git commit -m "Satélite: ${{ github.event.inputs.modo }} $(date -u '+%F %H:%M')"
-          git push
+          for i in 1 2 3 4 5; do git pull --rebase origin main && git push && break; sleep $((i*7)); done
