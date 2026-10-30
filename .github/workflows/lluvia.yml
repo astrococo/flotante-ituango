@@ -20,9 +20,8 @@ jobs:
       - run: pip install pandas==2.2.3 rasterio==1.4.3 numpy==2.1.3
       - name: Descargar
         run: |
-          set -o pipefail
-          mkdir -p datos/lluvia
-          cd lluvia && (python -u descargar.py; python -u chirps.py) 2>&1 | tee ../datos/lluvia/registro.txt
+                    mkdir -p datos/lluvia
+          cd lluvia && (python -u descargar.py; timeout 130m python -u chirps.py) 2>&1 | tee ../datos/lluvia/registro.txt
       - name: Guardar
         if: always()
         run: |

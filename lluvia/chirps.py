@@ -24,14 +24,17 @@ def uno(day):
     return day, None
 dias = pd.date_range("2019-01-01", dt.date.today() - dt.timedelta(days=3))
 faltan = [d for d in dias if d not in hecho.index]
-print("días por descargar:", len(faltan))
+print("días por descargar:", len(faltan), flush=True)
+t0 = time.time()
+for d in faltan[:3]:
+    t1 = time.time(); r_ = uno(d); print("prueba", d.date(), r_[1], f"{time.time()-t1:.1f} s", flush=True)
 os.environ.setdefault("GDAL_DISABLE_READDIR_ON_OPEN", "EMPTY_DIR")
 res = {}
 with ThreadPoolExecutor(12) as ex:
     for i, (d, r) in enumerate(ex.map(uno, faltan)):
         if r: res[d] = r
         if i % 250 == 0:
-            print(i, d.date(), r, flush=True)
+            print(i, d.date(), r, f"{time.time()-t0:.0f} s", flush=True)
             if res:   # guardado parcial: una ejecución lenta no pierde lo descargado
                 tmp = pd.DataFrame.from_dict(res, orient="index"); tmp.index.name = "fecha"
                 pd.concat([hecho, tmp]).sort_index().round(2).to_csv(prev)
