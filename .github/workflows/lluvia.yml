@@ -1,0 +1,31 @@
+name: Lluvia histórica (CHIRPS y NASA POWER)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "41 12 * * 1"   # lunes 07:41 hora de Colombia
+
+permissions:
+  contents: write
+
+jobs:
+  lluvia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas==2.2.3
+      - name: Descargar
+        run: cd lluvia && python descargar.py
+      - name: Guardar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add datos/lluvia
+          git diff --cached --quiet && exit 0
+          git commit -m "Lluvia histórica $(date -u +%F)"
+          git push

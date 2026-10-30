@@ -36,6 +36,11 @@ jobs:
           cp /tmp/q.json "datos/hf/pronostico_${dia}.json"
           cp /tmp/q.json datos/hf/ultimo.json
           cp /tmp/o.json datos/hf/observado.json
+          # lluvia y caudal aguas arriba (la API solo guarda 14 y 30 días: se acumulan aquí)
+          mkdir -p datos/hf/lluvia datos/hf/aguas_arriba datos/hf/lluvia_pronostico
+          curl -fsS --retry 3 --max-time 60 "$API/api/precipitation/pluviometros?days=14" -o "datos/hf/lluvia/pluviometros_${dia}.json" || echo "sin pluviómetros"
+          curl -fsS --retry 3 --max-time 90 "$API/api/aguas_arriba?hours=720" -o "datos/hf/aguas_arriba/aguas_arriba_${dia}.json" || echo "sin aguas arriba"
+          curl -fsS --retry 3 --max-time 60 "$API/api/precipitation/modelo" -o "datos/hf/lluvia_pronostico/modelo_${dia}.json" || echo "sin lluvia pronosticada"
       - name: Guardar en el repositorio
         run: |
           git config user.name "github-actions[bot]"
