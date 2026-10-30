@@ -24,20 +24,26 @@ for nombre, (x0, x1, y0, y1) in AREAS.items():
                "X/%s/%s/RANGEEDGES/Y/%s/%s/RANGEEDGES/T/(%s)/(%s)/RANGEEDGES/%%5BX/Y%%5Daverage/T/exch/table:/1/:table/.csv"
                % (var, x0, x1, y0, y1, INI.replace(" ", "%20"), FIN.replace(" ", "%20")))
         try:
-            txt = get(url); df = pd.read_csv(io.StringIO(txt)); print(nombre, df.shape, df.columns.tolist(), df.head(2).to_dict("records"))
-            df.columns = ["T", "prcp"]
-            df["fecha"] = pd.to_datetime(df["T"].astype(str).str.replace(r"^(\d{1,2}) (\w{3}) (\d{4}).*$", r"\1 \2 \3", regex=True), errors="coerce")
-            series[f"chirps_{nombre}"] = df.dropna(subset=["fecha"]).set_index("fecha")["prcp"]
+            txt = get(url); print(nombre, "primeras líneas:", repr(txt[:400]))
+            import re
+            rows = []
+            for ln in txt.splitlines():
+                m = re.match(r'^\s*"?(\d{1,2}\s+\w{3}\s+\d{4})[^,]*"?\s*,\s*"?([-\d.eE+]+)"?\s*$', ln)
+                if m: rows.append((pd.to_datetime(m.group(1), format="%d %b %Y"), float(m.group(2))))
+            if not rows: raise ValueError("no se reconocieron filas")
+            series[f"chirps_{nombre}"] = pd.Series(dict(rows)); print(nombre, "días", len(rows), rows[0], rows[-1])
         except Exception as e:
             print("CHIRPS falló", nombre, e)
 # NASA POWER en puntos (verificación)
 PUNTOS = {"barrera": (6.90, -75.84), "olaya": (6.63, -75.81), "sabanalarga": (6.85, -75.81), "pintada": (5.74, -75.60)}
 for k, (la, lo) in PUNTOS.items():
-    url = ("https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR&community=AG&longitude=%s&latitude=%s&start=20190101&end=%s&format=CSV&header=false"
+    url = ("https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR&community=AG&longitude=%s&latitude=%s&start=20190101&end=%s&format=JSON"
            % (lo, la, time.strftime("%Y%m%d", time.gmtime(time.time() - 5 * 86400))))
     try:
-        df = pd.read_csv(io.StringIO(get(url))); df["fecha"] = pd.to_datetime(dict(year=df.YEAR, month=df.MO, day=df.DY))
-        s = df.set_index("fecha")["PRECTOTCORR"].where(lambda v: v >= 0); series[f"power_{k}"] = s; print("POWER", k, len(s))
+        import json
+        js = json.loads(get(url)); d = js["properties"]["parameter"]["PRECTOTCORR"]
+        s_ = pd.Series({pd.to_datetime(k, format="%Y%m%d"): v for k, v in d.items()}).where(lambda v: v >= 0)
+        series[f"power_{k}"] = s_; print("POWER", k, len(s_), s_.dropna().index.min(), s_.dropna().index.max())
     except Exception as e:
         print("POWER falló", k, e)
 if not series: sys.exit("sin datos de lluvia")
