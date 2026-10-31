@@ -52,7 +52,19 @@ if os.path.exists(SP):
     Q["t"] = Q.total_vh14 / Q.total_valid_px.clip(lower=1) * Q.total_area_px / 100
     Q["b"] = Q.abajo_vh14 / Q.abajo_valid_px.clip(lower=1) * Q.abajo_area_px / 100
     s1 = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), b=round(b, 2)) for d, t, b in zip(Q.fecha, Q.t, Q.b)]
-json.dump(dict(s1=s1, s1_validacion=dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43), landsat=lsat, landsat_validacion=dict(n=31, rho=0.82, sesgo_ha=-0.6, mae_ha=9.3, umbral="NDVI ≥ 0,40"), generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], area_ha=area,
+# Margen del cauce (derecha = oriental, donde se extrae el material), Sentinel-2 (NDVI ≥ 0,30) y Landsat (NDVI ≥ 0,40)
+marg = []
+for f_, t_, s_ in (("escenas_s2.csv", 30, "S2"), ("escenas_landsat.csv", 40, "L")):
+    MP = f"{R}/datos/satelite/margenes/{f_}"
+    if not os.path.exists(MP): continue
+    M = pd.read_csv(MP, parse_dates=["fecha"]); M["vf"] = M.total_valid_px / M.total_area_px
+    M = M[M.vf >= 0.70].sort_values("vf").drop_duplicates("fecha", keep="last")
+    for z in ("arriba_der", "arriba_izq", "abajo_der", "abajo_izq"):
+        M[z] = M[f"{z}_ndvi{t_}"] / M[f"{z}_valid_px"].clip(lower=1) * M[f"{z}_area_px"] / 100
+    marg += [dict(f=d.strftime("%Y-%m-%d"), s=s_, ad=round(a1, 2), ai=round(a2, 2), bd=round(b1, 2), bi=round(b2, 2))
+             for d, a1, a2, b1, b2 in zip(M.fecha, M.arriba_der, M.arriba_izq, M.abajo_der, M.abajo_izq)]
+marg = sorted(marg, key=lambda r: r["f"])
+json.dump(dict(margen=marg, s1=s1, s1_validacion=dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43), landsat=lsat, landsat_validacion=dict(n=31, rho=0.82, sesgo_ha=-0.6, mae_ha=9.3, umbral="NDVI ≥ 0,40"), generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], area_ha=area,
                n_escenas=int(len(E)), n_utiles=int(len(C)), ultima_vista=base_d, mapas=mapas, serie=ser, todas=todas,
                metodo=dict(sensor="Sentinel-2 L2A (10 m), Microsoft Planetary Computer", nubes="SCL: válidos 4, 5, 6, 7",
                            agua="MNDWI > 0 en ≥ 50 % de las escenas despejadas, radio 2,5 km", vegetacion="NDVI ≥ 0,30", minimo_despejado=0.70)),
