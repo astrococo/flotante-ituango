@@ -21,7 +21,7 @@ jobs:
       - name: Descargar
         run: |
           mkdir -p datos/lluvia
-          cd lluvia && (python -u descargar.py; timeout 130m python -u chirps.py) 2>&1 | tee ../datos/lluvia/registro.txt
+          cd lluvia && (python -u descargar.py; timeout 100m python -u chirps.py) 2>&1 | tee ../datos/lluvia/registro.txt
       - name: Guardar
         if: always()
         run: |
@@ -30,4 +30,4 @@ jobs:
           git add datos/lluvia
           git diff --cached --quiet && exit 0
           git commit -m "Lluvia histórica $(date -u +%F)"
-          for i in 1 2 3 4 5; do git pull --rebase origin main && git push && break; sleep $((i*7)); done
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done

@@ -1,43 +1,35 @@
-"""CHIRPS v2.0 diario (0,05°) desde el servidor del Climate Hazards Center (UCSB), lectura por ventana de los COG.
-Promedio areal por día en las áreas 'cola' y 'media'. Los días aún no publicados en la versión final se omiten."""
-import os, time, datetime as dt, numpy as np, pandas as pd, rasterio
-from rasterio.windows import from_bounds
-from concurrent.futures import ThreadPoolExecutor
+"""CHIRPS v2.0 diario (0,05°) vía NOAA ERDDAP (dataset chirps20GlobalDailyP05), recorte por área y año en CSV.
+Promedio areal diario de las áreas 'cola' y 'media'. ERDDAP publica con ~4 meses de rezago."""
+import io, os, time, urllib.request, datetime as dt, pandas as pd
 OUT = "../datos/lluvia"; os.makedirs(OUT, exist_ok=True)
-AREAS = {"cola": (-76.00, 6.55, -75.60, 7.00), "media": (-76.10, 5.70, -75.40, 7.00)}   # lon0, lat0, lon1, lat1
-BASE = "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/cogs/p05/{y}/chirps-v2.0.{y}.{m:02d}.{d:02d}.cog"
-prev = f"{OUT}/chirps_diario.csv"
-hecho = pd.read_csv(prev, parse_dates=["fecha"]).set_index("fecha") if os.path.exists(prev) else pd.DataFrame()
-def uno(day):
-    url = BASE.format(y=day.year, m=day.month, d=day.day)
-    for k in range(3):
-        try:
-            with rasterio.Env(GDAL_HTTP_TIMEOUT=30, GDAL_HTTP_MAX_RETRY=2), rasterio.open(url) as src:
-                r = {}
-                for n, b in AREAS.items():
-                    a = src.read(1, window=from_bounds(*b, transform=src.transform)).astype(float)
-                    a[a < 0] = np.nan; r["chirps_" + n] = float(np.nanmean(a))
-                return day, r
-        except Exception as e:
-            if "404" in str(e) or "not recognized" in str(e) or "No such file" in str(e): return day, None
-            time.sleep(3 * (k + 1))
-    return day, None
-dias = pd.date_range("2019-01-01", dt.date.today() - dt.timedelta(days=3))
-faltan = [d for d in dias if d not in hecho.index]
-print("días por descargar:", len(faltan), flush=True)
-t0 = time.time()
-for d in faltan[:3]:
-    t1 = time.time(); r_ = uno(d); print("prueba", d.date(), r_[1], f"{time.time()-t1:.1f} s", flush=True)
-os.environ.setdefault("GDAL_DISABLE_READDIR_ON_OPEN", "EMPTY_DIR")
+AREAS = {"cola": (6.55, 7.00, -76.00, -75.60), "media": (5.70, 7.00, -76.10, -75.40)}   # lat0, lat1, lon0, lon1
+SERV = ["https://coastwatch.pfeg.noaa.gov/erddap", "https://upwell.pfeg.noaa.gov/erddap"]
+def get(path):
+    for k in range(6):
+        for s in SERV:
+            try:
+                t = time.time()
+                with urllib.request.urlopen(urllib.request.Request(s + path, headers={"User-Agent": "flotante-ituango"}), timeout=300) as r:
+                    txt = r.read().decode(); print("  ", s.split("/")[2], f"{len(txt)/1e6:.1f} MB", f"{time.time()-t:.0f} s", flush=True); return txt
+            except Exception as e:
+                print("   reintento", s.split("/")[2], e, flush=True)
+        time.sleep(30 * (k + 1))
+    raise RuntimeError("ERDDAP sin respuesta")
 res = {}
-with ThreadPoolExecutor(12) as ex:
-    for i, (d, r) in enumerate(ex.map(uno, faltan)):
-        if r: res[d] = r
-        if i % 250 == 0:
-            print(i, d.date(), r, f"{time.time()-t0:.0f} s", flush=True)
-            if res:   # guardado parcial: una ejecución lenta no pierde lo descargado
-                tmp = pd.DataFrame.from_dict(res, orient="index"); tmp.index.name = "fecha"
-                pd.concat([hecho, tmp]).sort_index().round(2).to_csv(prev)
-new = pd.DataFrame.from_dict(res, orient="index"); new.index.name = "fecha"
-D = pd.concat([hecho, new]).sort_index(); D = D[~D.index.duplicated(keep="last")]
-D.round(2).to_csv(prev); print("total días:", len(D), D.index.min(), D.index.max()); print(D.describe().round(2))
+hoy = dt.date.today()
+for y in range(2019, hoy.year + 1):
+    t0, t1 = f"{y}-01-01", (f"{y}-12-31" if y < hoy.year else f"{y}-06-30")
+    for n, (a0, a1, o0, o1) in AREAS.items():
+        print(y, n, flush=True)
+        try:
+            txt = get(f"/griddap/chirps20GlobalDailyP05.csv?precip%5B({t0}):1:({t1})%5D%5B({a0}):1:({a1})%5D%5B({o0}):1:({o1})%5D")
+        except Exception as e:
+            print("   sin datos", y, n, e, flush=True); continue
+        df = pd.read_csv(io.StringIO(txt), skiprows=[1])            # segunda fila = unidades
+        df["fecha"] = pd.to_datetime(df["time"]).dt.tz_localize(None).dt.normalize()
+        s = df.groupby("fecha")["precip"].mean()
+        res.setdefault(n, []).append(s)
+        print("   días", len(s), "celdas/día", int(len(df) / max(1, len(s))), "media", round(s.mean(), 2), flush=True)
+D = pd.DataFrame({f"chirps_{n}": pd.concat(v) for n, v in res.items()}).sort_index(); D.index.name = "fecha"
+D = D[~D.index.duplicated()]
+D.round(2).to_csv(f"{OUT}/chirps_diario.csv"); print("total", len(D), D.index.min(), D.index.max()); print(D.describe().round(2))
