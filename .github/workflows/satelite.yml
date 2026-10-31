@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: "explorar | series | margenes"
+        description: "explorar | series | margenes | corredor"
         required: true
         default: "explorar"
 
