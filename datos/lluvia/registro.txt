@@ -15,58 +15,999 @@ min             0.00         0.00               0.00           0.00
 50%             3.20         3.25               3.20           3.67
 75%             7.51         7.55               7.51           8.00
 max           170.50       186.97             170.50         109.77
-2019 cola
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   upwell.pfeg.noaa.gov 0.0 MB 1 s
-   días 1 celdas/día 90 media 2.06
-2019 media
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   días 1 celdas/día 405 media 1.41
-2020 cola
-   coastwatch.pfeg.noaa.gov 1.5 MB 5 s
-   días 366 celdas/día 90 media 4.79
-2020 media
-   coastwatch.pfeg.noaa.gov 6.9 MB 5 s
-   días 366 celdas/día 405 media 5.48
-2021 cola
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   upwell.pfeg.noaa.gov 0.0 MB 1 s
-   días 1 celdas/día 90 media 0.0
-2021 media
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   días 1 celdas/día 405 media 0.45
-2022 cola
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   días 2 celdas/día 90 media 1.03
-2022 media
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   días 2 celdas/día 405 media 0.71
-2023 cola
    coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   días 1 celdas/día 90 media 0.0
-2023 media
+   2019-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-01 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-01 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-01 media: 1 de 31 días, reintento
+2019 1 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-02 media: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-02 media: 1 de 28 días, reintento
+2019 2 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-03 cola: 1 de 31 días, reintento
    coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   días 1 celdas/día 405 media 0.01
-2024 cola
+   2019-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-03 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-03 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-03 media: 1 de 31 días, reintento
+2019 3 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 4 s
+   2019-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-04 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-04 media: 1 de 30 días, reintento
+2019 4 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 media: 1 de 31 días, reintento
    reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   upwell.pfeg.noaa.gov 1.5 MB 7 s
-   días 366 celdas/día 90 media 4.86
-2024 media
-   coastwatch.pfeg.noaa.gov 6.9 MB 6 s
-   días 366 celdas/día 405 media 5.53
-2025 cola
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-05 media: 1 de 31 días, reintento
+2019 5 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-06 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-06 media: 1 de 30 días, reintento
+2019 6 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-07 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-07 media: 1 de 31 días, reintento
+2019 7 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-08 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-08 media: 1 de 31 días, reintento
+2019 8 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 13 s
+   2019-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-09 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 15 s
+   2019-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-09 media: 1 de 30 días, reintento
+2019 9 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-10 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-10 media: 1 de 31 días, reintento
+2019 10 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-11 cola: 1 de 30 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
    reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   upwell.pfeg.noaa.gov 1.5 MB 5 s
-   días 365 celdas/día 90 media 5.69
-2025 media
-   coastwatch.pfeg.noaa.gov 6.9 MB 3 s
-   días 365 celdas/día 405 media 6.89
-2026 cola
-   coastwatch.pfeg.noaa.gov 0.8 MB 3 s
-   días 181 celdas/día 90 media 4.26
-2026 media
-   coastwatch.pfeg.noaa.gov 3.4 MB 5 s
-   días 181 celdas/día 405 media 5.2
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-11 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-11 media: 1 de 30 días, reintento
+2019 11 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2019-12 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2019-12 media: 1 de 31 días, reintento
+2019 12 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 1 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.5 MB 1 s
+2020 2 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 3 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 4 ok
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 5 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 6 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 7 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 5 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 8 ok
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 9 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 10 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 11 ok
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2020 12 ok
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-01 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-01 media: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-01 media: 1 de 31 días, reintento
+2021 1 INCOMPLETO
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-02 cola: 1 de 28 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 11 s
+   2021-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-02 cola: 1 de 28 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-02 media: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-02 media: 1 de 28 días, reintento
+2021 2 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 4 s
+   2021-03 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-03 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-03 media: 1 de 31 días, reintento
+2021 3 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 5 s
+   2021-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-04 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-04 media: 1 de 30 días, reintento
+2021 4 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-05 media: 1 de 31 días, reintento
+2021 5 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-06 media: 1 de 30 días, reintento
+2021 6 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-07 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-07 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-07 media: 1 de 31 días, reintento
+2021 7 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-08 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 22 s
+   2021-08 media: 1 de 31 días, reintento
+2021 8 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 4 s
+   2021-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 3 s
+   2021-09 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-09 media: 1 de 30 días, reintento
+2021 9 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 cola: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 7 s
+   2021-10 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-10 media: 1 de 31 días, reintento
+2021 10 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 cola: 1 de 30 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 cola: 1 de 30 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-11 media: 1 de 30 días, reintento
+2021 11 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2021-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2021-12 media: 1 de 31 días, reintento
+2021 12 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 4 s
+   2022-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-01 media: 1 de 31 días, reintento
+2022 1 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 5 s
+   2022-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-02 media: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 media: 1 de 28 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-02 media: 1 de 28 días, reintento
+2022 2 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-03 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-03 cola: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-03 cola: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-03 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-03 media: 1 de 31 días, reintento
+2022 3 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-04 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-04 media: 1 de 30 días, reintento
+2022 4 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 2 s
+   2022-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-05 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-05 media: 1 de 31 días, reintento
+2022 5 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-06 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-06 media: 1 de 30 días, reintento
+2022 6 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-07 cola: 2 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-07 cola: 2 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-07 cola: 2 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-07 cola: 2 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   2022-07 media: 2 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-07 media: 2 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-07 media: 2 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-07 media: 2 de 31 días, reintento
+2022 7 INCOMPLETO
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-08 cola: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-08 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-08 media: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-08 media: 1 de 31 días, reintento
+2022 8 INCOMPLETO
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-09 cola: 1 de 30 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-09 cola: 1 de 30 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 17 s
+   2022-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-09 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-09 media: 1 de 30 días, reintento
+2022 9 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-10 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-10 media: 1 de 31 días, reintento
+2022 10 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-11 media: 1 de 30 días, reintento
+2022 11 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-12 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2022-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2022-12 media: 1 de 31 días, reintento
+2022 12 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-01 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-01 media: 1 de 31 días, reintento
+2023 1 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 cola: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 cola: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 media: 1 de 28 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-02 media: 1 de 28 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-02 media: 1 de 28 días, reintento
+2023 2 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-03 cola: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-03 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-03 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-03 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-03 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-03 media: 1 de 31 días, reintento
+2023 3 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-04 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-04 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-04 media: 1 de 30 días, reintento
+2023 4 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 4 s
+   2023-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-05 media: 1 de 31 días, reintento
+2023 5 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-06 media: 1 de 30 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-06 media: 1 de 30 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-06 media: 1 de 30 días, reintento
+2023 6 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-07 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-07 media: 1 de 31 días, reintento
+   reintento upwell.pfeg.noaa.gov HTTP Error 503: 
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-07 media: 1 de 31 días, reintento
+2023 7 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-08 media: 1 de 31 días, reintento
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-08 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-08 media: 1 de 31 días, reintento
+2023 8 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-09 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-09 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-09 media: 1 de 30 días, reintento
+2023 9 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-10 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-10 media: 1 de 31 días, reintento
+2023 10 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 cola: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 cola: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-11 media: 1 de 30 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-11 media: 1 de 30 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-11 media: 1 de 30 días, reintento
+2023 11 INCOMPLETO
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 cola: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 cola: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-12 media: 1 de 31 días, reintento
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   2023-12 media: 1 de 31 días, reintento
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   2023-12 media: 1 de 31 días, reintento
+2023 12 INCOMPLETO
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 1 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.5 MB 1 s
+2024 2 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 3 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 4 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 5 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 6 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 0 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 7 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 8 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 9 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 6 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 10 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 0 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 11 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2024 12 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 1 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.5 MB 1 s
+2025 2 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 3 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 4 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 5 ok
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 6 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 7 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 8 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 9 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 10 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 11 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2025 12 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2026 1 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.5 MB 1 s
+2026 2 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2026 3 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2026 4 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2026 5 ok
+   coastwatch.pfeg.noaa.gov 0.1 MB 1 s
+   coastwatch.pfeg.noaa.gov 0.6 MB 1 s
+2026 6 ok
 total 1278 2020-01-01 00:00:00 2026-06-30 00:00:00
        chirps_cola  chirps_media
 count      1278.00       1278.00
