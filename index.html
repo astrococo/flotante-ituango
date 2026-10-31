@@ -111,6 +111,8 @@ select,input[type=text],input[type=url]{background:var(--surface2);border:1px so
 .btn.primary{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff}
 .btn:disabled{opacity:.5;cursor:wait}
 .rest{margin:4px 0 12px}.rest summary{cursor:pointer;font-size:13px;color:var(--fg2);font-weight:600}.rest-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}.rest-row label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}.rest-row input{width:56px;padding:5px 6px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--fg);font:inherit}
+.row-btn{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted)}
+@media print{header.top{position:static!important}header .hact,nav.tabs,.toolbar select,.row-btn,#rest-box,.banner button{display:none!important}body{background:#fff!important;color:#000}.panel,.st{break-inside:avoid;box-shadow:none}}
 .chart{position:relative;height:340px}
 .chart.sm{height:260px}
 @media(max-width:640px){.chart{height:280px}}
@@ -210,7 +212,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     <p class="note" id="fc-note">Barras: mediana calibrada (P50). Franja: intervalo P10–P90. Línea: caudal Sitio Presa (eje derecho), observado y pronosticado por HydroForecast. Las 8 semanas previas muestran lo extraído realmente.</p>
   </div>
   <div class="grid">
-    <div class="panel c12"><h3>Tabla por semana</h3><div class="tbl"><table id="fc-table"></table></div></div>
+    <div class="panel c12"><div class="toolbar"><h3>Tabla por semana</h3><div class="row-btn"><button type="button" class="pill" id="btn-csv">Descargar CSV</button><button type="button" class="pill" id="btn-print">Imprimir o PDF</button></div></div><div class="tbl"><table id="fc-table"></table></div></div>
     <div class="panel c12">
       <h3>Índice de aporte por crecientes</h3>
       <p class="note">Multiplicador hidrológico. Mayor que 1: más material flotante esperado tras crecientes. Menor que 1 en macrófitas: lavado por caudales altos.</p>
@@ -358,11 +360,11 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
       <p class="note">Mediana del área por mes calendario, escenas de Sentinel-2, Landsat y radar Sentinel-1 desde 2019. El número sobre cada barra es la cantidad de escenas.</p></div>
     <div class="panel c6">
       <div class="toolbar"><h3>Dónde se acumula</h3><label>Año <select id="sat-anio"></select></label></div>
-      <img id="sat-mapa" alt="Mapa de frecuencia de vegetación flotante alrededor de la barrera" style="width:100%;border-radius:8px;display:block">
+      <img loading="lazy" decoding="async" id="sat-mapa" alt="Mapa de frecuencia de vegetación flotante alrededor de la barrera" style="width:100%;border-radius:8px;display:block">
       <p class="note">Verde: fracción de las escenas del año con vegetación flotante en cada píxel de 10 m (intenso = 50 % o más). Cruz roja: barrera. El flujo va de sur (abajo) a norte (arriba).</p></div>
   </div>
   <div class="grid">
-    <div class="panel c6"><h3>Última escena despejada</h3><img id="sat-ql" alt="Imagen Sentinel-2 en color real de la última escena despejada" style="width:100%;border-radius:8px;display:block"><p class="note" id="sat-ql-note"></p></div>
+    <div class="panel c6"><h3>Última escena despejada</h3><img loading="lazy" decoding="async" id="sat-ql" alt="Imagen Sentinel-2 en color real de la última escena despejada" style="width:100%;border-radius:8px;display:block"><p class="note" id="sat-ql-note"></p></div>
     <div class="panel c6 prose" id="sat-metodo"></div>
   </div>
 </section>
@@ -843,10 +845,10 @@ function renderForecast(){
     const f=key==='tot'?null:fp[key];
     return `<div class="st ${st[0]} c4"><div class="row"><h2><i class="sw" style="background:${color}"></i>${title}</h2><span class="badge ${st[0]}">${st[1]}</span></div>
       <div class="big">${nf(v)} <small>m³</small></div>
-      <div class="note">Próximas ${n4} semanas${from} · mediana · P25–P75 ${nf(lo)} – ${nf(hi)}</div>
-      <p>${plan?'Esperado ':`Esperado ${nf(e)} m³ con operación normal · `}<b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')}${ref?` · nivel típico ${nf(ref)} m³ (${ratio>=1?'+':''}${nf((ratio-1)*100)} %)`:''}.</p></div>`};
+      <div class="note">Próximas ${n4} semanas${from} · mediana · rango probable ${nf(lo)} – ${nf(hi)} m³</div>
+      <p><b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')}${ref?` · ${ratio>=1?'+':''}${nf((ratio-1)*100)} % frente al nivel típico (${nf(ref)} m³)`:''}.${key!=='tot'?' <span class="muted">La división flotante/macrófitas del mecanizado es estimada en el registro; el total es la cifra más firme.</span>':''}</p></div>`};
   document.getElementById('fc-cards').innerHTML=
-    card('Material flotante','mf',R.mf_tot.LT,'var(--mf)')+card('Macrófitas','ma',R.ma_tot.LT,'var(--ma)')+card('Total','tot',(R.mf_tot.LT||0)+(R.ma_tot.LT||0),'var(--accent)')+
+    card('Total','tot',(R.mf_tot.LT||0)+(R.ma_tot.LT||0),'var(--accent)')+card('Material flotante','mf',R.mf_tot.LT,'var(--mf)')+card('Macrófitas','ma',R.ma_tot.LT,'var(--ma)')+
     [[Math.min(8,nAv),`Próximas ${Math.min(8,nAv)} semanas${from}`],[nAv,`Resto del horizonte · ${nAv} semanas${from}`]].map(([k,lab])=>`<div class="panel c6 kpi"><span class="lab">${lab}</span>
       <span class="val">${nf(s('tot',k))} <small>m³ (mediana)</small></span>
       <span class="rng">esperado ${nf(s('tot_e',k))} m³ con operación normal · ${nf(sp('tot',k))} m³ con paros históricos</span>
@@ -1080,6 +1082,13 @@ async function renderSat(){
 }
 
 
+function exportCSV(){
+  if(!FC) return; const B=FC.blocks, q=v=>v==null?'':String(Math.round(v));
+  const rows=[['semana','desde','hasta','dias','descanso_programado','caudal_m3s','flotante_p50','macrofitas_p50','total_p50','total_esperado','total_p10','total_p90']].concat(
+    B.map(b=>['S'+b.h,new Date(b.t0).toISOString().slice(0,10),new Date(b.t1).toISOString().slice(0,10),b.nd,b.rest??'',q(b.q),q(b.mf),q(b.ma),q(b.tot),q(b.tot_e),q(b.tot_p10),q(b.tot_p90)]));
+  const blob=new Blob(['\ufeff'+rows.map(r=>r.join(';')).join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pronostico_flotante_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
 /* ---------- vista operación (esfuerzo) ---------- */
 function renderOps(){
   const E=S.src.esfuerzo; if(!E) return;
@@ -1160,7 +1169,7 @@ function init(){
   const ys=new Date(S.T[S.first]).getUTCFullYear(),ye=new Date(S.T[S.last]).getUTCFullYear();
   const sel=document.getElementById('hist-from');sel.innerHTML='';for(let y=ys;y<=ye;y++)sel.insertAdjacentHTML('beforeend',`<option value="${y}">${y}</option>`);sel.value=String(Math.max(ys,2021));
   sel.onchange=renderHist;
-  initRestPlan();
+  initRestPlan();document.getElementById('btn-csv').onclick=exportCSV;document.getElementById('btn-print').onclick=()=>window.print();
   document.getElementById('fc-scen').onchange=renderForecast;document.getElementById('fc-comp').onchange=renderForecast;
   seg('hist-agg',renderHist);seg('cmp-thr',renderRel);seg('lag-x',renderRel);seg('sk-comp',renderModel);seg('aud-comp',renderAudit);seg('sat-lado',renderSat);
   document.getElementById('up-xlsx').onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=document.getElementById('up-msg');
