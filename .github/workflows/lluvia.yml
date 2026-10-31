@@ -1,4 +1,4 @@
-name: Lluvia histórica (CHIRPS y NASA POWER)
+name: Lluvia histórica (CHIRPS, IMERG y NASA POWER)
 
 on:
   workflow_dispatch: {}
@@ -21,7 +21,7 @@ jobs:
       - name: Descargar
         run: |
           mkdir -p datos/lluvia
-          cd lluvia && (python -u descargar.py; timeout 100m python -u climateserv.py; timeout 30m python -u chirps.py) 2>&1 | tee ../datos/lluvia/registro.txt
+          cd lluvia && (python -u descargar.py; timeout 100m python -u climateserv.py) 2>&1 | tee ../datos/lluvia/registro.txt
       - name: Guardar
         if: always()
         run: |
