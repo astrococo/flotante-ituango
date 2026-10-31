@@ -18,18 +18,25 @@ def get(path):
 res = {}
 hoy = dt.date.today()
 for y in range(2019, hoy.year + 1):
-    t0, t1 = f"{y}-01-01", (f"{y}-12-31" if y < hoy.year else f"{y}-06-30")
-    for n, (a0, a1, o0, o1) in AREAS.items():
-        print(y, n, flush=True)
-        try:
-            txt = get(f"/griddap/chirps20GlobalDailyP05.csv?precip%5B({t0}):1:({t1})%5D%5B({a0}):1:({a1})%5D%5B({o0}):1:({o1})%5D")
-        except Exception as e:
-            print("   sin datos", y, n, e, flush=True); continue
-        df = pd.read_csv(io.StringIO(txt), skiprows=[1])            # segunda fila = unidades
-        df["fecha"] = pd.to_datetime(df["time"]).dt.tz_localize(None).dt.normalize()
-        s = df.groupby("fecha")["precip"].mean()
-        res.setdefault(n, []).append(s)
-        print("   días", len(s), "celdas/día", int(len(df) / max(1, len(s))), "media", round(s.mean(), 2), flush=True)
+    for m in range(1, 13):
+        ini = pd.Timestamp(y, m, 1); fin = ini + pd.offsets.MonthEnd(0)
+        if fin > pd.Timestamp("2026-06-30") and y == 2026: break
+        if fin.date() > hoy: break
+        esperado = fin.day
+        for n, (a0, a1, o0, o1) in AREAS.items():
+            path = f"/griddap/chirps20GlobalDailyP05.csv?precip%5B({ini:%Y-%m-%d}T00:00:00Z):1:({fin:%Y-%m-%d}T00:00:00Z)%5D%5B({a0}):1:({a1})%5D%5B({o0}):1:({o1})%5D"
+            ok = False
+            for intento in range(4):
+                try:
+                    df = pd.read_csv(io.StringIO(get(path)), skiprows=[1])
+                except Exception as e:
+                    print("   error", y, m, n, e, flush=True); break
+                df["fecha"] = pd.to_datetime(df["time"]).dt.tz_localize(None).dt.normalize()
+                sr = df.groupby("fecha")["precip"].mean()
+                if len(sr) == esperado: ok = True; break
+                print(f"   {y}-{m:02d} {n}: {len(sr)} de {esperado} días, reintento", flush=True); SERV.reverse(); time.sleep(10)
+            if ok: res.setdefault(n, []).append(sr)
+        print(y, m, "ok" if ok else "INCOMPLETO", flush=True)
 D = pd.DataFrame({f"chirps_{n}": pd.concat(v) for n, v in res.items()}).sort_index(); D.index.name = "fecha"
 D = D[~D.index.duplicated()]
 D.round(2).to_csv(f"{OUT}/chirps_diario.csv"); print("total", len(D), D.index.min(), D.index.max()); print(D.describe().round(2))
