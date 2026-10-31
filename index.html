@@ -296,6 +296,16 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     </div>
   </div>
   <div class="panel prose" id="model-read"></div>
+  <div class="panel">
+    <div class="toolbar"><h3>Pronóstico real de HydroForecast vs caudal observado · Sitio Presa</h3>
+      <label>Ver <select id="hf-sel"><option value="all">Todas las emisiones</option></select></label></div>
+    <div class="chart"><canvas id="ch-hf"></canvas></div>
+    <p class="note" id="hf-note">Consultando el historial de pronósticos de HydroForecast…</p>
+    <div class="grid" style="margin-top:8px">
+      <div class="c6"><div class="tbl"><table id="tbl-hf"></table></div></div>
+      <div class="c6 prose" id="hf-read"></div>
+    </div>
+  </div>
 </section>
 
 <!-- SATÉLITE -->
@@ -863,6 +873,55 @@ Total = Flotante + Macrófitas`;
    <p>Se probaron y descartaron un modelo conceptual de inventario, regresiones de caudal sin persistencia, niveles de largo plazo móviles (26 a 104 semanas) y una corrección de sesgo móvil: ninguno mejoró fuera de la muestra. Detalle en <a href="#auditoria" style="color:var(--accent)">Auditoría</a>.</p>`;
 }
 
+/* ---------- pronóstico real de HydroForecast vs observado (sombra) ---------- */
+let HFH=null;
+async function loadHFHist(){
+  if(HFH) return HFH;
+  const base=(LIVE.src&&LIVE.src!=='archivo'?LIVE.src:DEF_API).replace(/\/+$/,'');
+  const [h,o]=await Promise.all([fetchJSON(base+'/api/forecast/history?station=olaya&n=20&spacing_hours=72&lookback_days=60',20000),fetchJSON(base+'/api/observed/daily?days=150',15000)]);
+  const sp=r=>Number.isFinite(+r.QSitioPresa_pred_mean)?+r.QSitioPresa_pred_mean:(Number.isFinite(+r.QOlaya_pred_mean)?1.0493*r.QOlaya_pred_mean+30.08:null);
+  const runs=(h.past_forecasts||[]).map(f=>{const q=f.quarterly_outlook_90d||[];return {t0:d0(String(q[0]?.timestamp).slice(0,10)),pts:q.map(r=>({t:d0(String(r.timestamp).slice(0,10)),v:sp(r)})).filter(x=>x.v!=null)}}).filter(r=>r.pts.length>7);
+  const obs=new Map((o.data||[]).map(r=>[d0(String(r.timestamp).slice(0,10)),Number.isFinite(+r.QSitioPresa_obs)?+r.QSitioPresa_obs:(Number.isFinite(+r.QOlaya_obs)?1.0493*r.QOlaya_obs+30.08:null)]).filter(x=>x[1]!=null));
+  HFH={runs,obs,base};return HFH;
+}
+async function renderHFSkill(){
+  const note=document.getElementById('hf-note');
+  let H; try{H=await loadHFHist()}catch(e){note.textContent='No se pudo consultar el historial de pronósticos de HydroForecast ('+(e.message||e)+').';return}
+  const {runs,obs}=H; if(!runs.length){note.textContent='HydroForecast no devolvió pronósticos pasados.';return}
+  const sel=document.getElementById('hf-sel');
+  if(sel.options.length===1){runs.forEach((r,i)=>sel.insertAdjacentHTML('beforeend',`<option value="${i}">Emitido ${fmtD(r.t0)}</option>`));sel.onchange=renderHFSkill}
+  const v=sel.value, show=v==='all'?runs:[runs[+v]];
+  const ot=[...obs.keys()].sort((a,b)=>a-b), t0=Math.min(...runs.map(r=>r.t0))-7*DAY;
+  const ds=[{type:'line',label:'Caudal observado (sombra)',data:ot.filter(t=>t>=t0).map(t=>({x:t,y:obs.get(t)})),borderColor:css('--muted'),backgroundColor:css('--muted')+'40',fill:'origin',pointRadius:0,borderWidth:1.5,order:9}];
+  show.forEach((r,i)=>ds.push({type:'line',label:i===show.length-1?(v==='all'?'Pronósticos emitidos (90 días)':'Pronóstico '+fmtD(r.t0)):'_',data:r.pts.map(p=>({x:p.t,y:p.v})),borderColor:css('--accent')+(v==='all'?(i===show.length-1?'':'55'):''),borderWidth:v==='all'&&i<show.length-1?1:2,pointRadius:0,fill:false,order:1}));
+  ds.push({type:'line',label:'Umbral macrófitas 1 000 m³/s',data:[{x:t0,y:1000},{x:Math.max(...runs.map(r=>r.pts.at(-1).t)),y:1000}],borderColor:css('--ma'),borderDash:[5,4],borderWidth:1,pointRadius:0,fill:false});
+  ds.push({type:'line',label:'Umbral flotante 1 500 m³/s',data:[{x:t0,y:1500},{x:Math.max(...runs.map(r=>r.pts.at(-1).t)),y:1500}],borderColor:css('--mf'),borderDash:[5,4],borderWidth:1,pointRadius:0,fill:false});
+  const o=baseOpts();o.scales.x={type:'linear',grid:{color:css('--line')},ticks:{callback:x=>fmtDs(x),maxTicksLimit:10}};o.scales.y.title={display:true,text:'m³/s'};
+  o.plugins.legend.labels.filter=it=>it.text!=='_';o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x);o.interaction={mode:'nearest',intersect:false};
+  o.plugins.tooltip.callbacks.label=c=>c.dataset.label==='_'?null:c.dataset.label+': '+nf(c.parsed.y);
+  mk('ch-hf',{data:{datasets:ds},options:o});
+  // calidad por semana de anticipación vs persistencia
+  const W=[];for(const r of runs){const per=obs.get(r.t0-DAY)??obs.get(r.t0);r.pts.forEach((p,k)=>{const ob=obs.get(p.t);if(ob==null||per==null)return;const w=Math.ceil((k+1)/7);(W[w]=W[w]||[]).push([p.v,ob,per])})}
+  const rows=W.map((a,w)=>a&&a.length>=10?{w,n:a.length,mae:a.reduce((s,x)=>s+Math.abs(x[0]-x[1]),0)/a.length,bias:a.reduce((s,x)=>s+(x[0]-x[1]),0)/a.length,pers:a.reduce((s,x)=>s+Math.abs(x[2]-x[1]),0)/a.length,mo:a.reduce((s,x)=>s+x[1],0)/a.length}:null).filter(Boolean);
+  document.getElementById('tbl-hf').innerHTML='<thead><tr><th>Semana</th><th>Casos</th><th>Error pron.</th><th>Sesgo</th><th>Error persist.</th><th>Q obs. medio</th></tr></thead><tbody>'+
+    rows.map(r=>`<tr><td>${r.w}</td><td class="num">${r.n}</td><td class="num"${r.mae<r.pers?' style="color:var(--ok)"':''}>${nf(r.mae)}</td><td class="num">${r.bias>=0?'+':''}${nf(r.bias)}</td><td class="num">${nf(r.pers)}</td><td class="num">${nf(r.mo)}</td></tr>`).join('')+'</tbody>';
+  // impacto en el multiplicador del modelo de extracción: pronóstico real vs observado
+  const imp={};for(const [y,lab] of [['mf_tot','flotante'],['ma_tot','macrófitas']]){const p=S.P[y];let n=0,dsum=0,dmax=0,cnt=0;
+    for(const r of runs){const pm=new Map(r.pts.map(x=>[x.t,x.v]));
+      const xw=(src,w)=>{let s_=0;for(let d=0;d<7;d++){const t=r.t0+((w-1)*7+d)*DAY;const val=w<=0?obs.get(t):src.get(t);if(val!=null)s_+=Math.max(val-p.qc,0)/1000}return s_};
+      for(let h=1;h<=13;h++){if(!obs.has(r.t0+(h*7-1)*DAY))break;const m=src=>{let lin=p.b0;for(let l=0;l<7;l++)lin+=p.beta[l]*xw(src,h-l);return Math.min(1.5,Math.max(0.7,Math.sqrt(Math.exp(lin))))};
+        const d=Math.abs(m(pm)/m(obs)-1);n++;dsum+=d;dmax=Math.max(dmax,d);if(d>0.001)cnt++}}
+    imp[lab]={n,media:n?dsum/n*100:0,max:dmax*100,cnt}}
+  const big=[...obs.values()].filter(x=>x>1000).length, pbig=runs.reduce((s,r)=>s+r.pts.filter(x=>x.v>1000).length,0), npts=runs.reduce((s,r)=>s+r.pts.length,0);
+  const better=rows.filter(r=>r.mae<r.pers).map(r=>r.w);
+  note.textContent=`${runs.length} pronósticos de 90 días emitidos entre ${fmtD(runs[0].t0)} y ${fmtD(runs.at(-1).t0)} (la API guarda 60 días), comparados con el caudal observado en Sitio Presa. Fuente: ${H.base.replace(/^https?:\/\//,'')}.`;
+  document.getElementById('hf-read').innerHTML=`<h3>Lectura</h3><ul>
+    <li>El pronóstico supera a repetir el caudal actual en las semanas ${better.length?better.join(', '):'—'}${rows.length?`; su sesgo medio va de ${nf(Math.min(...rows.map(r=>r.bias)))} a ${nf(Math.max(...rows.map(r=>r.bias)))} m³/s`:''}.</li>
+    <li>Impacto en el modelo de extracción (multiplicador con pronóstico real frente a caudal observado): flotante ${nf(imp.flotante.media,2)} % de diferencia media (${imp.flotante.cnt} de ${imp.flotante.n} casos con diferencia); macrófitas ${nf(imp['macrófitas'].media,2)} % (${imp['macrófitas'].cnt} de ${imp['macrófitas'].n}).</li>
+    <li>${big?`El caudal observado superó 1 000 m³/s en ${big} días del periodo.`:'En este periodo el caudal observado no superó 1 000 m³/s: los umbrales del modelo no se activan y el pronóstico real no cambia la extracción pronosticada.'} El pronóstico superó 1 000 m³/s en ${pbig} de ${npts} días pronosticados.</li>
+    <li>La evaluación se actualiza sola; tendrá peso cuando el periodo incluya crecientes. El repositorio archiva cada pronóstico dos veces al día para ampliar esta ventana.</li></ul>`;
+}
+
 /* ---------- vista auditoría ---------- */
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function integrityChecks(){
@@ -983,7 +1042,7 @@ function show(){
 function renderView(v){
   if(v==='pronostico')renderForecast();else if(v==='historico')renderHist();else if(v==='relacion')renderRel();
   if(v==='relacion'){const n=document.getElementById('rel-note');n.hidden=!S.src._xlsxName;n.textContent=`Análisis de crecientes y correlaciones calculados con el archivo base (hasta ${fmtD(S.T[ORIGLAST])}). El histórico, la calidad y el pronóstico sí usan el archivo cargado.`}
-  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();
+  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel();renderHFSkill()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();
   else if(v==='actualizar')renderUpdate();else if(v==='requisitos')renderReq();
 }
 function seg(id,cb){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
