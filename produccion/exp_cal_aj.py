@@ -1,5 +1,5 @@
 import pickle,json,pandas as pd,numpy as np,warnings;warnings.filterwarnings('ignore')
-D,W=pickle.load(open('semanal.pkl','rb'));C=pickle.load(open('cal.pkl','rb'));D=D.join(C)
+D,W=pickle.load(open('semanal_aj.pkl','rb'));C=pickle.load(open('cal.pkl','rb'));D=D.join(C)
 P=json.load(open('/home/claude/work/params_v21.json'))
 D['prog']=D.causa.isin(['programada','externa']).astype(int)
 D['tipo']=np.select([D.navidad==1,D.ssanta==1,D.fest==1,D.dom==1,D.sab==1],['nav','ss','fest','dom','sab'],'lv')
@@ -25,7 +25,7 @@ for comp in ['tot','mec','mf','ma']:
             if (i,j) not in cache: cache[(i,j)]=libres_esperados(idx[i],idx[j])
             a=p['a1']*np.exp(-(h-1)/p['tau']);rate=a*r8+(1-a)*rLT
             res.append(dict(comp=comp,o=idx[i],h=h,y=y[j],BASE=a*L8+(1-a)*LT,PROG_conocido=rate*lib[j],PROG_calendario=rate*cache[(i,j)]))
-R=pd.DataFrame(res);R.to_pickle('exp_cal.pkl')
+R=pd.DataFrame(res);R.to_pickle('exp_cal_aj.pkl')
 def boot(g,m1,m2,nb=2000):
     g=g.assign(d=(g[m1]-g.y).abs()-(g[m2]-g.y).abs());s=g.groupby('o').d.sum();c=g.groupby('o').size();oo=s.index.values;bl=[oo[k:k+8] for k in range(0,len(oo),8)]
     r=np.random.default_rng(1);st=[]

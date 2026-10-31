@@ -1,5 +1,5 @@
 import pickle,json,pandas as pd,numpy as np,warnings;warnings.filterwarnings('ignore')
-D,W=pickle.load(open('semanal.pkl','rb'));P=json.load(open('/home/claude/work/params_v21.json'))
+D,W=pickle.load(open('semanal_aj.pkl','rb'));P=json.load(open('/home/claude/work/params_v21.json'))
 W=W[W.index>='2019-09-01'].copy();idx=W.index;T=len(W)
 LT0=np.where(idx>=pd.Timestamp('2020-07-01'))[0][0]
 q=W.q.values;op=W.op_mec.values

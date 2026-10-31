@@ -1,5 +1,5 @@
 import pickle,json,pandas as pd,numpy as np,warnings;warnings.filterwarnings('ignore')
-D,W=pickle.load(open('semanal.pkl','rb'));P=json.load(open('/home/claude/work/params_v21.json'))
+D,W=pickle.load(open('semanal_aj.pkl','rb'));P=json.load(open('/home/claude/work/params_v21.json'))
 W=W[W.index>='2019-09-01'].copy();idx=W.index;T=len(W)
 LT0=np.where(idx>=pd.Timestamp('2020-07-01'))[0][0]
 W['libres']=7-W.prog            # días no programados como descanso
@@ -22,7 +22,7 @@ for comp in ['tot','mf','ma','mec']:
                 BASE=a*L8+(1-a)*LT,
                 PROG=(a*r8+(1-a)*rLT)*lib[j],
                 OPER_oraculo=(a*o8+(1-a)*oLT)*op[j]))
-R=pd.DataFrame(res);R.to_pickle('exp_esf.pkl')
+R=pd.DataFrame(res);R.to_pickle('exp_esf_aj.pkl')
 def boot(g,m1,m2,nb=2000):
     g=g.assign(d=(g[m1]-g.y).abs()-(g[m2]-g.y).abs());s=g.groupby('o').d.sum();c=g.groupby('o').size();oo=s.index.values;bl=[oo[k:k+8] for k in range(0,len(oo),8)]
     r=np.random.default_rng(1);st=[]

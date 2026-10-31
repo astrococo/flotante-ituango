@@ -1,11 +1,9 @@
-# Producción diaria → datos de la plataforma
+# Hoja de viajes (OT3_001) ↔ DatosExtracción
 
-Fuente: `OT3_001_Producción_Diaria_<fecha>.xlsx` (no se publica: contiene datos internos). Hojas usadas:
-`Viajes-Macrofitas_Mecanizado`, `Viajes-MF-Mecanizado-EPM`, `Viajes-diario-macrofitas_Manual`, `Viajes-diario-MF_Manual`.
+**Referencia: `datos/DatosExtraccion.xlsx` (sin cambios).** La hoja de viajes se ajusta a ella; el Excel fuente no se publica (contiene datos internos).
 
-Orden: `tidy.py` (lee celdas, fórmulas y comentarios) → `mec.py` (viajes por volqueta, auditoría de fórmulas) →
-`build.py` (correcciones por fecha, serie diaria) → `semanal.py` (causas y semanas) → `exp_*.py` (backtests).
-
-Salidas publicadas: `datos/DatosExtraccion.xlsx` (mismo formato de siempre, con hoja «Depuración») y
-`datos/produccion/esfuerzo_diario.csv` (operación por día, sin textos de observaciones).
-La versión anterior del Excel quedó en `datos/DatosExtraccion_original_2026-10-30.xlsx`.
+1. `tidy.py`, `mec.py`: leen celdas, fórmulas y comentarios de las hojas `Viajes-Macrofitas_Mecanizado`, `Viajes-MF-Mecanizado-EPM`, `Viajes-diario-macrofitas_Manual`, `Viajes-diario-MF_Manual`.
+2. `alinear.py`: para cada fila de viajes, la fecha con que la usa `Info_día_PHI-integrado` (origen de DatosExtracción).
+3. `plan.py`, `aplicar.py`: re-fechan filas y ajustan los pocos valores repetidos u omitidos por el informe; editan el XML del libro (no se toca ninguna otra hoja) y quitan la cadena de cálculo con recálculo al abrir. Registro de cambios en `Ajustes_archivo_viajes.xlsx`.
+4. `build_aj.py`, `semanal_aj.py`, `esf.py`: operación diaria y semanal con esas fechas → `datos/produccion/esfuerzo_diario.csv` y la pestaña Operación.
+5. `exp_*_aj.py`: backtests (descanso programado, calendario, caudal).
