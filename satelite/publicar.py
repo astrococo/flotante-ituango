@@ -33,7 +33,26 @@ Image.open(f"{S}/ql_{base_d}.jpg").save(f"{O}/ultima_escena.jpg", quality=85)
 ser = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), a=round(a, 2), b=round(b, 2), t20=round(t20, 2), t40=round(t40, 2), v=round(v, 2))
        for d, t, a, b, t20, t40, v in zip(C.fecha, C.total, C.arriba, C.abajo, C.total_20, C.total_40, C.vf)]
 todas = [dict(f=d.strftime("%Y-%m-%d"), v=round(v, 2)) for d, v in zip(E.fecha, E.vf)]
-json.dump(dict(generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], area_ha=area,
+# Landsat 8/9 (30 m): NDVI ≥ 0,40 reproduce el área de Sentinel-2 (NDVI ≥ 0,30) en fechas con ≤3 días de diferencia
+lsat = []
+LP = f"{R}/datos/satelite/landsat/escenas_landsat.csv"
+if os.path.exists(LP):
+    L = pd.read_csv(LP, parse_dates=["fecha"]); L["vf"] = L.total_valid_px / L.total_area_px
+    L = L[L.vf >= 0.70].sort_values("vf").drop_duplicates("fecha", keep="last").sort_values("fecha")
+    for lado in ("total", "arriba", "abajo"):
+        L[lado] = L[f"{lado}_ndvi40"] / L[f"{lado}_valid_px"].clip(lower=1) * L[f"{lado}_area_px"] / 100
+    lsat = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), a=round(a_, 2), b=round(b, 2), v=round(v, 2), p=p_[-1])
+            for d, t, a_, b, v, p_ in zip(L.fecha, L.total, L.arriba, L.abajo, L.vf, L.plat)]
+# Sentinel-1 RTC (radar, sin nubes): VH ≥ −14 dB reproduce el área total de Sentinel-2 (90 fechas, ρ = 0,75);
+# aguas arriba (tramo de río, agua turbulenta) no concuerda (ρ = 0,43) y no se publica.
+s1 = []
+SP = f"{R}/datos/satelite/s1/escenas_s1.csv"
+if os.path.exists(SP):
+    Q = pd.read_csv(SP, parse_dates=["fecha"]).sort_values("fecha").drop_duplicates("fecha", keep="last")
+    Q["t"] = Q.total_vh14 / Q.total_valid_px.clip(lower=1) * Q.total_area_px / 100
+    Q["b"] = Q.abajo_vh14 / Q.abajo_valid_px.clip(lower=1) * Q.abajo_area_px / 100
+    s1 = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), b=round(b, 2)) for d, t, b in zip(Q.fecha, Q.t, Q.b)]
+json.dump(dict(s1=s1, s1_validacion=dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43), landsat=lsat, landsat_validacion=dict(n=31, rho=0.82, sesgo_ha=-0.6, mae_ha=9.3, umbral="NDVI ≥ 0,40"), generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], area_ha=area,
                n_escenas=int(len(E)), n_utiles=int(len(C)), ultima_vista=base_d, mapas=mapas, serie=ser, todas=todas,
                metodo=dict(sensor="Sentinel-2 L2A (10 m), Microsoft Planetary Computer", nubes="SCL: válidos 4, 5, 6, 7",
                            agua="MNDWI > 0 en ≥ 50 % de las escenas despejadas, radio 2,5 km", vegetacion="NDVI ≥ 0,30", minimo_despejado=0.70)),
