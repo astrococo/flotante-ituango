@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/home/runner/work/flotante-ituango/flotante-ituango/satelite/corredor.py", line 15, in <module>
+    items = [i for i in catalogo().search(collections=["sentinel-2-l2a"], intersects={"type": "Point", "coordinates": [lon, lat]},
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/item_search.py", line 746, in items
+    for item in self.items_as_dicts():
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/item_search.py", line 757, in items_as_dicts
+    for page in self.pages_as_dicts():
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/item_search.py", line 789, in pages_as_dicts
+    for page in self._stac_io.get_pages(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/stac_api_io.py", line 308, in get_pages
+    page = self.read_json(url, method=method, parameters=parameters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac/stac_io.py", line 204, in read_json
+    txt = self.read_text(source, *args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/stac_api_io.py", line 171, in read_text
+    return self.request(href, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pystac_client/stac_api_io.py", line 223, in request
+    raise APIError.from_response(resp)
+pystac_client.exceptions.APIError: 1 validation error:
+  {'type': 'value_error', 'loc': ('body',), 'msg': 'Value error, intersects and bbox parameters are mutually exclusive', 'input': {'bbox': [-75.87611886430955, 6.7613227678763925, -75.79468093569045, 7.039799232123607], 'datetime': '2019-01-01T00:00:00Z/2026-12-31T23:59:59Z', 'collections': ['sentinel-2-l2a'], 'intersects': {'type': 'Point', 'coordinates': [-75.8353999, 6.900561]}}, 'ctx': {'error': ValueError('intersects and bbox parameters are mutually exclusive')}}
+
+  File "/opt/src/pccommon/pccommon/middleware.py", line 60, in _endpoint
+    POST /api/stac/v1/search
