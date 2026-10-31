@@ -12,8 +12,7 @@ bbox = (lon - dlon, lat - dlat, lon + dlon, lat + dlat)
 SH = (int(31000 / 20), int(9000 / 20))                     # grilla de 20 m
 yy = np.arange(SH[0])[:, None].repeat(SH[1], 1); km = (SH[0] / 2 - yy) * 0.02   # + norte, − sur
 TRAMOS = [(-15, -7.5), (-7.5, -2.5), (-2.5, 0), (0, 2.5), (2.5, 7.5), (7.5, 15)]
-items = [i for i in catalogo().search(collections=["sentinel-2-l2a"], intersects={"type": "Point", "coordinates": [lon, lat]},
-         bbox=bbox, datetime="2019-01-01/2026-12-31").items() if i.properties.get("s2:mgrs_tile") in ("18NUN", "18NVN")]
+items = [i for i in catalogo().search(collections=["sentinel-2-l2a"], bbox=bbox, datetime="2019-01-01/2026-12-31").items() if i.properties.get("s2:mgrs_tile") in ("18NUN", "18NVN")]
 por_fecha = collections.defaultdict(list)
 for it in items: por_fecha[it.datetime.strftime("%Y-%m-%d")].append(it)
 print("fechas:", len(por_fecha), "escenas:", len(items), flush=True)
