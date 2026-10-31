@@ -14,6 +14,17 @@ lat, lon = BARRERA
 items = sorted(catalogo().search(collections=["sentinel-1-grd"], intersects={"type": "Point", "coordinates": [lon, lat]},
                                  datetime="2019-01-01/2026-10-31").items(), key=lambda i: i.datetime)
 print("escenas S1 GRD:", len(items), flush=True)
+import urllib.request
+for it in items[-3:]:
+    it2 = firmar(it); h = it2.assets["vv"].href
+    try:
+        req = urllib.request.Request(h, method="GET", headers={"Range": "bytes=0-1023"})
+        with urllib.request.urlopen(req, timeout=60) as r: print("diag HTTP", r.status, r.headers.get("Content-Type"), flush=True)
+    except Exception as e: print("diag HTTP error", repr(e)[:300], flush=True)
+    try:
+        with rasterio.open(h) as src: print("diag rasterio ok", src.count, src.width, src.height, len(src.gcps[0]), flush=True)
+    except Exception as e: print("diag rasterio error", repr(e)[-300:], flush=True)
+    print("diag href", h.split("?")[0][-120:], "token?", "sig=" in h, flush=True)
 ref = np.where(DENTRO | True, FREQ, 0).astype("float32"); ref = (ref - ref.mean()) / (ref.std() + 1e-6)
 def leer(href):
     dst = np.full(SHP, np.nan, "float32")
@@ -54,5 +65,5 @@ for k, it in enumerate(items):
         rows.append(row)
         if k % 15 == 0: print(k, row["fecha"], row["orbita"], "corr", row["corr"], "desplazamiento", row["dy_m"], row["dx_m"], flush=True)
     except Exception as e:
-        print("error", it.id, str(e)[:160], flush=True)
+        print("error", it.id, str(e)[-200:], flush=True)
 pd.DataFrame(rows).to_csv(f"{OUT}/escenas_s1grd.csv", index=False); print("listo", len(rows), flush=True)
