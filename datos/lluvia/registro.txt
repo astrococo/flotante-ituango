@@ -2,21 +2,78 @@ cola primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta c
 CHIRPS falló cola no se reconocieron filas
 media primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n    <meta name="description" content="">\n    <title>dlauth</title>\n    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">\n    <link rel="stylesheet" href="https://use.fontawes'
 CHIRPS falló media no se reconocieron filas
-POWER barrera 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
-POWER olaya 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
-POWER sabanalarga 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
-POWER pintada 2855 2019-01-01 00:00:00 2026-10-25 00:00:00
+POWER barrera 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
+POWER olaya 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
+POWER sabanalarga 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
+POWER pintada 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
        power_barrera  power_olaya  power_sabanalarga  power_pintada
-count        2855.00      2855.00            2855.00        2855.00
-mean            5.63         5.72               5.63           5.69
-std             8.30         8.53               8.30           6.70
+count        2856.00      2856.00            2856.00        2856.00
+mean            5.65         5.74               5.65           5.69
+std             8.40         8.59               8.40           6.70
 min             0.00         0.00               0.00           0.00
 25%             0.80         0.98               0.80           1.24
 50%             3.20         3.25               3.20           3.67
-75%             7.50         7.54               7.50           8.00
+75%             7.51         7.55               7.51           8.00
 max           170.50       186.97             170.50         109.77
-días por descargar: 2857
-0 2019-01-01 None
-250 2019-09-08 None
-500 2020-05-15 None
-750 2021-01-20 None
+2019 cola
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   días 1 celdas/día 90 media 2.06
+2019 media
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   días 1 celdas/día 405 media 1.41
+2020 cola
+   coastwatch.pfeg.noaa.gov 1.5 MB 5 s
+   días 366 celdas/día 90 media 4.79
+2020 media
+   coastwatch.pfeg.noaa.gov 6.9 MB 5 s
+   días 366 celdas/día 405 media 5.48
+2021 cola
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 0.0 MB 1 s
+   días 1 celdas/día 90 media 0.0
+2021 media
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   días 1 celdas/día 405 media 0.45
+2022 cola
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   días 2 celdas/día 90 media 1.03
+2022 media
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   días 2 celdas/día 405 media 0.71
+2023 cola
+   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
+   días 1 celdas/día 90 media 0.0
+2023 media
+   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
+   días 1 celdas/día 405 media 0.01
+2024 cola
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 1.5 MB 7 s
+   días 366 celdas/día 90 media 4.86
+2024 media
+   coastwatch.pfeg.noaa.gov 6.9 MB 6 s
+   días 366 celdas/día 405 media 5.53
+2025 cola
+   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
+   upwell.pfeg.noaa.gov 1.5 MB 5 s
+   días 365 celdas/día 90 media 5.69
+2025 media
+   coastwatch.pfeg.noaa.gov 6.9 MB 3 s
+   días 365 celdas/día 405 media 6.89
+2026 cola
+   coastwatch.pfeg.noaa.gov 0.8 MB 3 s
+   días 181 celdas/día 90 media 4.26
+2026 media
+   coastwatch.pfeg.noaa.gov 3.4 MB 5 s
+   días 181 celdas/día 405 media 5.2
+total 1278 2020-01-01 00:00:00 2026-06-30 00:00:00
+       chirps_cola  chirps_media
+count      1278.00       1278.00
+mean          4.99          5.86
+std           6.13          6.54
+min           0.00          0.00
+25%           0.28          0.90
+50%           2.85          3.73
+75%           7.69          8.65
+max          50.44         65.48
