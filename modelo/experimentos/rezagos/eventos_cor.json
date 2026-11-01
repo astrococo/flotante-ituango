@@ -1,0 +1,110 @@
+{
+ "q_pico|resp_s2": [
+  0.11,
+  0.673
+ ],
+ "q_pico|resp_s2a4": [
+  0.17,
+  0.51
+ ],
+ "q_pico|mf_extra_8sem": [
+  -0.37,
+  0.117
+ ],
+ "vol_sobre_1500|resp_s2": [
+  0.33,
+  0.198
+ ],
+ "vol_sobre_1500|resp_s2a4": [
+  0.36,
+  0.145
+ ],
+ "vol_sobre_1500|mf_extra_8sem": [
+  -0.03,
+  0.898
+ ],
+ "dias_sobre_1500|resp_s2": [
+  0.36,
+  0.152
+ ],
+ "dias_sobre_1500|resp_s2a4": [
+  0.34,
+  0.168
+ ],
+ "dias_sobre_1500|mf_extra_8sem": [
+  0.22,
+  0.361
+ ],
+ "subida_3d|resp_s2": [
+  -0.2,
+  0.451
+ ],
+ "subida_3d|resp_s2a4": [
+  0.0,
+  0.997
+ ],
+ "subida_3d|mf_extra_8sem": [
+  -0.51,
+  0.027
+ ],
+ "dias_desde_anterior|resp_s2": [
+  -0.24,
+  0.345
+ ],
+ "dias_desde_anterior|resp_s2a4": [
+  -0.29,
+  0.241
+ ],
+ "dias_desde_anterior|mf_extra_8sem": [
+  -0.12,
+  0.611
+ ],
+ "virginia_max|resp_s2": [
+  0.23,
+  0.374
+ ],
+ "virginia_max|resp_s2a4": [
+  0.2,
+  0.433
+ ],
+ "virginia_max|mf_extra_8sem": [
+  -0.24,
+  0.325
+ ],
+ "aporte_local_max|resp_s2": [
+  0.28,
+  0.286
+ ],
+ "aporte_local_max|resp_s2a4": [
+  0.43,
+  0.085
+ ],
+ "aporte_local_max|mf_extra_8sem": [
+  -0.18,
+  0.47
+ ],
+ "mf_pre_dia|resp_s2": [
+  -0.89,
+  0.0
+ ],
+ "mf_pre_dia|resp_s2a4": [
+  -0.96,
+  0.0
+ ],
+ "mf_pre_dia|mf_extra_8sem": [
+  -0.52,
+  0.021
+ ],
+ "mes|resp_s2": [
+  -0.0,
+  0.985
+ ],
+ "mes|resp_s2a4": [
+  0.06,
+  0.812
+ ],
+ "mes|mf_extra_8sem": [
+  0.2,
+  0.416
+ ]
+}

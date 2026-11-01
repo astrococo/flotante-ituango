@@ -10,12 +10,12 @@ JS='(function(){\n'+'\n'.join(parts)+open('v2/new.js').read().rsplit('</script>'
 JS=JS.replace("ticks:{callback:v=>nf(v)}}}}","ticks:{callback:v=>nf(v,(Math.abs(v)<5&&!Number.isInteger(v))?2:0)}}}}")
 assert "const ORIG=JSON.parse(document.getElementById('payload').textContent);" in JS
 JS=JS.replace("const ORIG=JSON.parse(document.getElementById('payload').textContent);","let ORIG=null;")
-JS=JS.replace("r.src.esfuerzo=S.src.esfuerzo;","r.src.esfuerzo=S.src.esfuerzo;r.src.audit=S.src.audit;")
+JS=JS.replace("r.src.esfuerzo=S.src.esfuerzo;","r.src.esfuerzo=S.src.esfuerzo;r.src.audit=S.src.audit;r.src.rezagos=S.src.rezagos;")
 old="  (async()=>{await loadRepoExcel();await loadLive()})();"
 assert old in JS
 JS=JS.replace(old,"""  S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});""")
+  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});""")
 old="if(window.Chart) init(); else window.addEventListener('load',init);"
 assert old in JS
 JS=JS.replace(old,"""fetch('datos/app/base.json?v=__VB__',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
@@ -26,7 +26,7 @@ body=body.replace('<script id="payload" type="application/json">__DATA__</script
 D=json.load(open('platform_data.json'))
 D['params']=json.load(open('params_v21.json')); D['kgm3']=[160.0,160.0]
 D['xlsx_sha']=hashlib.sha256(open('site/datos/DatosExtraccion.xlsx','rb').read()).hexdigest()
-X={'audit':json.load(open('audit_ui.json')),'esfuerzo':json.load(open('prod/out/esfuerzo.json'))}
+X={'audit':json.load(open('audit_ui.json')),'esfuerzo':json.load(open('prod/out/esfuerzo.json')),'rezagos':json.load(open('q28/resumen.json'))}
 os.makedirs('site/datos/app',exist_ok=True)
 dump=lambda o:json.dumps(o,ensure_ascii=False,separators=(',',':'))
 b=dump(D); x=dump(X)

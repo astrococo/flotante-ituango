@@ -396,7 +396,7 @@ function renderForecast(){
   else bn.hidden=true;
   // aviso de crecientes (respuesta histórica tras picos > umbral)
   const AV=S.P.aviso_creciente, fb=document.getElementById('flood-banner');
-  if(AV&&FC.qpk.v>=AV.umbral){fb.hidden=false;const pf=AV.perfil_mf||[],t2=FC.qpk.t+14*DAY;fb.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M2 12c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1M2 18c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/></svg><div><b>Creciente ${FC.qpk.t>S.T[S.last]?'pronosticada':'reciente'}: Sitio Presa ${nf(FC.qpk.v)} m³/s el ${fmtD(FC.qpk.t)}.</b> En ${AV.eventos} crecientes sobre ${nf(AV.umbral)} m³/s (${AV.periodo}), la extracción de material flotante bajó la semana del pico (${nf(pf[0],2)}×) y subió <b>${nf(pf[2],1)}× en la segunda semana después</b> (semana del ${fmtD(t2)}), y siguió 1,0–1,8× hasta la octava, frente a las 4 semanas previas; las macrófitas no aumentan. Es un escenario para preparar equipos: sumarlo al pronóstico central no redujo el error en 2025–2026.</div>`}
+  if(AV&&FC.qpk.v>=AV.umbral){fb.hidden=false;fb.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M2 12c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1M2 18c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/></svg><div><b>Creciente ${FC.qpk.t>S.T[S.last]?'pronosticada':'reciente'}: Sitio Presa ${nf(FC.qpk.v)} m³/s el ${fmtD(FC.qpk.t)}.</b> Con caudal sobre ${nf(AV.umbral)} m³/s (oct-2021–2026) el mecanizado operó el ${nf(AV.opera*100)} % de los días (${nf(AV.opera_bajo*100)} % con menos de 1.000 m³/s) y el material flotante por día cayó a ~${nf(AV.mf_rel*100)} % de lo normal durante 2–3 semanas; después volvió a lo normal, sin volumen extra neto. Prepare la reanudación al bajar el caudal; el pronóstico semanal no incluye la parada.</div>`}
   else fb.hidden=true;
   renderAlertBanner('alert-banner');
   // tarjetas: desde la semana en curso (no desde el último reporte)
@@ -491,6 +491,32 @@ Total = Flotante + Macrófitas`;
    <p>En todo el periodo, el RMSE semanal del material flotante es ${nf(rmf.v2)} m³ con el modelo v${(S.P.version||'2').split(' ')[0]}, frente a ${nf(rmf.clim)} m³ de la mediana histórica y ${nf(rmf.pers)} m³ de repetir las últimas semanas. En macrófitas: ${nf(rma.v2)}, ${nf(rma.clim)} y ${nf(rma.pers)} m³. La ventaja se concentra en las primeras 4 semanas; más allá, el pronóstico converge al nivel de largo plazo.</p>
    <p>Un error semanal cercano al 40 % del volumen es esperable mientras el registro mezcle llegada de material con esfuerzo de extracción. Para planear volúmenes use el valor esperado acumulado a 4 u 8 semanas, que es más confiable que una semana aislada. El intervalo P10–P90 cubrió el ${nf(P.mf_tot.cobertura80_fuera_muestra*100)} % (flotante) y el ${nf(P.ma_tot.cobertura80_fuera_muestra*100)} % (macrófitas) de los casos de 2024–2026 calibrando solo con 2022–2023.</p>
    <p>Se probaron y descartaron un modelo conceptual de inventario, regresiones de caudal sin persistencia, niveles de largo plazo móviles (26 a 104 semanas) y una corrección de sesgo móvil: ninguno mejoró fuera de la muestra. Detalle en <a href="#auditoria" style="color:var(--accent)">Auditoría</a>.</p>`;
+}
+
+
+/* ---------- rezagos caudal → material flotante ---------- */
+function renderRezagos(){
+  const R=S.src.rezagos; const box=document.getElementById('rez-panel'); if(!box) return; if(!R){box.hidden=true;return} box.hidden=false;
+  const seg=document.getElementById('rez-per'); if(!seg.dataset.on){seg.dataset.on=1;seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderRezagos()})}
+  const per=[...seg.querySelectorAll('button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v, M=R.mensual[per];
+  const o=baseOpts(); o.scales.y.min=-0.6; o.scales.y.max=0.7; o.scales.y.title={display:true,text:'correlación'}; o.scales.x.title={display:true,text:'meses de rezago (caudal antes)'};
+  o.plugins.legend.labels.filter=it=>it.text!=='_';
+  const n=per==='2019-2026'?80:54, L95=1.96/Math.sqrt(n);
+  mk('ch-rez-mes',{type:'line',data:{labels:M.map(r=>r.L),datasets:[
+    {label:'Cruda',data:M.map(r=>r.crudo),borderColor:css('--muted'),backgroundColor:css('--muted'),borderDash:[5,4],pointRadius:2},
+    {label:'Preblanqueada',data:M.map(r=>r.preblanq),borderColor:css('--mf'),backgroundColor:css('--mf'),borderWidth:2.5,pointRadius:3},
+    {label:'_',data:M.map(()=>L95),borderColor:css('--line'),borderDash:[2,3],pointRadius:0,borderWidth:1},
+    {label:'_',data:M.map(()=>-L95),borderColor:css('--line'),borderDash:[2,3],pointRadius:0,borderWidth:1}]},options:o});
+  const E=R.evento, o2=baseOpts(); o2.scales.y.title={display:true,text:'× nivel normal'}; o2.scales.x.title={display:true,text:'semana respecto al pico'};
+  mk('ch-rez-ev',{type:'bar',data:{labels:E.semanas.map(s=>s.replace('s','')),datasets:[
+    {label:'Tras creciente',data:E.evento,backgroundColor:css('--mf')},{label:'Fechas sin creciente',data:E.control,backgroundColor:css('--muted')+'99'}]},options:o2});
+  document.getElementById('rez-tabla').innerHTML='<thead><tr><th>Caudal diario Sitio Presa (m³/s)</th><th>Días</th><th>Mecanizado operó</th><th>Parado por material o condiciones del río</th><th>Flotante por día vs normal (semanas con ese caudal máximo)</th></tr></thead><tbody>'+
+    R.por_caudal.map(r=>`<tr><td>${r.clase}</td><td class="num">${nf(r.dias)}</td><td class="num">${nf(r.opera_mec*100)} %</td><td class="num">${nf(r.sin_material*100)} %</td><td class="num">${nf(r.mf_rel,2)}×</td></tr>`).join('')+'</tbody>';
+  const bt=R.bt_lag, V=R.viaje;
+  document.getElementById('rez-read').innerHTML=`<p><b>Horas (viaje del agua).</b> La Pintada → Olaya ${V['CaudalPintada->CaudalOlaya'].horas} h y Olaya → Sitio Presa ${V['CaudalOlaya->CaudalSitioPresa'].horas} h (cambios horarios); La Virginia, La Pintada y Bolombolo responden el mismo día en Olaya. El caudal llega en horas, pero en la extracción no aparece a esa escala.</p>
+   <p><b>Días y semanas.</b> Con preblanqueo, la correlación diaria y semanal entre caudal y material flotante queda en ±0,1–0,2: no hay un rezago lineal útil. Lo que sí aparece es un umbral: por encima de ~2.300 m³/s el mecanizado opera el ${nf(R.por_caudal[4].opera_mec*100)} % de los días (${nf(R.por_caudal[0].opera_mec*100)} % con menos de 1.000 m³/s) y el flotante por día cae a ~${nf(R.por_caudal[4].mf_rel*100)} % de lo normal durante 2–3 semanas. Después vuelve a lo normal, sin volumen extra neto: la suma de las 8 semanas siguientes queda en la mediana +${nf(E.extra_8sem_mediana)} m³ sobre lo normal.</p>
+   <p><b>Meses.</b> La anomalía de caudal se relaciona con el material flotante 5 a 8 meses después (cruda ρ 0,37–0,54; preblanqueada 0,16–0,27, en el límite). Coincide con lo anual: 2021–2022 muy húmedos (La Niña) y 2023 récord de flotante (128.403 m³); 2024 seco y 2024–2025 bajos. Como término del pronóstico baja el error total ${nf((1-bt.rmse/bt.rmse_base)*100,1)} %, pero en 2024 queda por debajo de la mediana histórica, así que se muestra como contexto y no entra al modelo.</p>
+   <p class="note">Tras ~30 pruebas, los valores p son orientativos. Una revisión anterior reportó «2× en la segunda semana»: medido contra las 4 semanas previas, que ya venían deprimidas por el caudal alto; contra el nivel normal la segunda semana es 1,1×.</p>`;
 }
 
 /* ---------- pronóstico real de HydroForecast vs observado (sombra) ---------- */
@@ -845,14 +871,14 @@ function show(){
 function renderView(v){
   if(v==='pronostico')renderForecast();else if(v==='historico')renderHist();else if(v==='relacion')renderRel();
   if(v==='relacion'){const n=document.getElementById('rel-note');n.hidden=!S.src._xlsxName||S.src._same;n.textContent=`Análisis de crecientes y correlaciones calculados con el archivo base (hasta ${fmtD(S.T[ORIGLAST])}). El histórico, la calidad y el pronóstico sí usan el archivo cargado.`}
-  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel();renderHFSkill()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();else if(v==='operacion')renderOps();
+  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel();renderHFSkill();renderRezagos()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();else if(v==='operacion')renderOps();
   else if(v==='actualizar')renderUpdate();else if(v==='requisitos')renderReq();
 }
 function seg(id,cb){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   [...e.currentTarget.querySelectorAll('button')].forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));cb()})}
 function refreshAll(){renderLive();FC=forecast('mean');show()}
 function adoptParsed(r,name,repo){
-  r.src.forecast_snapshot=S.src.forecast_snapshot;r.src.esfuerzo=S.src.esfuerzo;r.src.audit=S.src.audit;
+  r.src.forecast_snapshot=S.src.forecast_snapshot;r.src.esfuerzo=S.src.esfuerzo;r.src.audit=S.src.audit;r.src.rezagos=S.src.rezagos;
   const D0=S.src.data;['olaya','pintada','sitiopresa','nivel','olaya_max'].forEach(k=>{r.src.data[k]=D0[k].slice();while(r.src.data[k].length<r.src.data.n)r.src.data[k].push(null)});
   r.src._xlsxName=name;r.src._repo=!!repo;S=build(r.src);refreshAll();
 }
@@ -895,9 +921,9 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=88ebaaed2a',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=d22d4c20b1',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});
 }
-fetch('datos/app/base.json?v=0ac5518735',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
+fetch('datos/app/base.json?v=46d82f12bf',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();

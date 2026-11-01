@@ -1,0 +1,7 @@
+import pandas as pd, numpy as np, json, warnings; warnings.filterwarnings('ignore')
+exec(open('/home/claude/work/prep.py').read())
+X=pd.read_csv('/home/claude/work/q26/caudales_cuenca.csv',index_col=0,parse_dates=True)
+d=d.join(X[['virginia','bolombolo']],how='left')
+d['opd']=((d.sin_operacion==0)&(d.mec_off==0)).astype(int)
+d['act']=(d.mf_tot>0).astype(int)
+I0=pd.Timestamp('2021-10-01'); I1=pd.Timestamp('2026-10-10')

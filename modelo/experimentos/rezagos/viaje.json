@@ -1,0 +1,26 @@
+{
+ "CaudalPintada->CaudalOlaya": {
+  "horas": 11,
+  "r": 0.47
+ },
+ "CaudalOlaya->CaudalSitioPresa": {
+  "horas": 2,
+  "r": 0.98
+ },
+ "CaudalPintada->CaudalSitioPresa": {
+  "horas": 13,
+  "r": 0.46
+ },
+ "virginia->olaya (d\u00edas)": {
+  "dias": 0,
+  "r": 0.64
+ },
+ "pintada_ideam->olaya (d\u00edas)": {
+  "dias": 0,
+  "r": 0.78
+ },
+ "bolombolo->olaya (d\u00edas)": {
+  "dias": 0,
+  "r": 0.83
+ }
+}
