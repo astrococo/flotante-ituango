@@ -6,5 +6,8 @@ G = json.load(open(f"{SER}/grilla.json")); SH = tuple(G["shape"]); TR = Affine(*
 FREQ = np.load(f"{SER}/zona_agua.npy")
 r0, c0 = G["barrera_px"]; yy, xx = np.mgrid[0:SH[0], 0:SH[1]]
 DENTRO = np.hypot((yy - r0) * 10, (xx - c0) * 10) <= 2500
-Z = (FREQ >= 0.5) & DENTRO; SUR = yy > r0
+Z = (FREQ >= 0.5) & DENTRO
+if "barrera_linea_px" in G:
+    (lr1, lc1), (lr2, lc2) = G["barrera_linea_px"]; SUR = yy > lr1 + (xx - lc1) * (lr2 - lr1) / (lc2 - lc1)
+else: SUR = yy > r0
 LADOS = (("total", np.ones(SH, bool)), ("arriba", SUR), ("abajo", ~SUR))

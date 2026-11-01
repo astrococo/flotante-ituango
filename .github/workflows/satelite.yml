@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: "explorar | series | margenes | corredor"
+        description: "explorar | series | margenes | corredor | s1ml"
         required: true
         default: "explorar"
 
@@ -41,7 +41,7 @@ jobs:
           python -u ${{ github.event.inputs.modo || 'series' }}.py 2>&1 | tee datos/satelite/registro_${{ github.event.inputs.modo || 'series' }}.txt
           cd ..
           [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
-          if [ "${{ github.event.inputs.modo || 'series' }}" = "series" ]; then (cd satelite && python -u landsat.py >> datos/satelite/registro_series.txt 2>&1; python -u s1.py >> datos/satelite/registro_series.txt 2>&1; python -u margenes.py >> datos/satelite/registro_series.txt 2>&1; cd .. ; cp -r satelite/datos/* datos/ || true); python satelite/publicar.py; fi
+          if [ "${{ github.event.inputs.modo || 'series' }}" = "series" ]; then (cd satelite && python -u landsat.py >> datos/satelite/registro_series.txt 2>&1; python -u s1.py >> datos/satelite/registro_series.txt 2>&1; python -u margenes.py >> datos/satelite/registro_series.txt 2>&1; python -u s1ml.py >> datos/satelite/registro_series.txt 2>&1; cd .. ; cp -r satelite/datos/* datos/ || true); python satelite/publicar.py; fi
           true
       - name: Guardar resultados
         if: always()

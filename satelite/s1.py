@@ -12,7 +12,10 @@ G = json.load(open(f"{SER}/grilla.json")); SH = tuple(G["shape"]); TR = Affine(*
 freq = np.load(f"{SER}/zona_agua.npy")
 r0, c0 = G["barrera_px"]; yy, xx = np.mgrid[0:SH[0], 0:SH[1]]
 dentro = np.hypot((yy - r0) * 10, (xx - c0) * 10) <= 2500
-Z = (freq >= 0.5) & dentro; SUR = yy > r0
+Z = (freq >= 0.5) & dentro
+if "barrera_linea_px" in G:
+    (lr1, lc1), (lr2, lc2) = G["barrera_linea_px"]; SUR = yy > lr1 + (xx - lc1) * (lr2 - lr1) / (lc2 - lc1)
+else: SUR = yy > r0
 lat, lon = BARRERA
 items = list(catalogo().search(collections=["sentinel-1-rtc"], intersects={"type": "Point", "coordinates": [lon, lat]},
                                datetime="2019-01-01/2026-10-31").items())

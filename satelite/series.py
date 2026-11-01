@@ -23,7 +23,10 @@ from rasterio.transform import rowcol
 from pyproj import Transformer
 X, Y = Transformer.from_crs(4326, crs, always_xy=True).transform(lon, lat); r0, c0 = rowcol(tr10, X, Y)
 yy, xx = np.mgrid[0:SH[0], 0:SH[1]]; dist = np.hypot((yy - r0) * 10, (xx - c0) * 10); dentro = dist <= 2500
-sur = yy > r0                                   # el flujo va de sur a norte: aguas arriba = sur (filas mayores)
+_tf = Transformer.from_crs(4326, crs, always_xy=True)
+(lr1, lc1), (lr2, lc2) = [rowcol(tr10, *_tf.transform(lo, la)) for la, lo in BARRERA_LINEA]
+fila_linea = lr1 + (xx - lc1) * (lr2 - lr1) / (lc2 - lc1)
+sur = yy > fila_linea                            # aguas arriba = sur de la línea de la barrera (el flujo va de sur a norte)
 L4, L8, L11 = 665.0, 833.0, 1614.0
 cubo = []                                        # (fecha, id, valid, ndvi, fdi, mndwi) en int16
 for k, it in enumerate(items):
@@ -50,13 +53,16 @@ for k, it in enumerate(items):
     except Exception as e:
         print("error", it.id, e, flush=True)
 print("escenas usadas:", len(cubo), flush=True)
+# máscaras por escena (válido y vegetación NDVI ≥ 0,30) para entrenar el radar y para el visor
+np.savez_compressed(f"{OUT}/mascaras.npz", fechas=np.array([c[0] for c in cubo]),
+    val=np.array([np.packbits(c[2] != -32768) for c in cubo]), veg=np.array([np.packbits((c[2] != -32768) & (c[2] >= 3000)) for c in cubo]), shape=np.array(SH))
 # zona de agua: frecuencia de MNDWI>0 entre observaciones válidas
 nv = np.zeros(SH, "int32"); nw = np.zeros(SH, "int32")
 for _, _, nd, fd, mw in cubo:
     v = mw != -32768; nv += v; nw += v & (mw > 0)
 freq = np.where(nv > 0, nw / np.maximum(nv, 1), 0).astype("float32")
 np.save(f"{OUT}/zona_agua.npy", freq); np.save(f"{OUT}/n_obs.npy", nv)
-json.dump(dict(bbox=bbox, shape=list(SH), transform=list(tr10)[:6], crs=str(crs), barrera_px=[int(r0), int(c0)]), open(f"{OUT}/grilla.json", "w"))
+json.dump(dict(bbox=bbox, shape=list(SH), transform=list(tr10)[:6], crs=str(crs), barrera_px=[int(r0), int(c0)], barrera_linea_px=[[int(lr1), int(lc1)], [int(lr2), int(lc2)]]), open(f"{OUT}/grilla.json", "w"))
 ZONAS = {f"z{int(t*100)}": (freq >= t) & dentro for t in (0.10, 0.20, 0.50)}
 NB = np.linspace(-0.5, 1.0, 61); FB = np.linspace(-0.10, 0.20, 61)
 rows = []; fveg = {}

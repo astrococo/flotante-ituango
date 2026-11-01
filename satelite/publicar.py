@@ -1,7 +1,9 @@
 """Resume la serie satelital para la app: datos/satelite/app/serie.json y mapas PNG de frecuencia anual de vegetación flotante.
 Criterios: núcleo de la zona de agua (agua en ≥50 % de las escenas despejadas, 2,5 km alrededor de la barrera), NDVI ≥ 0,30,
 escenas con ≥70 % del núcleo despejado, una escena por fecha."""
-import os, glob, json, numpy as np, pandas as pd
+import os, glob, json, sys, numpy as np, pandas as pd
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from comun_const import BARRERA as BARRERA_PUNTO, BARRERA_LINEA, BARRERA
 from PIL import Image
 R = os.path.dirname(os.path.abspath(__file__)) + "/.."
 S = f"{R}/datos/satelite/series"; O = f"{R}/datos/satelite/app"; os.makedirs(O, exist_ok=True)
@@ -26,7 +28,12 @@ for f in sorted(glob.glob(f"{S}/frec_veg_*.npy")):
     col = np.array([0.06, 0.73, 0.51])                           # verde (macrófitas)
     rgb = rgb * (1 - a) + col * a
     img = (np.clip(rgb, 0, 1) * 255).astype("uint8")
-    img[r0 - 9:r0 + 10, c0 - 1:c0 + 2] = [239, 68, 68]; img[r0 - 1:r0 + 2, c0 - 9:c0 + 10] = [239, 68, 68]
+    if "barrera_linea_px" in G:
+        (a1, b1), (a2, b2) = G["barrera_linea_px"]
+        for t_ in np.linspace(0, 1, 60):
+            rr, cc = int(round(a1 + (a2 - a1) * t_)), int(round(b1 + (b2 - b1) * t_)); img[rr - 1:rr + 2, cc - 1:cc + 2] = [239, 68, 68]
+    else:
+        img[r0 - 9:r0 + 10, c0 - 1:c0 + 2] = [239, 68, 68]; img[r0 - 1:r0 + 2, c0 - 9:c0 + 10] = [239, 68, 68]
     Image.fromarray(img).save(f"{O}/frecuencia_{y}.png", optimize=True); mapas.append(y)
 # vista previa de la escena despejada más reciente
 Image.open(f"{S}/ql_{base_d}.jpg").save(f"{O}/ultima_escena.jpg", quality=85)
@@ -64,7 +71,40 @@ for f_, t_, s_ in (("escenas_s2.csv", 30, "S2"), ("escenas_landsat.csv", 40, "L"
     marg += [dict(f=d.strftime("%Y-%m-%d"), s=s_, ad=round(a1, 2), ai=round(a2, 2), bd=round(b1, 2), bi=round(b2, 2))
              for d, a1, a2, b1, b2 in zip(M.fecha, M.arriba_der, M.arriba_izq, M.abajo_der, M.abajo_izq)]
 marg = sorted(marg, key=lambda r: r["f"])
-json.dump(dict(margen=marg, s1=s1, s1_validacion=dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43), landsat=lsat, landsat_validacion=dict(n=31, rho=0.82, sesgo_ha=-0.6, mae_ha=9.3, umbral="NDVI ≥ 0,40"), generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], area_ha=area,
+# radar calibrado píxel a píxel (s1ml.py): se usa si en la validación por años supera al umbral fijo
+s1val = dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43)
+MLP = f"{R}/datos/satelite/s1/escenas_s1ml.csv"; MLV = f"{R}/datos/satelite/s1/validacion_s1ml.json"
+if os.path.exists(MLP) and os.path.exists(MLV):
+    vv_ = json.load(open(MLV))
+    if vv_["total"]["rho_ml"] > vv_["total"]["rho_umbral"]:
+        Q = pd.read_csv(MLP); usa_a = vv_.get("arriba", {}).get("rho_ml", 0) >= 0.6
+        s1 = [dict(f=r.fecha, t=round(r.t, 2), b=round(r.b, 2), **({"a": round(r.a, 2)} if usa_a else {})) for r in Q.itertuples()]
+        s1val = dict(n=vv_["total"]["n"], rho=vv_["total"]["rho_ml"], sesgo_ha=vv_["total"]["sesgo_ml"], mae_ha=vv_["total"]["mae_ml"], umbral="clasificador VV/VH + textura (entrenado con Sentinel-2)",
+                     rho_abajo=vv_["abajo"]["rho_ml"], rho_arriba=vv_["arriba"]["rho_ml"], rho_umbral=vv_["total"]["rho_umbral"], mae_umbral=vv_["total"]["mae_umbral"], usa_arriba=usa_a)
+# visor interactivo: límites geográficos de la grilla, barrera, máscaras de vegetación por fecha y vistas de radar
+from pyproj import Transformer
+VI = f"{R}/datos/satelite/visor"; os.makedirs(VI, exist_ok=True)
+tf = Transformer.from_crs(G["crs"], 4326, always_xy=True); a_, b_, x0, c_, d_, y0 = G["transform"]; H_, W_ = G["shape"]
+lo0, la0 = tf.transform(x0, y0 + d_ * H_); lo1, la1 = tf.transform(x0 + a_ * W_, y0)
+vis = dict(bounds=[[la0, lo0], [la1, lo1]], punto=list(BARRERA_PUNTO), linea=[list(p) for p in BARRERA_LINEA], s2=[], s1=[])
+MP = f"{S}/mascaras.npz"
+if os.path.exists(MP):
+    Mk = np.load(MP); un = lambda q: np.unpackbits(q)[:H_ * W_].reshape(H_, W_).astype(bool)
+    Zz = np.load(f"{S}/zona_agua.npy") >= 0.5
+    yy_, xx_ = np.mgrid[0:H_, 0:W_]; Zz &= np.hypot((yy_ - r0) * 10, (xx_ - c0) * 10) <= 2500
+    ed = Zz & ~np.roll(Zz, 1, 0) | Zz & ~np.roll(Zz, 1, 1) | Zz & ~np.roll(Zz, -1, 0) | Zz & ~np.roll(Zz, -1, 1)
+    zon = np.zeros((H_, W_, 4), "uint8"); zon[ed] = [56, 189, 248, 230]; Image.fromarray(zon).save(f"{VI}/zona.png", optimize=True)
+    ok = set(C.fecha.dt.strftime("%Y-%m-%d"))
+    for f_, v_, g_ in zip(Mk["fechas"], Mk["val"], Mk["veg"]):
+        f_ = str(f_)
+        if f_ not in ok: continue
+        V_, G_ = un(v_), un(g_); im = np.zeros((H_, W_, 4), "uint8")
+        im[G_ & Zz] = [16, 185, 129, 210]; im[G_ & ~Zz] = [16, 185, 129, 70]; im[~V_ & Zz] = [255, 255, 255, 90]
+        Image.fromarray(im).save(f"{VI}/veg_{f_}.png", optimize=True)
+        vis["s2"].append(dict(f=f_, ql=os.path.exists(f"{S}/ql_{f_}.jpg")))
+vis["s1"] = sorted(os.path.basename(f)[3:13] for f in glob.glob(f"{VI}/s1_*.jpg"))
+json.dump(vis, open(f"{VI}/visor.json", "w"), separators=(",", ":"))
+json.dump(dict(margen=marg, s1=s1, s1_validacion=s1val, landsat=lsat, landsat_validacion=dict(n=31, rho=0.82, sesgo_ha=-0.6, mae_ha=9.3, umbral="NDVI ≥ 0,40"), generado=pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M"), barrera=[6.900561, -75.8353999], barrera_linea=[list(p) for p in BARRERA_LINEA], area_ha=area,
                n_escenas=int(len(E)), n_utiles=int(len(C)), ultima_vista=base_d, mapas=mapas, serie=ser, todas=todas,
                metodo=dict(sensor="Sentinel-2 L2A (10 m), Microsoft Planetary Computer", nubes="SCL: válidos 4, 5, 6, 7",
                            agua="MNDWI > 0 en ≥ 50 % de las escenas despejadas, radio 2,5 km", vegetacion="NDVI ≥ 0,30", minimo_despejado=0.70)),

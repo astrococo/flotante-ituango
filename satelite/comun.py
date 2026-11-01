@@ -3,7 +3,9 @@ Datos: Sentinel-2 L2A (Microsoft Planetary Computer, colección sentinel-2-l2a).
 import numpy as np, rasterio, planetary_computer, pystac_client
 from rasterio.warp import transform_bounds
 from rasterio.windows import from_bounds
-BARRERA = (6.900561, -75.8353999)            # lat, lon (dato del área)
+BARRERA = (6.900561, -75.8353999)            # lat, lon (dato del área; queda en la orilla occidental)
+# Barrera identificada en Sentinel-2: borde persistente de la vegetación flotante a la salida del estrecho (2022–2023)
+BARRERA_LINEA = [(6.902171, -75.834965), (6.901994, -75.832792)]   # (lat, lon) orilla occidental → oriental
 STAC = "https://planetarycomputer.microsoft.com/api/stac/v1"
 # SCL válidos: 4 vegetación, 5 suelo, 6 agua, 7 sin clasificar (baja prob. de nube), 2 sombra oscura de terreno, 11 nieve (no aplica)
 SCL_OK = {2, 4, 5, 6, 7}
