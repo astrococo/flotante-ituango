@@ -34,17 +34,19 @@ Plataforma web para analizar y pronosticar la extracción de **material flotante
 - Rachas de 7 o más días sin extracción ("sin operación") y de 10 o más sin mecanizado ("mecanizado detenido") se excluyen solo como objetivo al ajustar el modelo.
 - Sitio Presa faltante se estima como 1,049·Olaya + 30 (r = 0,998).
 
-## Modelo (v2.1)
+## Modelo (v2.2)
 
 ```
-a(h)  = k · a1 · exp(−(h−1)/τ)
-f(h)  = [a(h)·L8 + (1−a(h))·LT] · clip(√exp(b0 + Σ βl·x(h−l)), 0,7, 1,5)
+Macrófitas:        a(h) = k · a1 · exp(−(h−1)/τ)
+                   f(h) = [a(h)·L8 + (1−a(h))·LT] · clip(√exp(b0 + Σ βl·x(h−l)), 0,7, 1,5)
+Material flotante: EW   = media exponencial de semanas con operación (vida media 6 semanas)
+                   f(h) = ½·[a_h·EW + (1−a_h)·LT] + ½·LT        (sin caudal; q50 = 1)
 P50   = (f+50)·q50(h) − 50          E = (f+50)·r̄(h) − 50
 ```
 
 Valor esperado con paros = E × (media de todas las semanas / media de semanas con operación, últimas 104 semanas).
 
-Se comparó contra modelos solo de extracción y modelos con caudal (ver [AUDITORIA.md](AUDITORIA.md)): la base son los registros de extracción y el caudal entra como ajuste acotado; mejora de forma significativa las macrófitas y no cambia de forma medible el material flotante. L8 = mediana de las últimas 8 semanas con operación; LT = mediana desde jul-2020; x = exceso semanal de caudal Sitio Presa sobre el umbral; k = peso de persistencia elegido con el error de las últimas 52 semanas. Parámetros en [`modelo/params_v21.json`](modelo/params_v21.json); implementación de referencia en Python en [`modelo/modelo_flotante.py`](modelo/modelo_flotante.py), que incluye un router opcional para FastAPI (`/api/flotante/pronostico`) para integrarlo en el backend de HydroForecast.
+Se comparó contra modelos solo de extracción y modelos con caudal (ver [AUDITORIA.md](AUDITORIA.md)): la base son los registros de extracción y el caudal entra como ajuste acotado; mejora de forma significativa las macrófitas; en material flotante aumentó el error con las fechas corregidas y se muestra solo como aviso de creciente (v2.2). L8 = mediana de las últimas 8 semanas con operación; LT = mediana desde jul-2020; x = exceso semanal de caudal Sitio Presa sobre el umbral; k = peso de persistencia elegido con el error de las últimas 52 semanas. Parámetros en [`modelo/params_v21.json`](modelo/params_v21.json); implementación de referencia en Python en [`modelo/modelo_flotante.py`](modelo/modelo_flotante.py), que incluye un router opcional para FastAPI (`/api/flotante/pronostico`) para integrarlo en el backend de HydroForecast.
 
 ## Actualizar
 

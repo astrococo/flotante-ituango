@@ -1,6 +1,6 @@
 # Auditoría · Material Flotante Ituango
 
-Fecha: 2026-11-01 · Modelo v2.1 · Generado desde la pestaña Auditoría de la aplicación.
+Fecha: 2026-11-01 · Modelo v2.2 · Generado desde la pestaña Auditoría de la aplicación.
 
 ## Integridad de los datos
 
@@ -24,7 +24,7 @@ Fecha: 2026-11-01 · Modelo v2.1 · Generado desde la pestaña Auditoría de la 
 | Estado | Punto | Detalle |
 |---|---|---|
 | ✅ Correcto | Cobertura de caudal | Olaya, La Pintada y nivel con datos el 100 % de los días del registro. |
-| ⚠️ Atención | Sitio Presa incompleto | Falta en 881 días (33 %); se estima como 1,049·Olaya + 30 (r = 0,998, error medio 2,4 %). Error aceptable para un exceso semanal. |
+| ✅ Correcto | Sitio Presa: huecos explicados y estimación validada | La estación empieza el 1-oct-2021: HydroForecast no tiene registros antes (consultado el 1-nov-2026 por su API). De los 881 días sin dato, 821 son anteriores a esa fecha y 60 son fallas del sensor (dic-2022–ene-2023 y abr–jul-2026), que tampoco están en HydroForecast. XM publica aportes del río Ituango solo desde 2022 y son ~12 % menores que Olaya, así que no sirven de reemplazo. Los huecos se estiman como 1,049·Olaya + 30. Validación dejando fuera un año a la vez (2021–2026): error medio 2,8 % diario y 2,5 % semanal (1,4–3,9 % según el año); agregar el Olaya del día anterior solo lo baja a 2,4 %. Desde la v2.2 el material flotante no usa caudal; en macrófitas este error es mucho menor que el del pronóstico. |
 | ✅ Correcto | Caudal en vivo | La API pública de HydroForecast (Hugging Face) responde con CORS abierto: la plataforma toma el pronóstico de 90 días y el caudal observado al abrirse, con respaldo embebido si no hay conexión. |
 | ⚠️ Atención | Afluentes y lluvia en HydroForecast | HydroForecast no mide caudal de los ríos San Andrés, Ituango ni Espíritu Santo. Tiene pluviómetros (la API guarda 14 días), Cauca aguas arriba en La Virginia y Bolombolo (30 días) y lluvia pronosticada (WRF, GEFS, AIFS). Los totales anuales DHIME 2005–2025 cubren ~144 días/año y La Pintada y Olaya tienen valores idénticos (posible error de datos). Desde el 30-oct estas series se archivan a diario en el repositorio. |
 | ✅ Correcto | Lluvia histórica como variable exógena | Se probaron cuatro series de lluvia diaria 2019–2026 y ninguna mejoró el pronóstico. CHIRPS v2.0 completo (ClimateSERV, 2019–sep 2026), zona de la cola: flotante +23 (1–4 sem) y +22 m³/sem (5–13 sem), ambos significativos; macrófitas +15 y +24. IMERG (ClimateSERV, hasta may-2024): flotante +29 y +26; macrófitas +15 y +13. NASA POWER: flotante +4 a +13; macrófitas +17 a +41. Sumar lluvia al caudal no supera al caudal solo. El caudal de Sitio Presa ya integra la lluvia de la cuenca. |
@@ -34,14 +34,14 @@ Fecha: 2026-11-01 · Modelo v2.1 · Generado desde la pestaña Auditoría de la 
 
 | Estado | Punto | Detalle |
 |---|---|---|
-| ⚠️ Atención | Pérdida de desempeño del material flotante en 2024–2026 (v1) | Frente a la mediana histórica, la v1 fue 12 % mejor en 2022 y 7 % en 2023, pero 2 % peor en 2024, 7 % en 2025 y 12 % en 2026: las últimas 8 semanas pesaban demasiado cuando hay paros frecuentes. Corregida en buena parte con el peso adaptativo; 2026 sigue por debajo de la mediana histórica. |
-| ✅ Correcto | Peso adaptativo de la persistencia | El peso de las semanas recientes se elige cada semana entre 0; 0,5 y 1 según el error de las últimas 52 semanas con resultado conocido. Error medio absoluto del material flotante: 835 → 809 m³/sem. |
+| ✅ Correcto | Material flotante 2024–2026: corregido en la v2.2 | Con las fechas corregidas, la v1 queda 7 % peor que la mediana histórica en 2024, 2 % en 2025 y 6 % en 2026. Se probaron siete alternativas (ventana de 52 semanas, media exponencial, tasa por día activo, estacionalidad y combinaciones). La v2.2 usa la media exponencial de las semanas con operación (vida media 6 semanas), mezclada con la mediana histórica y encogida 50 % hacia ella, sin multiplicador de caudal. Supera a la mediana histórica todos los años: 22 % en 2022, 18 % en 2023, 0,5 % en 2024, 5,5 % en 2025 y 3 % en 2026. La ganancia de 2024–2026 es pequeña porque en esos años la extracción semanal varía sobre todo por esfuerzo (paros y descansos), no por la llegada de material; el plan semanal de descansos de EPM es lo que más puede bajar ese error. La forma se eligió mirando 2024–2026: tiene dos parámetros fijos, pero la cifra es levemente optimista. |
+| ✅ Correcto | Peso adaptativo de la persistencia | Macrófitas: el peso de las semanas recientes se elige cada semana entre 0; 0,5 y 1 según el error de las últimas 52 semanas con resultado conocido. En material flotante lo reemplaza la mezcla fija de la v2.2, que fue más estable año a año. |
 | ✅ Correcto | La base del modelo son los registros de extracción | En 4.908 pronósticos (2022–2026), combinar persistencia y nivel de largo plazo reduce el error frente a la mediana histórica en 60–90 m³/sem a 1–4 semanas (significativo). Suavizamiento exponencial, estacionalidad y aprendizaje automático no la superan. |
 | ✅ Correcto | Caudal en macrófitas | Reduce el error a 1–4 semanas en 38 m³/sem (−4 %, IC95 −74 a −5) incluso con caudal futuro desconocido: la ganancia viene del caudal pasado (lavado tras crecientes). |
-| ⚠️ Atención | Caudal en material flotante | Sin ganancia significativa (IC95 incluye 0). Se mantiene porque quitarlo sube el RMSE 1,5 % y hay respaldo físico (11 crecientes con 1,3–1,5× más extracción); se agrega un aviso de creciente como escenario. |
+| ✅ Correcto | Caudal en material flotante: aviso, no multiplicador | Con las fechas corregidas, aplicar el multiplicador de caudal al material flotante sube el error 2022–2026 de 1.096 a 1.169–1.232 m³/semana (según se aplique solo en crecientes o siempre). En la v2.2 se retira del valor central y la creciente (≥ 2.100 m³/s; 11 eventos con 1,3–1,5× más extracción en las 8 semanas siguientes) se mantiene como aviso. |
 | ⚠️ Atención | Aprendizaje automático con caudal | Un modelo flexible (gradient boosting) con caudal pasado o futuro fue 4–24 % peor que la mediana histórica: con ~300 semanas no hay datos suficientes para relaciones complejas. |
 | ⚠️ Atención | Valor del pronóstico de caudal a 5–13 semanas | La ganancia del caudal más allá de 4 semanas solo aparece con el caudal futuro real. Su valor práctico depende de la calidad del pronóstico de HydroForecast, que se medirá con el archivo diario que ahora guarda el repositorio. |
-| ✅ Correcto | Intervalos P10–P90 fuera de muestra | Calibrados con 2022–2023 y evaluados en 2024–2026: cubren 76 % (flotante) y 78 % (macrófitas), frente al 80 % nominal. |
+| ✅ Correcto | Intervalos P10–P90 fuera de muestra | Calibrados con 2022–2023 y evaluados en 2024–2026: cubren 76 % (flotante, v2.2) y 78 % (macrófitas), frente al 80 % nominal. |
 | ✅ Correcto | Paros en el valor esperado | El pronóstico se calibra con semanas de operación normal. El valor esperado con paros (factor de las últimas 104 semanas: 0,78 flotante, 0,84 macrófitas) reduce el sesgo de 8 semanas de +3.200 m³ a +350–600 m³. |
 | ⚠️ Atención | Fuga de información menor | Umbrales de caudal, factores de día de la semana y forma de a(h) se eligieron con todo el periodo; las métricas son levemente optimistas. |
 | ✅ Correcto | Cobertura satelital con tres sensores | Sentinel-2 (106 escenas), Landsat 8/9 (103; frente a Sentinel-2 ρ = 0,82, sesgo −0,6 ha) y radar Sentinel-1 corregido por terreno (351; con la línea de la barrera ρ = 0,80 en total y 0,64 aguas arriba). Cubren los 94 meses desde 2019. Ni la serie de Sentinel-2 ni la combinada mejoran el pronóstico de extracción (−2 a +4 m³/sem, no significativo). |
@@ -52,6 +52,7 @@ Fecha: 2026-11-01 · Modelo v2.1 · Generado desde la pestaña Auditoría de la 
 | ✅ Correcto | Radar Sentinel-1 con la barrera corregida | 351 escenas hasta el 30-oct-2026. Frente a Sentinel-2 en 70 fechas (±2 días): total ρ 0,80 y error 10 ha; aguas abajo 0,76; aguas arriba 0,64 (antes 0,43 con el punto sobre tierra), por eso ahora se muestra por lado. Un clasificador de VV, VH y textura entrenado con Sentinel-2 fue peor dejando un año fuera (ρ 0,58). |
 | ✅ Correcto | Alternativas de pronóstico probadas | Con las fechas corregidas: pronosticar el total directamente o como tasa por día operado × días esperados no mejora (−4 a −22 m³/sem, IC95 incluye 0). Conocer el descanso programado: −15 % (semanas 1–4) y −16 % (5–13). |
 | ✅ Correcto | Corredor del río: 30 km aguas arriba | Sentinel-2 a 20 m en 8 tramos, de 30 km aguas arriba a 15 km aguas abajo de la barrera (mosaicos 18NTN, 18NUN y 18NVN; 587 fechas, 310 con algún tramo despejado). Se actualiza a diario con las imágenes nuevas. Ningún tramo mejora el pronóstico al usarlo (+9 a +179 m³/sem); se muestra como seguimiento. |
+| ⚠️ Atención | Volumen estimado con el satélite | Inventario = área con vegetación flotante × biomasa fresca (3,8 / 11,8 / 40,8 kg/m², mínimo, mediana y máximo mensual de jacinto de agua, PeerJ 2023) ÷ 160 kg/m³ (densidad de la hoja de viajes): 238 / 738 / 2.550 m³ por hectárea. Generado por mes = extracción + cambio del inventario. No está calibrado con datos de Ituango: en los tres paros con imágenes el área no creció de forma consistente (un caso implica 0,55 m de espesor equivalente, por encima del máximo de la literatura). Es un orden de magnitud; para calibrarlo hay que pesar material en cuadros de 1 m² frente al puerto. |
 
 ## Plataforma
 
@@ -94,12 +95,13 @@ Error medio absoluto (m³/semana) en 4.908 pronósticos con origen móvil 2022�
 
 ## Recomendaciones
 
-- Reemplazar datos/DatosExtraccion.xlsx en el repositorio cada semana (ideal: cada día); la página lo toma al abrir.
-- Registrar el esfuerzo diario (equipos, horas, cuadrillas) y la causa de los días sin extracción: es la mayor fuente de error.
-- Confirmar el valor de 448 m³ del 11-mar-2020 (flotante manual) y los de 20–22-ene-2022 (macrófitas manual): podrían ser acumulados de varios días, como el de dic-2019.
-- Recalibrar el modelo cada trimestre con el script de Python del repositorio.
-- En 3 meses, evaluar con el archivo diario el aporte del pronóstico de caudal (5–13 semanas), de la lluvia de los pluviómetros y del Cauca aguas arriba.
-- Para medir madera y residuos (no visibles con Sentinel-2, Landsat ni radar en agua turbia), considerar imágenes de mayor resolución (PlanetScope 3 m) o vuelos con dron sobre la barrera.
-- Registrar la causa de cada día sin extracción con una lista fija (descanso, labores operativas, sin material en el puerto, caudal, externa) y compartir el plan semanal de descansos de EPM: con él el error del pronóstico total baja 15–16 %.
-- Medir el volumen real de algunas cargas y separar la composición por viaje: hoy el volumen y la división flotante/macrófitas son estimaciones.
-- Armar el informe integrado por fecha (BUSCARV/XLOOKUP sobre la fecha) y no por posición de fila: así se originaron los desfases de 1 a 3 días.
+1. Reemplazar datos/DatosExtraccion.xlsx en el repositorio cada semana (ideal: cada día); la página lo toma al abrir.
+2. Registrar el esfuerzo diario (equipos, horas, cuadrillas) y la causa de los días sin extracción: es la mayor fuente de error.
+3. Confirmar el valor de 448 m³ del 11-mar-2020 (flotante manual) y los de 20–22-ene-2022 (macrófitas manual): podrían ser acumulados de varios días, como el de dic-2019.
+4. Recalibrar el modelo cada trimestre con el script de Python del repositorio.
+5. En 3 meses, evaluar con el archivo diario el aporte del pronóstico de caudal (5–13 semanas), de la lluvia de los pluviómetros y del Cauca aguas arriba.
+6. Para medir madera y residuos (no visibles con Sentinel-2, Landsat ni radar en agua turbia), considerar imágenes de mayor resolución (PlanetScope 3 m) o vuelos con dron sobre la barrera.
+7. Registrar la causa de cada día sin extracción con una lista fija (descanso, labores operativas, sin material en el puerto, caudal, externa) y compartir el plan semanal de descansos de EPM: con él el error del pronóstico total baja 15–16 %.
+8. Medir el volumen real de algunas cargas y separar la composición por viaje: hoy el volumen y la división flotante/macrófitas son estimaciones.
+9. Armar el informe integrado por fecha (BUSCARV/XLOOKUP sobre la fecha) y no por posición de fila: así se originaron los desfases de 1 a 3 días.
+10. Para calibrar el volumen satelital: pesar y medir el volumen suelto del material de 3–5 cuadros de 1 m² en la mancha frente al puerto, en fechas con imagen despejada.

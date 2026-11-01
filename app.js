@@ -269,18 +269,21 @@ function forecast(scen){
     const W=weekly(arr,S.op,S.iS,S.last).filter(w=>w.n===7&&w.end<=lastT);
     const Wo=W.filter(w=>w.op===1);
     const L8=median(Wo.slice(-8).map(w=>w.sum));
+    // v2.2 (flotante): nivel por media exponencial de semanas con operación completa (vida media p.ewma_hl semanas, igual que pandas ewm adjust=True)
+    let EW=null; if(p.ewma_hl){const g=Math.pow(0.5,1/p.ewma_hl);let num=0,den=0,wt=1;for(let i=Wo.length-1;i>=0;i--){num+=wt*Wo[i].sum;den+=wt;wt*=g}EW=den?num/den:null}
     const LT=median(Wo.filter(w=>w.end>=d0(p.lt_desde||'2020-07-01')).map(w=>w.sum));
     const xw=new Map(); for(const [t,v] of map){const e=t+(6-dowM(t))*DAY;xw.set(e,(xw.get(e)||0)+Math.max(v-p.qc,0)/1000)}
     const days=[];
     for(let t=lastT+DAY;t<=endT;t+=DAY){
       const h=Math.ceil((t-lastT)/DAY/7); const we=t+(6-dowM(t))*DAY;
       let lin=p.b0; for(let l=0;l<7;l++) lin+=p.beta[l]*(xw.get(we-l*7*DAY)||0);
-      const mult=Math.min(1.5,Math.max(0.7,Math.sqrt(Math.exp(lin))));
-      const ah=k*p.a1*Math.exp(-(h-1)/p.tau);
-      const fw=(ah*L8+(1-ah)*LT)*mult;
+      const mult=p.usa_caudal===false?1:Math.min(1.5,Math.max(0.7,Math.sqrt(Math.exp(lin))));
+      let fw;
+      if(EW!=null&&p.a_h){const a=p.a_h[Math.min(h,13)-1],sh=p.shrink??0;fw=((1-sh)*(a*EW+(1-a)*LT)+sh*LT)*mult}
+      else{const ah=k*p.a1*Math.exp(-(h-1)/p.tau);fw=(ah*L8+(1-ah)*LT)*mult}
       days.push({t,h,f:fw/7*p.dow[dowM(t)],mult,fw});
     }
-    res[y]={L8,LT,k,days};
+    res[y]={L8,LT,EW,k,days};
   }
   const nd=res.mf_tot.days.length;
   for(let i=0;i<nd;i++){const a=res.mf_tot.days[i],b=res.ma_tot.days[i];out.days.push({t:a.t,h:a.h,mf:a.f,ma:b.f,mmf:a.mult,mma:b.mult,q:map.get(a.t)})}
@@ -451,11 +454,16 @@ function renderModel(){
   const P=S.P;
   document.getElementById('formula').textContent=
 `Semana h (desde el último dato):
+Macrófitas
   a(h)   = k · a₁ · exp(−(h−1)/τ)
   nivel  = a(h) · L₈ + (1 − a(h)) · LT
   m      = clip( √exp(b₀ + Σₗ βₗ · x(semana−ℓ)) , 0,7 , 1,5 )
   f(h)   = nivel · m
-  P50    = (f + 50) · q₅₀(h) − 50      ← valor mostrado
+Material flotante (v2.2)
+  EW     = media exponencial de semanas con operación (vida media 6 sem.)
+  f(h)   = ½ · [a(h) · EW + (1 − a(h)) · LT] + ½ · LT    (sin caudal)
+Ambos
+  P50    = (f + 50) · q₅₀(h) − 50      ← valor mostrado (q₅₀ = 1 en flotante)
   E      = (f + 50) · r̄(h) − 50       ← valor esperado
   Pp     = (f + 50) · q_p(h) − 50,  p = 10, 25, 75, 90
   día    = semana / 7 · factor del día de la semana
@@ -474,13 +482,13 @@ Total = Flotante + Macrófitas`;
   mk('ch-skill',{type:'line',data:{labels:M.map(m=>'h='+m.h),datasets:[
     {label:'Mediana histórica',data:M.map(m=>m.clim),borderColor:css('--muted'),backgroundColor:css('--muted'),borderDash:[5,4],pointRadius:2},
     {label:'Persistencia (8 semanas)',data:M.map(m=>m.pers),borderColor:css('--warn'),backgroundColor:css('--warn'),pointRadius:2},
-    {label:'Modelo v2',data:M.map(m=>m.modelo),borderColor:css('--accent'),backgroundColor:css('--accent'),borderWidth:3,pointRadius:3}]},options:o});
+    {label:'Modelo '+(S.P.version||'v2').split(' ')[0],data:M.map(m=>m.modelo),borderColor:css('--accent'),backgroundColor:css('--accent'),borderWidth:3,pointRadius:3}]},options:o});
   document.getElementById('tbl-skill').innerHTML='<thead><tr><th>h</th><th>MAE</th><th>vs mediana</th><th>vs pers.</th><th>Cob. 80%</th></tr></thead><tbody>'+
    M.filter(m=>[1,2,4,8,13].includes(m.h)).map(m=>`<tr><td>${m.h} sem</td><td class="num">${nf(m.mae)}</td><td class="num">${nf(m.skill_clim*100,1)} %</td><td class="num">${nf(m.skill_pers*100,1)} %</td><td class="num">${nf(m.cobertura80*100)} %</td></tr>`).join('')+'</tbody>';
   const m1=P.mf_tot.metricas[0],a1=P.ma_tot.metricas[0], rmf=P.mf_tot.rmse_total||{}, rma=P.ma_tot.rmse_total||{};
   document.getElementById('model-read').innerHTML=`<h3>Cómo leer el desempeño</h3>
    <p>En el backtest se pronosticó cada semana entre 2022 y 2026 usando solo la información disponible en la fecha de origen. A una semana, el error absoluto medio es de ${nf(m1.mae)} m³ en material flotante (promedio observado ${nf(m1.media_obs)} m³/semana) y ${nf(a1.mae)} m³ en macrófitas (promedio ${nf(a1.media_obs)} m³/semana).</p>
-   <p>En todo el periodo, el RMSE semanal del material flotante es ${nf(rmf.v2)} m³ con el modelo v2, frente a ${nf(rmf.clim)} m³ de la mediana histórica y ${nf(rmf.pers)} m³ de repetir las últimas semanas. En macrófitas: ${nf(rma.v2)}, ${nf(rma.clim)} y ${nf(rma.pers)} m³. La ventaja se concentra en las primeras 4 semanas; más allá, el pronóstico converge al nivel de largo plazo.</p>
+   <p>En todo el periodo, el RMSE semanal del material flotante es ${nf(rmf.v2)} m³ con el modelo v${(S.P.version||'2').split(' ')[0]}, frente a ${nf(rmf.clim)} m³ de la mediana histórica y ${nf(rmf.pers)} m³ de repetir las últimas semanas. En macrófitas: ${nf(rma.v2)}, ${nf(rma.clim)} y ${nf(rma.pers)} m³. La ventaja se concentra en las primeras 4 semanas; más allá, el pronóstico converge al nivel de largo plazo.</p>
    <p>Un error semanal cercano al 40 % del volumen es esperable mientras el registro mezcle llegada de material con esfuerzo de extracción. Para planear volúmenes use el valor esperado acumulado a 4 u 8 semanas, que es más confiable que una semana aislada. El intervalo P10–P90 cubrió el ${nf(P.mf_tot.cobertura80_fuera_muestra*100)} % (flotante) y el ${nf(P.ma_tot.cobertura80_fuera_muestra*100)} % (macrófitas) de los casos de 2024–2026 calibrando solo con 2022–2023.</p>
    <p>Se probaron y descartaron un modelo conceptual de inventario, regresiones de caudal sin persistencia, niveles de largo plazo móviles (26 a 104 semanas) y una corrección de sesgo móvil: ninguno mejoró fuera de la muestra. Detalle en <a href="#auditoria" style="color:var(--accent)">Auditoría</a>.</p>`;
 }
@@ -576,7 +584,7 @@ function renderAudit(){
   const v=A.v1v2;
   document.getElementById('aud-score').innerHTML=[
     ['ok','Correctos',cnt('ok'),'puntos verificados sin observaciones'],['warn','Atención',cnt('warn'),'limitaciones conocidas y documentadas'],['bad','Críticos',cnt('bad')+(age>14?1:0),'requieren acción'],
-    ['info','Error v1 → v2 (flotante)',`${nf(v.mf_tot.rmse.v1)} → ${nf(v.mf_tot.rmse.v2)}`,'RMSE semanal 2022–2026, m³']
+    ['info','Error v1 → actual (flotante)',`${nf(v.mf_tot.rmse.v1)} → ${nf(v.mf_tot.rmse.v2)}`,'RMSE semanal 2022–2026, m³']
   ].map(([s,l,n,d])=>`<div class="st ${s} c3"><h2>${l}</h2><div class="big">${n}</div><div class="note">${d}</div></div>`).join('');
   const y=[...document.querySelectorAll('#aud-comp button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
   const yrs=Object.keys(v[y].anual);
@@ -584,7 +592,7 @@ function renderAudit(){
   o.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y,1)+' %';
   mk('ch-aud',{type:'bar',data:{labels:yrs,datasets:[
     {label:'v1 (anterior)',data:yrs.map(k=>v[y].anual[k].v1*100),backgroundColor:css('--muted')+'aa'},
-    {label:'v2 (actual)',data:yrs.map(k=>v[y].anual[k].v2*100),backgroundColor:css('--accent')}]},options:o});
+    {label:v.etiqueta_v2||'v2 (actual)',data:yrs.map(k=>v[y].anual[k].v2*100),backgroundColor:css('--accent')}]},options:o});
 }
 
 /* ---------- vista satélite ---------- */
@@ -632,7 +640,7 @@ async function renderSat(){
   document.getElementById('sat-ql').src='datos/satelite/app/ultima_escena.jpg';
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
   renderVisor(J);
-  renderCorredor();
+  renderCorredor(); renderVolumen(J,ALL);
   renderAlertas();renderAlertBanner('sat-alert');
   document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
@@ -752,6 +760,47 @@ async function renderCorredor(){
 }
 
 
+
+/* ---------- volumen estimado a partir del área satelital ---------- */
+// Biomasa fresca por m² de jacinto de agua (Eichhornia crassipes): mínimo 3,8, mediana 11,8 y máximo 40,8 kg/m² (PeerJ 2023, 12 meses, llanura del Brahmaputra).
+// Densidad aparente del proyecto: 160 kg/m³ (conversión de la hoja de viajes manual). m³/ha = kg/m² × 10.000 / 160.
+const VOLK={bajo:3.8*1e4/160,central:11.8*1e4/160,alto:40.8*1e4/160};
+async function renderVolumen(J,ALL){
+  const box=document.getElementById('vol-cards');if(!box)return;
+  try{if(!COR)COR=await fetchJSON('datos/satelite/corredor/serie.json',10000)}catch(e){}
+  const rng=ha=>`${nf(ha*VOLK.central)} <small>m³</small>`, rtxt=ha=>`${nf(ha*VOLK.bajo)}–${nf(ha*VOLK.alto)} m³`;
+  // ritmo de extracción de las últimas 8 semanas
+  let e8=0;for(let i=S.last-55;i<=S.last;i++)e8+=(S.mf[i]||0)+(S.ma[i]||0);const eDia=e8/56;
+  const last=ALL[ALL.length-1], cards=[];
+  cards.push(['info','Zona del puerto (núcleo de '+nf(J.area_ha.total)+' ha)',last.t,`${fmtD(last.T)} · ${last.src} · ${nf(last.t,1)} ha · rango ${rtxt(last.t)} · ≈ ${nf(last.t*VOLK.central/Math.max(eDia,1))} días de extracción al ritmo de las últimas 8 semanas (${nf(eDia)} m³/día)`]);
+  if(COR&&COR.serie){const up=COR.tramos.filter(t=>t.split('..').map(Number)[1]<=0);let ha=0,fs=[];
+    up.forEach(t=>{for(let i=COR.serie.length-1;i>=0;i--){const r=COR.serie[i];if(r[t]!=null){ha+=r[t];fs.push(r.f);break}}});
+    const f0=fs.sort()[0],f1=fs[fs.length-1];
+    cards.push(['info','Corredor 0–30 km aguas arriba',ha,`${nf(ha,1)} ha · última escena despejada de cada tramo (${fmtD(d0(f0))} a ${fmtD(d0(f1))}) · rango ${rtxt(ha)} · material en camino al puerto`]);}
+  box.innerHTML=cards.map(([s,t,ha,d])=>`<div class="st ${s} c6"><h2>${t}</h2><div class="big">${rng(ha)}</div><div class="note">${d}</div></div>`).join('');
+  // serie mensual: inventario de la zona del puerto frente a la extracción del mes
+  const mk_=t=>{const d=new Date(t);return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),1)};
+  const A=new Map();ALL.forEach(r=>{const k=mk_(r.T);const o=A.get(k)||{s:0,n:0};o.s+=r.t;o.n++;A.set(k,o)});
+  const E=new Map();for(let i=S.first;i<=S.last;i++){const k=mk_(S.T[i]);E.set(k,(E.get(k)||0)+(S.mf[i]||0)+(S.ma[i]||0))}
+  const partial=mk_(S.T[S.last]+DAY)===mk_(S.T[S.last])?mk_(S.T[S.last]):null; // mes con extracción incompleta
+  const ks=[...A.keys()].filter(k=>E.has(k)&&k!==partial&&k>=Date.UTC(2020,0,1)).sort((a,b)=>a-b);
+  const rows=ks.map(k=>({k,ha:A.get(k).s/A.get(k).n,n:A.get(k).n,e:E.get(k)}));
+  const o=baseOpts();o.scales.x={type:'linear',grid:{color:css('--line')},ticks:{callback:v=>{const d=new Date(v);return MES[d.getUTCMonth()]+' '+String(d.getUTCFullYear()).slice(2)},maxTicksLimit:10}};
+  o.scales.y.title={display:true,text:'m³'};o.plugins.legend.labels.filter=l=>l.text!=='_bajo';o.plugins.tooltip.filter=c=>c.dataset.label!=='_bajo';o.plugins.tooltip.callbacks.title=it=>{const d=new Date(it[0].parsed.x);return MES[d.getUTCMonth()]+' '+d.getUTCFullYear()};o.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y)+' m³';
+  mk('ch-vol',{type:'line',data:{datasets:[
+    {label:'Rango del inventario (bajo–alto)',data:rows.map(r=>({x:r.k,y:r.ha*VOLK.alto})),borderColor:'transparent',backgroundColor:css('--accent')+'22',pointRadius:0,fill:'+1'},
+    {label:'_bajo',data:rows.map(r=>({x:r.k,y:r.ha*VOLK.bajo})),borderColor:'transparent',pointRadius:0,fill:false},
+    {label:'Inventario estimado (central), promedio del mes',data:rows.map(r=>({x:r.k,y:r.ha*VOLK.central})),borderColor:css('--accent'),backgroundColor:css('--accent'),pointRadius:1.5,borderWidth:2},
+    {label:'Extracción del mes',data:rows.map(r=>({x:r.k,y:r.e})),borderColor:css('--mf'),backgroundColor:css('--mf'),pointRadius:1.5,borderWidth:2}]},options:o});
+  // generación = extracción + Δinventario (últimos 12 meses completos)
+  const T=[];for(let i=1;i<rows.length;i++){const a=rows[i-1],b=rows[i];const dh=b.ha-a.ha;T.push({k:b.k,e:b.e,dh,g:b.e+dh*VOLK.central,gl:b.e+dh*(dh>=0?VOLK.bajo:VOLK.alto),gh:b.e+dh*(dh>=0?VOLK.alto:VOLK.bajo),n:b.n})}
+  const T12=T.slice(-12);
+  document.getElementById('vol-tabla').innerHTML='<thead><tr><th>Mes</th><th>Extracción (m³)</th><th>Δ área (ha)</th><th>Generado, central (m³)</th><th>Rango (m³)</th><th>Escenas</th></tr></thead><tbody>'+
+    T12.map(r=>{const d=new Date(r.k);return `<tr><td>${MES[d.getUTCMonth()]} ${d.getUTCFullYear()}</td><td class="num">${nf(r.e)}</td><td class="num">${nf(r.dh,1)}</td><td class="num"><b>${nf(Math.max(0,r.g))}</b></td><td class="num">${nf(Math.max(0,r.gl))}–${nf(Math.max(0,r.gh))}</td><td class="num">${r.n}</td></tr>`}).join('')+
+    (T12.length?`<tr><td><b>12 meses</b></td><td class="num"><b>${nf(T12.reduce((s,r)=>s+r.e,0))}</b></td><td class="num">${nf(T12.reduce((s,r)=>s+r.dh,0),1)}</td><td class="num"><b>${nf(Math.max(0,T12.reduce((s,r)=>s+r.g,0)))}</b></td><td></td><td></td></tr>`:'')+'</tbody>';
+  document.getElementById('vol-nota').innerHTML=`Volumen = área con vegetación flotante × biomasa fresca por m² ÷ densidad aparente. Biomasa de jacinto de agua: 3,8 (bajo), 11,8 (central) y 40,8 kg/m² (alto), mínimo, mediana y máximo mensual medidos en un año completo (PeerJ, 2023); densidad 160 kg/m³, la misma de la hoja de viajes manual. Equivale a ${nf(VOLK.bajo)}, ${nf(VOLK.central)} y ${nf(VOLK.alto)} m³ por hectárea. <b>Es un orden de magnitud, no una medición:</b> no se ha medido la biomasa por m² en Ituango; con fechas de paro sin extracción el área no creció de forma consistente, así que el factor no se pudo calibrar con los datos propios. Solo cuenta vegetación verde: madera y residuos no se ven. Para cerrar la incertidumbre: pesar el material de 3–5 cuadros de 1 m² en la mancha frente al puerto y medir su volumen suelto.`;
+}
+
 /* ---------- alertas satelitales y material frente al puerto ---------- */
 let ALR=null;
 async function loadAlertas(){if(ALR)return ALR;try{ALR=await fetchJSON('datos/satelite/alertas.json',8000)}catch(e){ALR={activas:[],posibles_pasos_barrera:[]}}return ALR}
@@ -846,9 +895,9 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=0ee4be9358',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=acb16ab0d9',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
-fetch('datos/app/base.json?v=844de4c842',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
+fetch('datos/app/base.json?v=b5610e91d4',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();

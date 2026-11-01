@@ -61,7 +61,9 @@ def pronosticar(ext: pd.DataFrame, q_sitiopresa: pd.Series, params: dict) -> pd.
         P50   = (f + 50)·q50(h) − 50   (mediana calibrada en el backtest)
         E     = (f + 50)·r̄(h) − 50     (valor esperado; usar para volúmenes acumulados)
     L8 = mediana de las últimas 8 semanas con operación; LT = mediana de semanas con operación desde 2020-07-01;
-    k = peso de persistencia (adaptativo, recalibrado con el backtest)."""
+    k = peso de persistencia (adaptativo, recalibrado con el backtest).
+    v2.2 (material flotante, si params trae ewma_hl): EW = media exponencial de semanas con operación (vida media ewma_hl),
+        f(h) = (1 − s)·[a_h·EW + (1 − a_h)·LT] + s·LT, sin multiplicador de caudal (usa_caudal = False)."""
     last = ext.index[ext.reportado == 1].max()
     q = q_sitiopresa.sort_index()
     end = q.index.max()
@@ -76,15 +78,20 @@ def pronosticar(ext: pd.DataFrame, q_sitiopresa: pd.Series, params: dict) -> pd.
         L8 = Wo.y.tail(8).median()
         LT = Wo[Wo.index >= p.get("lt_desde", "2020-07-01")].y.median()
         k = p.get("k", 1.0)
+        EW = Wo.y.ewm(halflife=p["ewma_hl"]).mean().iloc[-1] if p.get("ewma_hl") else None
         xq = ((q - p["qc"]).clip(lower=0) / 1000).resample("W-SUN").sum()
         rows = []
         for t in pd.date_range(last + pd.Timedelta(days=1), end):
             h = int(np.ceil((t - last).days / 7)); hh = min(h, 13) - 1
             we = t + pd.Timedelta(days=6 - t.dayofweek)
             xs = [xq.get(we - pd.Timedelta(weeks=l), 0.0) for l in range(7)]
-            mult = float(np.clip(np.sqrt(np.exp(p["b0"] + np.dot(p["beta"], xs))), 0.7, 1.5))
-            ah = k * p["a1"] * np.exp(-(h - 1) / p["tau"])
-            fw = (ah * L8 + (1 - ah) * LT) * mult
+            mult = 1.0 if p.get("usa_caudal") is False else float(np.clip(np.sqrt(np.exp(p["b0"] + np.dot(p["beta"], xs))), 0.7, 1.5))
+            if EW is not None and p.get("a_h"):
+                a, s_ = p["a_h"][hh], p.get("shrink", 0.0)
+                fw = ((1 - s_) * (a * EW + (1 - a) * LT) + s_ * LT) * mult
+            else:
+                ah = k * p["a1"] * np.exp(-(h - 1) / p["tau"])
+                fw = (ah * L8 + (1 - ah) * LT) * mult
             cal = lambda r: max(0.0, (fw + 50) * r - 50) / 7 * p["dow"][t.dayofweek]
             rows.append(dict(fecha=t, h=h, mult=mult, p10=cal(p["q"]["0.1"][hh]), p50=cal(p["q"]["0.5"][hh]),
                              p90=cal(p["q"]["0.9"][hh]), esperado=cal(p["rmean"][hh])))
