@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=4ce9c47031" defer></script>
+<script src="app.js?v=3f0609c53d" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -373,7 +373,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
       <div class="row-btn"><label>Sensor <select id="vis-sensor"><option value="s2">Sentinel-2 (óptico)</option><option value="s1">Sentinel-1 (radar)</option></select></label>
       <button type="button" class="pill" id="vis-prev" aria-label="Fecha anterior">◀</button><select id="vis-fecha" aria-label="Fecha de la imagen"></select><button type="button" class="pill" id="vis-next" aria-label="Fecha siguiente">▶</button></div></div>
     <div class="rest-row" id="vis-capas"><label><input type="checkbox" id="vc-img" checked> Imagen</label><label><input type="checkbox" id="vc-veg" checked> Vegetación detectada</label><label><input type="checkbox" id="vc-zona" checked> Zona analizada</label><label><input type="checkbox" id="vc-bar" checked> Barrera</label><label>Opacidad <input type="range" id="vis-op" min="0" max="100" value="85" style="width:110px"></label></div>
-    <div id="visor" style="height:520px;border-radius:8px;margin-top:8px;background:var(--surface2)"></div>
+    <div id="visor" role="region" aria-label="Mapa interactivo de la cola del embalse" style="height:520px;border-radius:8px;margin-top:8px;background:var(--surface2)"></div>
     <p class="note" id="vis-info"></p>
     <p class="note">Haga clic en un punto del gráfico de área para ver esa escena. Imagen base de alta resolución: Esri World Imagery (fecha de captura distinta a la de Sentinel). Línea roja: barrera identificada como el borde persistente de la vegetación flotante a la salida del estrecho (2022–2023, ±20 m); el punto informado queda unos 180 m al suroeste, en la orilla.</p>
   </div>

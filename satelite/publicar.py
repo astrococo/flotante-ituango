@@ -104,7 +104,7 @@ if os.path.exists(MP):
     ok = set(C.fecha.dt.strftime("%Y-%m-%d"))
     for f_, v_, g_ in zip(Mk["fechas"], Mk["val"], Mk["veg"]):
         f_ = str(f_)
-        if f_ not in ok: continue
+        if f_ not in ok or any(r["f"] == f_ for r in vis["s2"]): continue
         V_, G_ = un(v_), un(g_); im = np.zeros((H_, W_, 4), "uint8")
         im[G_ & Zz] = [16, 185, 129, 210]; im[G_ & ~Zz] = [16, 185, 129, 70]; im[~V_ & Zz] = [255, 255, 255, 90]
         Image.fromarray(im).save(f"{VI}/veg_{f_}.png", optimize=True)

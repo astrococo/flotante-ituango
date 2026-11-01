@@ -11,15 +11,18 @@ Plataforma web para analizar y pronosticar la extracción de **material flotante
 | Pronóstico | Volumen esperado por semana (mediana P50, valor esperado e intervalo P10–P90) para 90 días, con escenarios de caudal bajo, medio y alto. |
 | Histórico | Extracción diaria, semanal o mensual por modalidad (manual / mecanizada) frente al caudal de Sitio Presa. |
 | Caudal y material | Respuesta de la extracción después de crecientes, correlaciones con rezago y estacionalidad. |
+| Operación | Días operados, causas de los días sin extracción (hoja de viajes OT3_001), caudal frente a operación y qué mejora el pronóstico. |
 | Calidad del dato | Depuración aplicada, régimen operativo día a día, validación de acumulados y periodos excluidos. |
-| Modelo y desempeño | Estructura, parámetros y error por horizonte (backtest 2022–2026). |
+| Modelo y desempeño | Estructura, parámetros y error por horizonte (backtest 2022–2026); pronóstico real de HydroForecast frente al caudal observado. |
+| Satélite | Vegetación flotante con Sentinel-2, Landsat y radar Sentinel-1; visor interactivo por fecha; corredor de 30 km aguas arriba; alertas y material frente al puerto. |
 | Auditoría | Revisión de datos, modelo y plataforma con estado de cada punto. Ver también [AUDITORIA.md](AUDITORIA.md). |
 | Datos | Cargar un Excel de extracción actualizado y elegir el servidor de HydroForecast. |
 | Información requerida | Datos adicionales que mejorarían la precisión. |
 
 ## Arquitectura
 
-- **Sitio estático** (GitHub Pages): un solo `index.html` con los datos depurados incluidos. Sin servidor propio y sin dependencias externas: Chart.js y SheetJS están en `vendor/`, y usa fuentes del sistema. Funciona en cualquier equipo con navegador moderno.
+- **Sitio estático** (GitHub Pages): `index.html` (estructura y estilos), `app.js` (lógica) y datos en `datos/app/base.json` y `datos/app/extra.json`. Chart.js, SheetJS y Leaflet están en `vendor/`. Instalable como aplicación (service worker, red primero).
+- **Datos de extracción:** al subir `datos/DatosExtraccion.xlsx`, la tarea `datos` lo convierte en `datos/app/base.json` (`scripts/excel_a_json.py`); la página no descarga el Excel al abrir.
 - **Caudal en vivo:** al abrir la página se consultan `GET /api/forecast/quarterly_outlook` y `GET /api/observed/daily?days=90` del backend de HydroForecast en Hugging Face, que permite consultas desde otros dominios (CORS). Si la consulta falla, se usa el pronóstico de respaldo incluido y la cabecera lo indica en rojo.
 - **Excel local:** el archivo que se carga en la pestaña *Datos* se procesa en el navegador; no se envía a ningún servidor ni queda guardado.
 
@@ -45,22 +48,27 @@ Se comparó contra modelos solo de extracción y modelos con caudal (ver [AUDITO
 
 ## Actualizar
 
-- **Datos de extracción (para todos):** en GitHub, abra la carpeta `datos/`, use *Add file › Upload files* y suba el Excel nuevo con el nombre exacto `DatosExtraccion.xlsx` (reemplaza al anterior). La página lo lee al abrir; GitHub Pages tarda 1–2 minutos en publicarlo.
+- **Datos de extracción (para todos):** en GitHub, abra la carpeta `datos/`, use *Add file › Upload files* y suba el Excel nuevo con el nombre exacto `DatosExtraccion.xlsx` (reemplaza al anterior). Una tarea automática lo convierte en los datos de la app; en 2–3 minutos queda publicado.
 - **Prueba rápida (solo para usted):** en la pestaña *Datos* cargue el Excel; se procesa en el navegador y no se guarda.
-- **Caudal:** automático. La página consulta HydroForecast al abrir. El GitHub Action `archivar-hydroforecast` guarda dos veces al día el pronóstico y el caudal observado en `datos/hf/`; si la API no responde, la página usa ese archivo.
+- **Caudal:** automático. La página consulta HydroForecast al abrir. El GitHub Action `archivar-hydroforecast` guarda cuatro veces al día el pronóstico y el caudal observado en `datos/hf/`; si la API no responde, la página usa ese archivo.
 - **Modelo:** recalibrar cada trimestre con `modelo/modelo_flotante.py`.
 
 ## Archivos
 
 ```
-index.html                      aplicación (datos de respaldo incluidos)
-datos/DatosExtraccion.xlsx      Excel de extracción que la página lee al abrir
-datos/hf/                       archivo diario del pronóstico y caudal de HydroForecast
-.github/workflows/              tarea programada que llena datos/hf/
-vendor/                         Chart.js 4.4.1 y SheetJS 0.18.5
+index.html, app.js              aplicación (estructura y lógica)
+datos/app/                      datos que lee la app (base.json, extra.json)
+datos/DatosExtraccion.xlsx      Excel de extracción (fechas corregidas el 1-nov-2026)
+datos/hf/                       archivo del pronóstico y caudal de HydroForecast
+datos/satelite/                 series, visor, corredor y alertas satelitales
+datos/produccion/               operación diaria derivada de la hoja de viajes
+.github/workflows/              tareas: archivar-hydroforecast, datos, satelite (mensual), corredor (diario), lluvia (semanal)
+satelite/                       procesamiento satelital (Planetary Computer)
+produccion/                     scripts de la hoja de viajes (el Excel fuente no se publica)
+scripts/                        excel_a_json.py y build_v3.py
+vendor/                         Chart.js 4.4.1, SheetJS 0.18.5, Leaflet 1.9.4
 modelo/modelo_flotante.py       depuración + pronóstico + router FastAPI
 modelo/params_v21.json          parámetros, cuantiles y métricas del backtest
 datos/extraccion_caudal_depurado.csv   serie diaria depurada con caudales y régimen
-datos/pronostico_v2_respaldo.csv       pronóstico de referencia (respaldo)
 AUDITORIA.md                    informe de auditoría
 ```

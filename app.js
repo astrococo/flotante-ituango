@@ -185,8 +185,8 @@ function renderReq(){
    ['Alta','Plan semanal de descansos de EPM','Días sin extracción mecanizada ya programados para las próximas semanas. Es lo único que mejoró el pronóstico de forma significativa (−15 a −16 % de error en el total). Se ingresa en Pronóstico.'],
    ['Media','Causa de los días sin extracción con lista fija','Las observaciones permiten clasificar casi todos los días, pero en texto libre (100 días sin texto y 36 sin causa clara). Una lista fija evitaría la interpretación.'],
    ['Media','Volumen medido y composición por viaje','Hoy el volumen es viajes × capacidad nominal y la parte de flotante del mecanizado se estima (60/40 en volquetas mixtas). Medir algunas cargas y registrar la composición por viaje.'],
-   ['Alta','Inventario observado en la cola','Área o volumen de material acumulado en la superficie (inspección con dron, imágenes Sentinel-2/Planet, o estimación visual en las barreras). Es la variable que el caudal realmente explica.'],
-   ['Media','Ubicación de la extracción','Punto o sector de la cola donde se retira el material y posición de las barreras o log-booms. Permite separar llegada desde el Cauca de material que ya circula en el embalse.'],
+   ['Media','Inventario observado en la cola','La vegetación flotante ya se mide con Sentinel-2, Landsat y radar (pestaña Satélite). Falta lo que el satélite no ve: madera y residuos (dron o imágenes de 3 m) y el espesor de la mancha para pasar de hectáreas a m³.'],
+   ['Recibido','Ubicación de la extracción y del depósito','Recibida el 1-nov-2026 (punto de extracción en la margen derecha, ~900 m aguas arriba de la barrera, y depósito). La barrera se ubicó en las imágenes. Falta: confirmar en campo el trazado de la barrera (hoy ±20 m) y si hay más de una.'],
    ['Media','Composición del material flotante','Fracción de troncos, ramas, residuos sólidos y plásticos. Los troncos llegan con crecientes; los residuos urbanos responden más a la lluvia local y a los primeros eventos de la temporada.'],
    ['Media','Caudal de afluentes cercanos a la cola','Caudal de los ríos San Andrés, Ituango y Espíritu Santo. HydroForecast no los mide: tiene pluviómetros (14 días en la API), Cauca aguas arriba (La Virginia, Bolombolo; 30 días) y lluvia pronosticada (WRF, GEFS, AIFS). La lluvia histórica (CHIRPS, IMERG y NASA POWER, 2019–2026) se evaluó y no mejoró el pronóstico: el caudal ya la integra. Ver Auditoría.'],
    ['Media','Operación del embalse','Nivel horario, caudal turbinado y vertido. Cambios de nivel desplazan la cola y concentran o dispersan el material.'],
@@ -846,7 +846,7 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=557aec9b07',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=0ee4be9358',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
 fetch('datos/app/base.json?v=844de4c842',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
