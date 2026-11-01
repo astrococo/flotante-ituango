@@ -1,2 +1,4 @@
 BARRERA = (6.900561, -75.8353999)
 BARRERA_LINEA = [(6.902171, -75.834965), (6.901994, -75.832792)]
+PUERTO = (6.893912, -75.829260)      # punto de extracción
+DEPOSITO = (6.895500, -75.827299)    # punto de depósito

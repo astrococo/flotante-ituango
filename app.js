@@ -394,6 +394,7 @@ function renderForecast(){
   const AV=S.P.aviso_creciente, fb=document.getElementById('flood-banner');
   if(AV&&FC.qpk.v>=AV.umbral){fb.hidden=false;fb.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M2 12c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1M2 18c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/></svg><div><b>Creciente ${FC.qpk.t>S.T[S.last]?'pronosticada':'reciente'}: Sitio Presa ${nf(FC.qpk.v)} m³/s el ${fmtD(FC.qpk.t)}.</b> En ${AV.eventos} crecientes históricas sobre ${nf(AV.umbral)} m³/s, la extracción de material flotante fue ${nf(AV.factor_mf[0],2)}–${nf(AV.factor_mf[1],2)} veces la previa durante unas ${AV.semanas} semanas, y la de macrófitas ${nf(AV.factor_ma[0],2)}–${nf(AV.factor_ma[1],2)} veces. Úselo como escenario: el pronóstico central incluye solo parte de ese efecto.</div>`}
   else fb.hidden=true;
+  renderAlertBanner('alert-banner');
   // tarjetas: desde la semana en curso (no desde el último reporte)
   const now=new Date(), today=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
   let i0=B.findIndex(b=>b.t1>=today); if(i0<0) i0=0;
@@ -632,6 +633,7 @@ async function renderSat(){
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
   renderVisor(J);
   renderCorredor();
+  renderAlertas();renderAlertBanner('sat-alert');
   document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
    <li><b>Zona de agua:</b> píxeles con agua (MNDWI &gt; 0) en al menos la mitad de las escenas despejadas, a 2,5 km de la barrera: ${nf(A.total)} ha. El índice de agua del SCL no sirve aquí porque confunde el agua turbia del Cauca con suelo.</li>
@@ -707,6 +709,10 @@ async function renderVisor(J){
     VL.zona=L.imageOverlay('datos/satelite/visor/zona.png',VIS.bounds,{opacity:1,interactive:false}).addTo(MAP);
     VL.barrera=L.polyline(VIS.linea,{color:'#ef4444',weight:4}).bindTooltip('Barrera (identificada en Sentinel-2)').addTo(MAP);
     VL.punto=L.circleMarker(VIS.punto,{radius:4,color:'#f59e0b',weight:2,fillOpacity:.6}).bindTooltip('Punto informado (orilla occidental)').addTo(MAP);
+    const PU=VIS.puerto||[6.893912,-75.82926],DE=VIS.deposito||[6.8955,-75.827299];
+    VL.puerto=L.circleMarker(PU,{radius:7,color:'#fff',weight:2,fillColor:'#0ea5e9',fillOpacity:1}).bindTooltip('Punto de extracción (margen derecha)').addTo(MAP);
+    VL.radio=L.circle(PU,{radius:500,color:'#0ea5e9',weight:1,dashArray:'4 4',fill:false}).addTo(MAP);
+    VL.deposito=L.circleMarker(DE,{radius:6,color:'#fff',weight:2,fillColor:'#a855f7',fillOpacity:1}).bindTooltip('Depósito').addTo(MAP);
     L.control.layers({'Alta resolución (Esri)':esri,'Mapa (OpenStreetMap)':osm},{},{collapsed:true}).addTo(MAP);
     L.control.scale({imperial:false}).addTo(MAP);
     sen.onchange=()=>{fill();sel.selectedIndex=0;show()};sel.onchange=show;
@@ -743,6 +749,30 @@ async function renderCorredor(){
   o.scales.y.title={display:true,text:'hectáreas'};o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x);o.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y,1)+' ha';
   mk('ch-cor',{type:'line',data:{datasets:tr.map((t,i)=>({label:lab(t),data:COR.serie.filter(r=>r[t]!=null).map(r=>({x:d0(r.f),y:r[t]})),borderColor:cols[i],backgroundColor:cols[i],pointRadius:1.5,borderWidth:1,tension:0,hidden:!t.startsWith('-')}))},options:o});
   document.getElementById('cor-nota').textContent=`Sentinel-2 a 20 m, ${COR.serie.length} fechas con algún tramo despejado (≥ 60 %). Se actualiza todos los días con las imágenes nuevas (última revisión ${COR.generado} UTC). Haga clic en la leyenda para mostrar u ocultar tramos; por defecto se ven los de aguas arriba.`;
+}
+
+
+/* ---------- alertas satelitales y material frente al puerto ---------- */
+let ALR=null;
+async function loadAlertas(){if(ALR)return ALR;try{ALR=await fetchJSON('datos/satelite/alertas.json',8000)}catch(e){ALR={activas:[],posibles_pasos_barrera:[]}}return ALR}
+async function renderAlertBanner(id){
+  const el=document.getElementById(id);if(!el)return;const A=await loadAlertas();const a=A.activas||[];
+  if(!a.length){el.hidden=true;return}
+  el.hidden=false;el.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div><b>Alerta satelital${a.length>1?'s ('+a.length+')':''}.</b> ${a.map(x=>esc(x.texto)).join(' ')} <a href="#satelite">Ver en Satélite</a></div>`;
+}
+async function renderAlertas(){
+  const box=document.getElementById('alr-lista');if(!box)return;const A=await loadAlertas();
+  box.innerHTML=(A.activas||[]).length?A.activas.map(a=>`<li><span class="tag ${a.nivel==='alta'?'bad':'warn'}">${a.nivel}</span> ${esc(a.texto)}</li>`).join(''):`<li><span class="tag ok">sin alertas</span> Ninguna regla se activó con las imágenes de los últimos 10 días (revisión ${esc(A.generado||'—')} UTC).</li>`;
+  const P=A.posibles_pasos_barrera||[];
+  document.getElementById('alr-barrera').innerHTML='<thead><tr><th>Entre</th><th>Aguas arriba (ha)</th><th>Aguas abajo (ha)</th><th>Sensores</th></tr></thead><tbody>'+
+    P.map(e=>`<tr><td><a href="#satelite" onclick="window.__visorGo&&window.__visorGo('${e.hasta}',${/radar/.test(e.sensores.split('→')[1])});return false">${fmtD(d0(e.desde))} – ${fmtD(d0(e.hasta))}</a></td><td class="num">${nf(e.arriba[0],1)} → ${nf(e.arriba[1],1)}</td><td class="num">${nf(e.abajo[0],1)} → ${nf(e.abajo[1],1)}</td><td>${esc(e.sensores)}</td></tr>`).join('')+'</tbody>';
+  // material frente al puerto (corredor diario)
+  try{if(!COR)COR=await fetchJSON('datos/satelite/corredor/serie.json',10000)}catch(e){}
+  const k=document.getElementById('alr-puerto');if(!k)return;
+  if(!COR||!COR.serie.some(r=>r.p500!=null)){k.innerHTML='<div class="st info c12"><h2>Material frente al puerto</h2><div class="note">Se calcula en la próxima corrida diaria del corredor.</div></div>';return}
+  const card=(key,tit,desc)=>{const h=COR.serie.filter(r=>r[key]!=null),v=h.map(r=>r[key]).sort((a,b)=>a-b),q=p=>v[Math.min(v.length-1,Math.floor(p*v.length))],last=h[h.length-1],pr=v.filter(x=>x<=last[key]).length/v.length;
+    return `<div class="st ${pr>=0.9?'warn':pr<=0.1?'info':'ok'} c6"><h2>${tit}</h2><div class="big">${nf(last[key],1)} <small>ha</small></div><div class="note">${desc} · ${fmtD(d0(last.f))} · percentil ${nf(pr*100)} (mediana ${nf(q(0.5),1)} ha, P90 ${nf(q(0.9),1)} ha, ${v.length} escenas)</div></div>`};
+  k.innerHTML=card('bp','Entre el puerto y la barrera','vegetación en el agua de los ~900 m entre el punto de extracción y la barrera')+card('p500','A 500 m del punto de extracción','vegetación en el agua a ≤ 500 m del puerto');
 }
 
 /* ---------- vista datos ---------- */

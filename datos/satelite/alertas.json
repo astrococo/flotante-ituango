@@ -1,0 +1,123 @@
+{
+ "generado": "2026-11-01 15:16",
+ "activas": [],
+ "posibles_pasos_barrera": [
+  {
+   "desde": "2019-07-16",
+   "hasta": "2019-07-17",
+   "arriba": [
+    42.4,
+    7.8
+   ],
+   "abajo": [
+    7.4,
+    15.3
+   ],
+   "sensores": "S2 → Landsat"
+  },
+  {
+   "desde": "2021-08-07",
+   "hasta": "2021-08-09",
+   "arriba": [
+    18.8,
+    8.4
+   ],
+   "abajo": [
+    4.3,
+    12.7
+   ],
+   "sensores": "Landsat → radar"
+  },
+  {
+   "desde": "2022-03-11",
+   "hasta": "2022-03-19",
+   "arriba": [
+    82.7,
+    7.6
+   ],
+   "abajo": [
+    10.7,
+    23.4
+   ],
+   "sensores": "Landsat → radar"
+  },
+  {
+   "desde": "2022-03-31",
+   "hasta": "2022-04-04",
+   "arriba": [
+    17.2,
+    3.0
+   ],
+   "abajo": [
+    38.6,
+    60.8
+   ],
+   "sensores": "radar → Landsat"
+  },
+  {
+   "desde": "2022-07-01",
+   "hasta": "2022-07-05",
+   "arriba": [
+    41.0,
+    13.2
+   ],
+   "abajo": [
+    24.2,
+    36.5
+   ],
+   "sensores": "Landsat → S2"
+  },
+  {
+   "desde": "2022-11-14",
+   "hasta": "2022-11-26",
+   "arriba": [
+    27.6,
+    12.6
+   ],
+   "abajo": [
+    15.4,
+    34.5
+   ],
+   "sensores": "radar → radar"
+  },
+  {
+   "desde": "2023-03-22",
+   "hasta": "2023-03-26",
+   "arriba": [
+    25.3,
+    12.3
+   ],
+   "abajo": [
+    10.7,
+    16.2
+   ],
+   "sensores": "Landsat → radar"
+  },
+  {
+   "desde": "2025-07-07",
+   "hasta": "2025-07-09",
+   "arriba": [
+    8.1,
+    0.4
+   ],
+   "abajo": [
+    28.8,
+    44.7
+   ],
+   "sensores": "radar → Landsat"
+  },
+  {
+   "desde": "2025-08-06",
+   "hasta": "2025-08-10",
+   "arriba": [
+    10.3,
+    4.7
+   ],
+   "abajo": [
+    25.2,
+    49.0
+   ],
+   "sensores": "radar → Landsat"
+  }
+ ]
+}

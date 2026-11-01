@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: corredor
@@ -33,13 +34,29 @@ jobs:
           mkdir -p satelite/datos/satelite
           cd satelite && python -u corredor.py 2>&1 | tee datos/satelite/registro_corredor.txt; cd ..
           mkdir -p datos && cp -r satelite/datos/* datos/
+          python satelite/alertas.py | tee datos/satelite/registro_alertas.txt
+      - name: Avisar alertas nuevas (issue en GitHub)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          A = json.load(open("datos/satelite/alertas.json"))["activas"]
+          f = "datos/satelite/alertas_notificadas.json"
+          ya = set(json.load(open(f))) if os.path.exists(f) else set()
+          for a in A:
+              if a["id"] in ya: continue
+              subprocess.run(["gh", "issue", "create", "--title", f"Alerta satelital ({a['tipo']}, {a['fecha']})", "--body", a["texto"] + "\n\nVer: https://astrococo.github.io/flotante-ituango/#satelite"], check=False)
+              ya.add(a["id"])
+          json.dump(sorted(ya), open(f, "w"))
+          PY
       - name: Guardar
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           [ -d satelite/datos ] && cp -r satelite/datos/* datos/ || true
-          git add datos/satelite/corredor datos/satelite/registro_corredor.txt
+          git add -A datos/satelite
           git diff --cached --quiet && exit 0
           git commit -m "Corredor: escenas nuevas $(date -u '+%F %H:%M')"
           for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done

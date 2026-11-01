@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=49fb705b09" defer></script>
+<script src="app.js?v=4ce9c47031" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -195,6 +195,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-pronostico">
   <div id="stale-banner" class="banner" hidden></div>
   <div id="flood-banner" class="banner" hidden></div>
+  <div id="alert-banner" class="banner" hidden></div>
   <div class="grid" id="fc-cards"></div>
   <div class="panel">
     <div class="toolbar">
@@ -350,6 +351,16 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
   <div><h2>Vegetación flotante vista desde el satélite</h2>
     <p class="lede">Área cubierta por vegetación flotante (macrófitas y material vegetal verde) en la cola del embalse, 2,5 km alrededor de la barrera, medida con Sentinel-2 y Landsat 8/9 cuando el cielo está despejado y con el radar Sentinel-1, que ve a través de las nubes. Mide presencia de material vegetal verde, no el esfuerzo de extracción; madera y residuos no se distinguen.</p></div>
   <div id="sat-msg" class="banner" hidden></div>
+  <div id="sat-alert" class="banner" hidden></div>
+  <div class="panel">
+    <h3>Alertas y material frente al puerto</h3>
+    <ul class="req" id="alr-lista"></ul>
+    <div class="grid" id="alr-puerto" style="margin-top:12px"></div>
+    <details style="margin-top:10px"><summary class="note" style="cursor:pointer">Posibles pasos de material por la barrera en la historia</summary>
+      <div class="tbl"><table id="alr-barrera"></table></div>
+      <p class="note">Señal: entre dos imágenes a ≤ 12 días, aguas arriba cae a la mitad o menos (≥ 5 ha) y aguas abajo sube igual. Dos coinciden con las observaciones de la hoja de viajes: marzo–abril de 2022 («la mancha continúa bajando en el embalse») y noviembre de 2022 (daños en una barrera). Cuando los sensores son distintos puede ser diferencia entre sensores; confirme en el visor (clic en la fecha).</p></details>
+    <p class="note">Reglas, revisadas a diario con las imágenes de los últimos 10 días: llegada de material (un tramo de 2,5–30 km aguas arriba sobre su percentil 90), acumulación entre el puerto y la barrera (sobre su percentil 90), poco material a 500 m del puerto (bajo su percentil 10 en dos imágenes seguidas) y posible paso por la barrera. En 2019–2026 el área frente al puerto y entre el puerto y la barrera no se relacionó con lo extraído (ρ ≈ 0); es un dato de contexto para la operación, no entra al pronóstico. Cada alerta nueva también abre un aviso en GitHub (le llega por correo si sigue el repositorio).</p>
+  </div>
   <div class="grid" id="sat-kpis"></div>
   <div class="panel">
     <div class="toolbar"><h3>Área por escena despejada</h3>

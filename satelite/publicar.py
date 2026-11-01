@@ -3,7 +3,7 @@ Criterios: núcleo de la zona de agua (agua en ≥50 % de las escenas despejadas
 escenas con ≥70 % del núcleo despejado, una escena por fecha."""
 import os, glob, json, sys, numpy as np, pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from comun_const import BARRERA as BARRERA_PUNTO, BARRERA_LINEA, BARRERA
+from comun_const import BARRERA as BARRERA_PUNTO, BARRERA_LINEA, BARRERA, PUERTO, DEPOSITO
 from PIL import Image
 R = os.path.dirname(os.path.abspath(__file__)) + "/.."
 S = f"{R}/datos/satelite/series"; O = f"{R}/datos/satelite/app"; os.makedirs(O, exist_ok=True)
@@ -93,7 +93,7 @@ from pyproj import Transformer
 VI = f"{R}/datos/satelite/visor"; os.makedirs(VI, exist_ok=True)
 tf = Transformer.from_crs(G["crs"], 4326, always_xy=True); a_, b_, x0, c_, d_, y0 = G["transform"]; H_, W_ = G["shape"]
 lo0, la0 = tf.transform(x0, y0 + d_ * H_); lo1, la1 = tf.transform(x0 + a_ * W_, y0)
-vis = dict(bounds=[[la0, lo0], [la1, lo1]], punto=list(BARRERA_PUNTO), linea=[list(p) for p in BARRERA_LINEA], s2=[], s1=[])
+vis = dict(bounds=[[la0, lo0], [la1, lo1]], punto=list(BARRERA_PUNTO), puerto=list(PUERTO), deposito=list(DEPOSITO), linea=[list(p) for p in BARRERA_LINEA], s2=[], s1=[])
 MP = f"{S}/mascaras.npz"
 if os.path.exists(MP):
     Mk = np.load(MP); un = lambda q: np.unpackbits(q)[:H_ * W_].reshape(H_, W_).astype(bool)

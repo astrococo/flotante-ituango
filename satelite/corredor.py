@@ -14,6 +14,10 @@ bbox = (lon - KMW / c, lat - KMS / 111.32, lon + KME / c, lat + KMN / 111.32)
 RES = 0.02; SH = (int((KMS + KMN) / RES), int((KMW + KME) / RES))
 km = (KMN - (np.arange(SH[0]) + 0.5) * RES)[:, None].repeat(SH[1], 1)   # + norte, − sur
 TRAMOS = [(-30, -22.5), (-22.5, -15), (-15, -7.5), (-7.5, -2.5), (-2.5, 0), (0, 2.5), (2.5, 7.5), (7.5, 15)]
+PUERTO = (6.893912, -75.829260)                            # punto de extracción (margen derecha)
+xkm = ((np.arange(SH[1]) + 0.5) * RES - KMW)[None, :].repeat(SH[0], 0)
+py, px = (PUERTO[0] - lat) * 111.32, (PUERTO[1] - lon) * c
+dpu = np.hypot(km - py, xkm - px)
 TILES = ("18NTN", "18NUN", "18NVN")
 items = [i for i in catalogo().search(collections=["sentinel-2-l2a"], bbox=bbox, datetime=f"2019-01-01/{dt.date.today()}").items()
          if i.properties.get("s2:mgrs_tile") in TILES]
@@ -52,13 +56,15 @@ else:
 # 2) escenas nuevas
 ep = f"{PREV}/escenas.csv"
 prev = pd.read_csv(ep) if os.path.exists(ep) and os.path.exists(zp) and tuple(np.load(zp)["shape"]) == SH else pd.DataFrame(columns=["fecha"])
-hechas = set(prev.fecha.astype(str)); nuevas = sorted(d for d in por_fecha if d not in hechas)
+hechas = set(prev.fecha.astype(str)) if "p500_area_px" in prev.columns else set(); nuevas = sorted(d for d in por_fecha if d not in hechas)
 print("fechas nuevas:", len(nuevas), flush=True)
 rows = []
 for k, d in enumerate(nuevas):
     try:
         v, B = mosaico(por_fecha[d], ("B04", "B08")); nd = (B["B08"] - B["B04"]) / (B["B08"] + B["B04"] + 1e-6)
         row = dict(fecha=d)
+        for n_, m in (("p500", Z & (dpu <= 0.5)), ("bp", Z & (km < 0) & (km > py - 0.02))):
+            row[f"{n_}_area_px"] = int(m.sum()); row[f"{n_}_valid_px"] = int((m & v).sum()); row[f"{n_}_veg_px"] = int((m & v & (nd >= 0.30)).sum())
         for a, b in TRAMOS:
             m = Z & (km >= a) & (km < b); row[f"t{a}_{b}_area_px"] = int(m.sum()); row[f"t{a}_{b}_valid_px"] = int((m & v).sum()); row[f"t{a}_{b}_veg_px"] = int((m & v & (nd >= 0.30)).sum())
         rows.append(row)
@@ -74,8 +80,11 @@ for r in E.to_dict("records"):
         k = f"t{a}_{b}".replace("-", "_").replace(".", "p")
         ar, vl, vg = r.get(f"t{a}_{b}_area_px"), r.get(f"t{a}_{b}_valid_px"), r.get(f"t{a}_{b}_veg_px")
         if ar and vl == vl and vl >= 0.6 * ar: o[f"{a}..{b}"] = round(vg / vl * ar * RES * RES * 100, 1)
+    for n_ in ("p500", "bp"):
+        ar, vl, vg = r.get(f"{n_}_area_px"), r.get(f"{n_}_valid_px"), r.get(f"{n_}_veg_px")
+        if ar and vl == vl and vl >= 0.6 * ar: o[n_] = round(vg / vl * ar * RES * RES * 100, 2)
     if len(o) > 1: ser.append(o)
 json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), tramos=[f"{a}..{b}" for a, b in TRAMOS],
                agua_ha={f"{a}..{b}": round(float((Z & (km >= a) & (km < b)).sum()) * RES * RES * 100, 1) for a, b in TRAMOS},
-               serie=ser, nuevas=len(rows)), open(f"{OUT}/serie.json", "w"), separators=(",", ":"))
+               serie=ser, nuevas=len(rows), puerto=list(PUERTO), zonas_extra={"p500": "agua a ≤ 500 m del punto de extracción", "bp": "agua entre el puerto y la barrera"}), open(f"{OUT}/serie.json", "w"), separators=(",", ":"))
 print("listo: nuevas", len(rows), "total", len(E), flush=True)
