@@ -89,7 +89,9 @@ def corre_s2():
         try:
             v, B = mosaico(g[d], ("B04", "B08")); nd = (B["B08"] - B["B04"]) / (B["B08"] + B["B04"] + 1e-6)
             rows.append(metricas(nd >= 0.30, v, Ze, dict(fecha=d)))
-            if k % 25 == 0: print("s2", k, d, flush=True)
+            if k % 25 == 0:
+                print("s2", k, d, flush=True)
+                pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fecha", keep="last").sort_values("fecha").to_csv(f"{OUT}/escenas_s2.csv", index=False)
         except Exception as e: print("error s2", d, str(e)[:120], flush=True)
     E = pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fecha", keep="last").sort_values("fecha")
     E.to_csv(f"{OUT}/escenas_s2.csv", index=False); print("S2 listo: nuevas", len(rows), "total", len(E), flush=True)
@@ -118,7 +120,9 @@ def corre_s1():
             for t in (-16, -15, -14, -13, -12):
                 r = metricas(vh >= t, v, Ze, {}); row.update({f"{kk}_vh{abs(t)}" if kk.endswith("veg_px") else kk: vv for kk, vv in r.items()})
             rows.append(row)
-            if k % 25 == 0: print("s1", k, d, row["vh_agua_mediana"], flush=True)
+            if k % 25 == 0:
+                print("s1", k, d, row["vh_agua_mediana"], flush=True)
+                pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fecha", keep="last").sort_values("fecha").to_csv(f"{OUT}/escenas_s1.csv", index=False)
         except Exception as e: print("error s1", d, str(e)[:120], flush=True)
     E = pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fecha", keep="last").sort_values("fecha")
     E.to_csv(f"{OUT}/escenas_s1.csv", index=False); print("S1 listo: nuevas", len(rows), "total", len(E), flush=True)
