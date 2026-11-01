@@ -1,0 +1,85 @@
+name: Mancha retenida y corredor ±30 km (óptico y radar)
+
+on:
+  schedule:
+    - cron: "11 16 * * *"   # todos los días, 11:11 hora de Colombia: solo fechas nuevas
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "s2, s1 o serie (vacío = s2 y s1)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: retenido
+  cancel-in-progress: false
+
+jobs:
+  s2:
+    if: ${{ github.event.inputs.modo == '' || github.event.inputs.modo == 's2' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r satelite/requirements.txt
+      - name: Sentinel-2
+        env: { GDAL_HTTP_MAX_RETRY: "5", GDAL_HTTP_RETRY_DELAY: "3", GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.tiff,.TIF" }
+        run: |
+          mkdir -p satelite/datos/satelite/retenido
+          cd satelite && (timeout 320m python -u retenido.py s2 2>&1 | tee datos/satelite/retenido/registro_s2.txt || true)
+      - name: Guardar
+        if: always()
+        run: |
+          mkdir -p datos/satelite && cp -r satelite/datos/satelite/retenido datos/satelite/ || true
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A datos/satelite/retenido; git diff --cached --quiet && exit 0
+          git commit -m "Mancha retenida: Sentinel-2 $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
+  s1:
+    needs: s2
+    if: ${{ always() && (github.event.inputs.modo == '' || github.event.inputs.modo == 's1' || github.event_name == 'schedule') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - run: git pull --rebase origin main || true
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r satelite/requirements.txt
+      - name: Sentinel-1
+        env: { GDAL_HTTP_MAX_RETRY: "5", GDAL_HTTP_RETRY_DELAY: "3", GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.tiff,.TIF" }
+        run: |
+          mkdir -p satelite/datos/satelite/retenido
+          cp datos/satelite/retenido/zona.npz satelite/datos/satelite/retenido/ 2>/dev/null || true
+          cp datos/satelite/retenido/escenas_s2.csv satelite/datos/satelite/retenido/ 2>/dev/null || true
+          cd satelite && (timeout 320m python -u retenido.py s1 2>&1 | tee datos/satelite/retenido/registro_s1.txt || true)
+      - name: Guardar
+        if: always()
+        run: |
+          mkdir -p datos/satelite && cp -r satelite/datos/satelite/retenido datos/satelite/ || true
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A datos/satelite/retenido; git diff --cached --quiet && exit 0
+          git commit -m "Mancha retenida: Sentinel-1 $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
+  serie:
+    if: ${{ github.event.inputs.modo == 'serie' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r satelite/requirements.txt
+      - run: |
+          mkdir -p satelite/datos/satelite/retenido && cp datos/satelite/retenido/* satelite/datos/satelite/retenido/
+          cd satelite && python -u retenido.py serie
+          cd .. && cp -r satelite/datos/satelite/retenido datos/satelite/
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A datos/satelite/retenido; git diff --cached --quiet && exit 0
+          git commit -m "Mancha retenida: serie $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
