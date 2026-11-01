@@ -1,0 +1,155 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Temperatura Ambiente del Aire",
+            "id" : "sbwg-7ju4",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "Anteriormente este set de datos se denominaba: \"Datos Hidrometeorológicos Crudos - Red de Estaciones IDEAM\" el cual se actualiza por \"Temperatura Ambiente del Aire\".\nContiene datos de la temperatura ambiente del aire registrada cada hora en diferentes estaciones meteorológicas ubicadas en el territorio colombiano. Los cuales han sido verificados mediante un control de calidad básico, de acuerdo con las recomendaciones de la Organización Meteorológica Mundial (OMM). \nPor lo anterior, se han corregido o eliminado valores que no han cumplido con estos controles y podrían requerir validaciones adicionales según el uso específico. \nEste conjunto de datos lo podemos utilizar para establecer el comportamiento diario, mensual y anual de la temperatura máxima del aire, en análisis climatológico y modelos climáticos, así como, en alertas tempranas.\nSe recomienda a los usuarios aplicar criterios adicionales de verificación para usos sensibles o técnicos especializados.\nLos datos disponibles a través de este medio pueden ser libremente consumidos bajo los siguientes clausulas: 1. Los datos a visualizar o descargar a continuación no han sido validados por el IDEAM. 2. Los datos aquí dispuestos son datos crudos instantáneos provenientes de los sensores de las estaciones automáticas de la red propia y/o producto de convenios interadministrativos con terceras entidades. 3. Los datos son puestos a disposición de la ciudadanía como mecanismo de transparencia y para proveer una herramienta de apoyo a la gestión del riesgo territorial y como datos abiertos en cumplimiento de la Ley 1712 de 2014. 4. Es posible que los datos aquí dispuestos tengan cierto retraso en el tiempo debido a las frecuencias de envío de datos de los sensores y los medios de transmisión utilizados. 5. Los datos presenten errores y/o inconsistencias estando incluso por fuera de los límites considerados normales, producto de fallas en los sensores de origen. 6. El posterior uso e interpretación que se le dé para cualquier finalidad queda bajo la exclusiva responsabilidad del portador de los datos. 7. Cualquier destino que se le dé a los datos exime al IDEAM de realizarles cualquier tipo de justificación o iniciarles proceso alguno de validación posterior, cuya fuente primaria deben ser los canales oficialmente dispuestos por la Entidad para el suministro de información oficial y validada. 8. Por las razones expuestas anteriormente los datos dispuestos no podrán ser utilizados como evidencia jurídica ante entes de control acerca de la ocurrencia o no de fenómenos hidro climatológicos o de soporte a cualquier tipo de situación o evento ocurrido como consecuencia de estos.",
+            "attribution" : "Instituto de Hidrología, Meteorología y Estudios Ambientales - IDEAM, Bogotá D.C.",
+            "attribution_link" : "http://www.ideam.gov.co",
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2026-11-01T14:06:04.000Z",
+            "createdAt" : "2019-07-02T16:42:11.000Z",
+            "metadata_updated_at" : "2026-05-18T19:02:53.000Z",
+            "data_updated_at" : "2026-11-01T14:06:04.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 295,
+                "page_views_last_month" : 1401,
+                "page_views_total" : 65384,
+                "page_views_last_week_log" : 8.20945336562895,
+                "page_views_last_month_log" : 10.453270634010623,
+                "page_views_total_log" : 15.996672083962517
+              },
+            "columns_name" :
+              [
+                "NombreEstacion",
+                "FechaObservacion",
+                "ZonaHidrografica",
+                "ValorObservado",
+                "Departamento",
+                "CodigoSensor",
+                "CodigoEstacion",
+                "Longitud",
+                "Latitud",
+                "DescripcionSensor",
+                "UnidadMedida",
+                "Municipio"
+              ],
+            "columns_field_name" :
+              [
+                "nombreestacion",
+                "fechaobservacion",
+                "zonahidrografica",
+                "valorobservado",
+                "departamento",
+                "codigosensor",
+                "codigoestacion",
+                "longitud",
+                "latitud",
+                "descripcionsensor",
+                "unidadmedida",
+                "municipio"
+              ],
+            "columns_datatype" :
+              [
+                "Text",
+                "Calendar date",
+                "Text",
+                "Number",
+                "Text",
+                "Text",
+                "Text",
+                "Number",
+                "Number",
+                "Text",
+                "Text",
+                "Text"
+              ],
+            "columns_description" :
+              [ "", "", "", "", "", "", "", "", "", "", "", "" ],
+            "columns_format" :
+              [ {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} ],
+            "download_count" : 15503,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2019-07-02T19:40:51.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "Ambiente y Desarrollo Sostenible",
+            "domain_tags" : [ "datos" ],
+            "domain_metadata" :
+              [
+                { "key" : "Información-de-Datos_Idioma", "value" : "Español" },
+                {
+                  "key" : "Información-de-Datos_Cobertura-Geográfica",
+                  "value" : "Nacional"
+                },
+                {
+                  "key" : "Información-de-Datos_Frecuencia-de-Actualización",
+                  "value" : "Diaria"
+                },
+                {
+                  "key" : "Información-de-la-Entidad_Sector",
+                  "value" : "Ambiente y Desarrollo Sostenible"
+                },
+                {
+                  "key" : "Información-de-la-Entidad_Nombre-de-la-Entidad",
+                  "value" : "Instituto de Hidrología, Meteorología y Estudios Ambientales - IDEAM, Bogotá D.C."
+                },
+                {
+                  "key" : "Información-de-la-Entidad_Orden",
+                  "value" : "Nacional"
+                },
+                {
+                  "key" : "Información-de-la-Entidad_Municipio",
+                  "value" : "Bogotá D.C."
+                },
+                {
+                  "key" : "Información-de-la-Entidad_DIVIPOLA-Municipio",
+                  "value" : "11001"
+                },
+                {
+                  "key" : "Información-de-la-Entidad_Departamento",
+                  "value" : "Bogotá D.C."
+                }
+              ]
+          },
+        "metadata" :
+          {
+            "domain" : "www.datos.gov.co",
+            "license" : "Creative Commons Attribution | Share Alike 4.0 International"
+          },
+        "permalink" : "https://www.datos.gov.co/d/sbwg-7ju4",
+        "link" : "https://www.datos.gov.co/Ambiente-y-Desarrollo-Sostenible/Temperatura-Ambiente-del-Aire/sbwg-7ju4",
+        "owner" :
+          {
+            "id" : "xac7-ivuv",
+            "user_type" : "interactive",
+            "display_name" : "Oficina de Informática IDEAM"
+          },
+        "creator" :
+          {
+            "id" : "xac7-ivuv",
+            "user_type" : "interactive",
+            "display_name" : "Oficina de Informática IDEAM"
+          }
+      }
+    ],
+  "resultSetSize" : 1,
+  "timings" : { "serviceMillis" : 17, "searchMillis" : [ 2, 5 ] },
+  "warnings" : []
+}

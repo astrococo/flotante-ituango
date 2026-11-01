@@ -1,2 +1,12 @@
 200 36091 https://jdguarnizor-hydroforecast-ituango.hf.space/openapi.json
 422 144 https://jdguarnizor-hydroforecast-ituango.hf.space/api/observed/daily?days=4000
+200 387695 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2019-07-01&hasta=2019-08-01
+422 48 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?hours=720&desde=2020-01-01
+200 610 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical/stats
+200 48340 https://jdguarnizor-hydroforecast-ituango.hf.space/api/observed/daily?days=400
+200 89069 https://jdguarnizor-hydroforecast-ituango.hf.space/api/aguas_arriba?hours=720
+200 648 https://jdguarnizor-hydroforecast-ituango.hf.space/api/rainfall/stations?window_hours=720
+200 2108 https://jdguarnizor-hydroforecast-ituango.hf.space/api/estado
+200 185083 https://jdguarnizor-hydroforecast-ituango.hf.space/api/climatology/daily
+200 348110 https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&q=caudal&limit=50
+200 8151 https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&q=IDEAM%20hidrometeorologicos&limit=50
