@@ -1,23 +1,24 @@
-"""Descarga caudales diarios del IDEAM (AQUARIUS WebPortal) para estaciones cercanas al embalse de Ituango.
-Salida: datos/ideam/estaciones.csv, datos/ideam/conjuntos.csv, datos/ideam/q_<codigo>_<etiqueta>.csv, datos/ideam/registro.txt"""
-import os, sys, traceback, pandas as pd
-from colombia_hydrodata.utils.fetch import stations as st, aquarius as aq
+"""Caudales medios diarios del IDEAM (bucket público s3-estacionesideam) para estaciones cercanas al embalse de Ituango.
+Catálogo nacional de estaciones: datos.gov.co hp9r-jxuu. Salida en datos/ideam/."""
+import os, io, json, urllib.request, urllib.parse, pandas as pd
 O='datos/ideam'; os.makedirs(O,exist_ok=True)
 log=open(f'{O}/registro.txt','w')
 def L(*a): print(*a); log.write(' '.join(map(str,a))+'\n'); log.flush()
-BB=(6.3,7.6,-76.3,-75.3)   # lat min, lat max, lon min, lon max (cuenca media del Cauca alrededor de Ituango)
-S=st.fetch_df(); S=pd.DataFrame(S.drop(columns=[c for c in S.columns if c=='geometry'],errors='ignore'))
-for c in ['latitude','longitude']: S[c]=pd.to_numeric(S[c],errors='coerce')
-E=S[(S.latitude.between(BB[0],BB[1]))&(S.longitude.between(BB[2],BB[3]))]
+def get(u,t=120): return urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'flotante-ituango'}),timeout=t).read()
+BB=(6.3,7.6,-76.3,-75.3)   # lat, lat, lon, lon: Cauca medio alrededor de Ituango
+C=pd.DataFrame(json.loads(get('https://www.datos.gov.co/resource/hp9r-jxuu.json?$limit=20000')))
+L('catálogo',len(C),list(C.columns))
+lat=pd.to_numeric(C.get('latitud'),errors='coerce'); lon=pd.to_numeric(C.get('longitud'),errors='coerce')
+E=C[lat.between(BB[0],BB[1])&lon.between(BB[2],BB[3])].copy()
 E.to_csv(f'{O}/estaciones.csv',index=False); L('estaciones en el recuadro',len(E))
-D=aq.aquarius_datasets(); D=pd.DataFrame(D)
-ids=set(E['id'].astype(str))|{i.zfill(10) for i in E['id'].astype(str)}|{i.lstrip('0') for i in E['id'].astype(str)}
-C=D[D['loc_id'].astype(str).isin(ids)]
-C.to_csv(f'{O}/conjuntos.csv',index=False); L('conjuntos de esas estaciones',len(C)); L(C.groupby('param').size().to_string())
-Q=C[C['param'].astype(str).str.upper().isin(['CAUDAL','NIVEL'])]
-Q=Q[Q['label'].astype(str).str.contains('MEDIA_D|Q_MEDIA|NV_MEDIA',case=False,regex=True)]
-for r in Q.itertuples():
+base='https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/'
+res=[]
+for r in E.itertuples():
+    cod=str(r.codigo).zfill(10)
     try:
-        df=aq.dataset(int(r.wp_dset_id)); n=f"{O}/{str(r.param).lower()}_{r.loc_id}_{str(r.label).replace('/','_')}.csv"
-        df.to_csv(n,index=False); L('ok',r.loc_id,r.param,r.label,len(df),df.timestamp.min(),df.timestamp.max())
-    except Exception as e: L('error',r.loc_id,r.label,repr(e)[:200])
+        b=get(base+f'{cod}-Q_MEDIA_D.csv'); open(f'{O}/q_{cod}.csv','wb').write(b)
+        d=pd.read_csv(io.BytesIO(b)); res.append(dict(codigo=cod,nombre=getattr(r,'nombre',''),municipio=getattr(r,'municipio',''),filas=len(d),cols='|'.join(d.columns[:8])))
+        L('ok',cod,getattr(r,'nombre',''),len(d))
+    except Exception as e:
+        if '404' not in str(e) and 'Not Found' not in str(e): L('error',cod,repr(e)[:150])
+pd.DataFrame(res).to_csv(f'{O}/con_caudal.csv',index=False); L('estaciones con caudal diario',len(res))
