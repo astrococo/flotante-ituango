@@ -1,0 +1,1 @@
+días 2678 reportados 2614 último 2026-10-10 {'mf_man': 15781.1, 'mf_mec': 527252.7, 'ma_man': 246346.6, 'ma_mec': 823890.3}
