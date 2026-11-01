@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=0e0711c139" defer></script>
+<script src="app.js?v=1c4242bb20" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -372,7 +372,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     <div class="panel c6">
       <div class="toolbar"><h3>Dónde se acumula</h3><label>Año <select id="sat-anio"></select></label></div>
       <img loading="lazy" decoding="async" id="sat-mapa" alt="Mapa de frecuencia de vegetación flotante alrededor de la barrera" style="width:100%;border-radius:8px;display:block">
-      <p class="note">Verde: fracción de las escenas del año con vegetación flotante en cada píxel de 10 m (intenso = 50 % o más). Cruz roja: barrera. El flujo va de sur (abajo) a norte (arriba).</p></div>
+      <p class="note">Verde: fracción de las escenas del año con vegetación flotante en cada píxel de 10 m (intenso = 50 % o más). Línea roja: barrera. El flujo va de sur (abajo) a norte (arriba).</p></div>
   </div>
   <div class="grid">
     <div class="panel c6"><h3>Última escena despejada</h3><img loading="lazy" decoding="async" id="sat-ql" alt="Imagen Sentinel-2 en color real de la última escena despejada" style="width:100%;border-radius:8px;display:block"><p class="note" id="sat-ql-note"></p></div>

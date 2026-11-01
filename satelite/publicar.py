@@ -58,7 +58,10 @@ if os.path.exists(SP):
     Q = pd.read_csv(SP, parse_dates=["fecha"]).sort_values("fecha").drop_duplicates("fecha", keep="last")
     Q["t"] = Q.total_vh14 / Q.total_valid_px.clip(lower=1) * Q.total_area_px / 100
     Q["b"] = Q.abajo_vh14 / Q.abajo_valid_px.clip(lower=1) * Q.abajo_area_px / 100
-    s1 = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), b=round(b, 2)) for d, t, b in zip(Q.fecha, Q.t, Q.b)]
+    Q["a"] = Q.arriba_vh14 / Q.arriba_valid_px.clip(lower=1) * Q.arriba_area_px / 100
+    _v = json.load(open(f"{R}/datos/satelite/s1/validacion_s1ml.json")) if os.path.exists(f"{R}/datos/satelite/s1/validacion_s1ml.json") else None
+    _usa_a = bool(_v and _v["arriba"]["rho_umbral"] >= 0.6)
+    s1 = [dict(f=d.strftime("%Y-%m-%d"), t=round(t, 2), b=round(b, 2), **({"a": round(a, 2)} if _usa_a else {})) for d, t, b, a in zip(Q.fecha, Q.t, Q.b, Q.a)]
 # Margen del cauce (derecha = oriental, donde se extrae el material), Sentinel-2 (NDVI ≥ 0,30) y Landsat (NDVI ≥ 0,40)
 marg = []
 for f_, t_, s_ in (("escenas_s2.csv", 30, "S2"), ("escenas_landsat.csv", 40, "L")):
@@ -73,6 +76,10 @@ for f_, t_, s_ in (("escenas_s2.csv", 30, "S2"), ("escenas_landsat.csv", 40, "L"
 marg = sorted(marg, key=lambda r: r["f"])
 # radar calibrado píxel a píxel (s1ml.py): se usa si en la validación por años supera al umbral fijo
 s1val = dict(n=90, rho=0.75, sesgo_ha=3.1, mae_ha=11.3, umbral="VH ≥ −14 dB", rho_abajo=0.78, rho_arriba=0.43)
+if os.path.exists(f"{R}/datos/satelite/s1/validacion_s1ml.json"):      # validación con la línea de la barrera (pares ±2 días)
+    _v = json.load(open(f"{R}/datos/satelite/s1/validacion_s1ml.json"))
+    s1val = dict(n=_v["total"]["n"], rho=_v["total"]["rho_umbral"], mae_ha=_v["total"]["mae_umbral"], umbral="VH ≥ −14 dB", rho_abajo=_v["abajo"]["rho_umbral"], rho_arriba=_v["arriba"]["rho_umbral"],
+                 usa_arriba=_v["arriba"]["rho_umbral"] >= 0.6, clasificador=dict(rho=_v["total"]["rho_ml"], mae_ha=_v["total"]["mae_ml"], rho_arriba=_v["arriba"]["rho_ml"]))
 MLP = f"{R}/datos/satelite/s1/escenas_s1ml.csv"; MLV = f"{R}/datos/satelite/s1/validacion_s1ml.json"
 if os.path.exists(MLP) and os.path.exists(MLV):
     vv_ = json.load(open(MLV))
