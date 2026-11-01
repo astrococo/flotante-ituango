@@ -22,3 +22,13 @@ POST 200 84852 https://servapibi.xm.com.co/lists {"MetricId":"ListadoMetricas"}
 200 106643 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-04-24&hasta=2026-05-20
 200 380751 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-05-20&hasta=2026-06-18
 200 427896 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-06-18&hasta=2026-07-21
+200 642 https://datos.ideam.gov.co/s3-estacionesideam?list-type=2&delimiter=%2F&prefix=observaciones%2F
+200 2479 https://datos.ideam.gov.co/s3-estacionesideam?list-type=2&delimiter=%2F&prefix=observaciones%2Fhistoricos%2Fcsv%2F
+200 1156778 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026177030-Q_MEDIA_D.csv
+200 903897 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026187110-Q_MEDIA_D.csv
+404 232 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026187111-Q_MEDIA_D.csv
+200 807634 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026207080-Q_MEDIA_D.csv
+404 232 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026237070-Q_MEDIA_D.csv
+200 204430 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026237100-Q_MEDIA_D.csv
+404 232 https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/0026237071-Q_MEDIA_D.csv
+200 46457 https://www.datos.gov.co/resource/hp9r-jxuu.json?$where=latitud%20between%204.8%20and%207.0%20and%20(nombre%20like%20%27%25ANDR%25%27%20or%20nombre%20like%20%27%25VIRGINIA%25%27%20or%20nombre%20like%20%27%25PINTADA%25%27%20or%20nombre%20like%20%27%25BOLOMBOLO%25%27%20or%20nombre%20like%20%27%25MAR%C3%8DA%25%27%20or%20nombre%20like%20%27%25OLAYA%25%27)
