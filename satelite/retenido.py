@@ -13,7 +13,7 @@ from comun import catalogo, firmar, leer, BARRERA_LINEA
 OUT = "datos/satelite/retenido"; os.makedirs(OUT, exist_ok=True)
 PREV = "../datos/satelite/retenido"
 lat = (BARRERA_LINEA[0][0] + BARRERA_LINEA[1][0]) / 2; lon = (BARRERA_LINEA[0][1] + BARRERA_LINEA[1][1]) / 2
-KMS, KMN, KMW, KME = 31.0, 31.0, 12.0, 14.0               # km al sur, norte, oeste y este de la barrera
+KMS, KMN, KMW, KME = 31.0, 33.0, 12.0, 32.0               # km al sur, norte, oeste y este de la barrera (el embalse gira al este)
 c = 111.32 * np.cos(np.radians(lat))
 bbox = (lon - KMW / c, lat - KMS / 111.32, lon + KME / c, lat + KMN / 111.32)
 RES = 0.02; SH = (int((KMS + KMN) / RES), int((KMW + KME) / RES)); HA = RES * RES * 100
