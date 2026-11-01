@@ -631,6 +631,7 @@ async function renderSat(){
   document.getElementById('sat-ql').src='datos/satelite/app/ultima_escena.jpg';
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
   renderVisor(J);
+  renderCorredor();
   document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
    <li><b>Zona de agua:</b> píxeles con agua (MNDWI &gt; 0) en al menos la mitad de las escenas despejadas, a 2,5 km de la barrera: ${nf(A.total)} ha. El índice de agua del SCL no sirve aquí porque confunde el agua turbia del Cauca con suelo.</li>
@@ -726,6 +727,24 @@ async function renderVisor(J){
   window.__visorGo=(f,s1)=>{sen.value=s1?'s1':'s2';fill();if([...sel.options].some(o=>o.value===f)){sel.value=f;show();box.scrollIntoView({behavior:'smooth',block:'center'})}};
 }
 
+
+/* ---------- corredor del río (30 km aguas arriba, 15 km aguas abajo) ---------- */
+let COR=null;
+async function renderCorredor(){
+  const box=document.getElementById('cor-tabla');if(!box)return;
+  try{if(!COR)COR=await fetchJSON('datos/satelite/corredor/serie.json',10000)}catch(e){box.innerHTML='<tbody><tr><td>El análisis del corredor aún no está disponible.</td></tr></tbody>';return}
+  const tr=COR.tramos, lab=t=>{const [a,b]=t.split('..').map(Number);return b<=0?`${nf(Math.abs(b),1)}–${nf(Math.abs(a),1)} km aguas arriba`:`${nf(a,1)}–${nf(b,1)} km aguas abajo`};
+  const last=t=>{for(let i=COR.serie.length-1;i>=0;i--){if(COR.serie[i][t]!=null)return COR.serie[i]}return null};
+  const med=t=>median(COR.serie.map(r=>r[t]).filter(v=>v!=null));
+  box.innerHTML='<thead><tr><th>Tramo</th><th>Agua (ha)</th><th>Última escena despejada</th><th>Vegetación (ha)</th><th>% del agua</th><th>Mediana histórica (ha)</th></tr></thead><tbody>'+
+    tr.map(t=>{const r=last(t);return `<tr><td>${lab(t)}</td><td class="num">${nf(COR.agua_ha[t])}</td><td>${r?fmtD(d0(r.f)):'—'}</td><td class="num"><b>${r?nf(r[t],1):'—'}</b></td><td class="num">${r?nf(r[t]/COR.agua_ha[t]*100):'—'} %</td><td class="num">${nf(med(t),1)}</td></tr>`}).join('')+'</tbody>';
+  const cols=['#7c3aed','#2563eb','#0891b2','#10b981','#84cc16','#f59e0b','#f97316','#ef4444'];
+  const o=baseOpts();o.scales.x={type:'linear',grid:{color:css('--line')},ticks:{callback:v=>{const d=new Date(v);return MES[d.getUTCMonth()]+' '+String(d.getUTCFullYear()).slice(2)},maxTicksLimit:10}};
+  o.scales.y.title={display:true,text:'hectáreas'};o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x);o.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y,1)+' ha';
+  mk('ch-cor',{type:'line',data:{datasets:tr.map((t,i)=>({label:lab(t),data:COR.serie.filter(r=>r[t]!=null).map(r=>({x:d0(r.f),y:r[t]})),borderColor:cols[i],backgroundColor:cols[i],pointRadius:1.5,borderWidth:1,tension:0,hidden:!t.startsWith('-')}))},options:o});
+  document.getElementById('cor-nota').textContent=`Sentinel-2 a 20 m, ${COR.serie.length} fechas con algún tramo despejado (≥ 60 %). Se actualiza todos los días con las imágenes nuevas (última revisión ${COR.generado} UTC). Haga clic en la leyenda para mostrar u ocultar tramos; por defecto se ven los de aguas arriba.`;
+}
+
 /* ---------- vista datos ---------- */
 function renderUpdate(){
   const s=S.src;
@@ -797,7 +816,7 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=7711ed1d90',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=557aec9b07',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
 fetch('datos/app/base.json?v=844de4c842',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});

@@ -68,8 +68,8 @@ E = pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fe
 E.to_csv(f"{OUT}/escenas.csv", index=False)
 # 3) serie para la app: hectáreas por tramo cuando el tramo está ≥ 60 % despejado
 ser = []
-for r in E.itertuples(index=False):
-    r = r._asdict(); o = dict(f=r["fecha"])
+for r in E.to_dict("records"):
+    o = dict(f=str(r["fecha"]))
     for a, b in TRAMOS:
         k = f"t{a}_{b}".replace("-", "_").replace(".", "p")
         ar, vl, vg = r.get(f"t{a}_{b}_area_px"), r.get(f"t{a}_{b}_valid_px"), r.get(f"t{a}_{b}_veg_px")

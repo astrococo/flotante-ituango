@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=ff57f6b3c8" defer></script>
+<script src="app.js?v=49fb705b09" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -365,6 +365,13 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     <div id="visor" style="height:520px;border-radius:8px;margin-top:8px;background:var(--surface2)"></div>
     <p class="note" id="vis-info"></p>
     <p class="note">Haga clic en un punto del gráfico de área para ver esa escena. Imagen base de alta resolución: Esri World Imagery (fecha de captura distinta a la de Sentinel). Línea roja: barrera identificada como el borde persistente de la vegetación flotante a la salida del estrecho (2022–2023, ±20 m); el punto informado queda unos 180 m al suroeste, en la orilla.</p>
+  </div>
+  <div class="panel">
+    <h3>Corredor del río: 30 km aguas arriba y 15 km aguas abajo</h3>
+    <div class="chart"><canvas id="ch-cor"></canvas></div>
+    <div class="tbl"><table id="cor-tabla"></table></div>
+    <p class="note" id="cor-nota"></p>
+    <p class="note">Vegetación flotante (NDVI ≥ 0,30) dentro del agua de cada tramo, medida desde la barrera en dirección norte-sur. Sirve para ver qué viene río abajo; en las pruebas sobre 2022–2026 no mejoró el pronóstico semanal de extracción, por eso no entra al modelo.</p>
   </div>
   <div class="grid">
     <div class="panel c6"><h3>Estacionalidad</h3><div class="chart sm"><canvas id="ch-sat-mes"></canvas></div>
