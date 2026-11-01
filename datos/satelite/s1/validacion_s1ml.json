@@ -1,0 +1,26 @@
+{
+ "abajo": {
+  "n": 70,
+  "rho_ml": 0.698,
+  "mae_ml": 10.37,
+  "sesgo_ml": -2.54,
+  "rho_umbral": 0.757,
+  "mae_umbral": 8.49
+ },
+ "arriba": {
+  "n": 70,
+  "rho_ml": 0.208,
+  "mae_ml": 5.79,
+  "sesgo_ml": 2.55,
+  "rho_umbral": 0.641,
+  "mae_umbral": 4.76
+ },
+ "total": {
+  "n": 70,
+  "rho_ml": 0.58,
+  "mae_ml": 14.13,
+  "sesgo_ml": -0.8,
+  "rho_umbral": 0.799,
+  "mae_umbral": 10.0
+ }
+}
