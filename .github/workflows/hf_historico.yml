@@ -1,0 +1,24 @@
+name: Histórico HydroForecast (15 min → diario)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  historico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q pandas
+      - run: mkdir -p datos/hf && python scripts/hf_historico.py
+      - name: Guardar
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/hf; git diff --cached --quiet && exit 0
+          git commit -m "Histórico HydroForecast $(date -u '+%F')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
