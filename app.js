@@ -797,7 +797,7 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=0d1ba1d297',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=7711ed1d90',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
 fetch('datos/app/base.json?v=844de4c842',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
