@@ -311,6 +311,11 @@ function forecast(scen){
     Object.keys(b).forEach(k=>{if(/^(mf|ma|tot)(_|$)/.test(k)&&typeof b[k]==='number')b[k]*=b.adj})});
   out.res=res; out.lastT=lastT; out.endT=endT;
   out.fp={mf:parosFactor(S.mf),ma:parosFactor(S.ma)};
+  // parada por caudal alto (seguridad de las lanchas): factor por días de la semana sobre el umbral, según el pronóstico de caudal
+  const PC=S.P.parada_caudal;
+  out.blocks.forEach(b=>{const ds=out.days.filter(d=>d.t>=b.t0&&d.t<=b.t1);const n=ds.filter(d=>d.q!=null&&d.q>(PC?PC.umbral:1e9)).length*7/Math.max(1,ds.length);
+    const c=n<0.5?0:n<=3.5?1:2; b.d_alto=Math.round(n); b.ff_mf=PC?PC.mf[c]:1; b.ff_ma=PC?PC.ma[c]:1;
+    b.mf_ep=b.mf_e*out.fp.mf*b.ff_mf; b.ma_ep=b.ma_e*out.fp.ma*b.ff_ma; b.tot_ep=b.mf_ep+b.ma_ep});
   let pk={v:-1,t:null}; for(const [t,v] of map){if(t>=lastT-56*DAY&&Number.isFinite(v)&&v>pk.v)pk={v,t}} out.qpk=pk;
   return out;
 }
@@ -405,7 +410,7 @@ function renderForecast(){
   const fp=FC.fp, nAv=B.length-i0, n4=Math.min(4,nAv);
   const s=(k,n=n4)=>B.slice(i0,i0+n).reduce((a,b)=>a+b[k],0);
   const plan=B.slice(i0,i0+n4).some(b=>b.rest!=null);
-  const sp=(key,n=n4)=>plan?s(key+'_e',n):(key==='tot'?s('mf_e',n)*fp.mf+s('ma_e',n)*fp.ma:s(key+'_e',n)*fp[key]);
+  const sp=(key,n=n4)=>plan?s(key+'_e',n):s(key+'_ep',n);
   const from=i0?` desde hoy (S${B[i0].h})`:'';
   const card=(title,key,LT,color)=>{
     const v=s(key), e=s(key+'_e'), lo=s(key+'_p25'), hi=s(key+'_p75');
@@ -415,12 +420,12 @@ function renderForecast(){
     return `<div class="st ${st[0]} c4"><div class="row"><h2><i class="sw" style="background:${color}"></i>${title}</h2><span class="badge ${st[0]}">${st[1]}</span></div>
       <div class="big">${nf(v)} <small>m³</small></div>
       <div class="note">Próximas ${n4} semanas${from} · mediana · rango probable ${nf(lo)} – ${nf(hi)} m³</div>
-      <p><b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')}${ref?` · ${ratio>=1?'+':''}${nf((ratio-1)*100)} % frente al nivel típico (${nf(ref)} m³)`:''}.${key!=='tot'?' <span class="muted">La división flotante/macrófitas del mecanizado es estimada en el registro; el total es la cifra más firme.</span>':''}</p></div>`};
+      <p><b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')+(B.slice(i0,i0+n4).some(b=>b.d_alto)?' y la parada por caudal alto pronosticado':'')}${ref?` · ${ratio>=1?'+':''}${nf((ratio-1)*100)} % frente al nivel típico (${nf(ref)} m³)`:''}.${key!=='tot'?' <span class="muted">La división flotante/macrófitas del mecanizado es estimada en el registro; el total es la cifra más firme.</span>':''}</p></div>`};
   document.getElementById('fc-cards').innerHTML=
     card('Total','tot',(R.mf_tot.LT||0)+(R.ma_tot.LT||0),'var(--accent)')+card('Material flotante','mf',R.mf_tot.LT,'var(--mf)')+card('Macrófitas','ma',R.ma_tot.LT,'var(--ma)')+
     [[Math.min(8,nAv),`Próximas ${Math.min(8,nAv)} semanas${from}`],[nAv,`Resto del horizonte · ${nAv} semanas${from}`]].map(([k,lab])=>`<div class="panel c6 kpi"><span class="lab">${lab}</span>
       <span class="val">${nf(s('tot',k))} <small>m³ (mediana)</small></span>
-      <span class="rng">esperado ${nf(s('tot_e',k))} m³ con operación normal · ${nf(sp('tot',k))} m³ con paros históricos</span>
+      <span class="rng">esperado ${nf(s('tot_e',k))} m³ con operación normal · ${nf(sp('tot',k))} m³ con paros históricos y caudal pronosticado</span>
       <div class="split"><span><i class="sw" style="background:var(--mf)"></i>Flotante ${nf(s('mf',k))}</span><span><i class="sw" style="background:var(--ma)"></i>Macrófitas ${nf(s('ma',k))}</span></div></div>`).join('');
   // gráfico
   const hist=[]; for(let k=8;k>=1;k--){const i1=S.last-(k-1)*7,i0=i1-6;let a=0,b=0;for(let i=i0;i<=i1;i++){a+=S.mf[i];b+=S.ma[i]}let qq=0,c=0;for(let i=i0;i<=i1;i++)if(S.q[i]!=null){qq+=S.q[i];c++}hist.push({lab:fmtDs(S.T[i0])+'–'+fmtDs(S.T[i1]),mf:a,ma:b,q:c?qq/c:null})}
@@ -442,7 +447,7 @@ function renderForecast(){
   o.plugins.tooltip.callbacks.label=c=>c.parsed.y==null?null:c.dataset.label+': '+nf(c.parsed.y);
   mk('ch-fc',{data:{labels,datasets:ds},options:o});
   document.getElementById('fc-table').innerHTML='<thead><tr><th>Semana</th><th>Días</th><th>Q m³/s</th><th>Flotante</th><th>Macrófitas</th><th>Total P50</th><th>Esperado</th><th>Con paros</th><th>P10–P90</th></tr></thead><tbody>'+
-   B.map(b=>`<tr${b.t1<today?' style="opacity:.55" title="Semana ya transcurrida, sin dato de extracción"':''}><td>S${b.h} · ${fmtDs(b.t0)} – ${fmtDs(b.t1)}</td><td class="num">${b.nd}${b.rest!=null?` <small>(${nf(b.rest)} desc.)</small>`:''}</td><td class="num">${nf(b.q)}</td><td class="num">${nf(b.mf)}</td><td class="num">${nf(b.ma)}</td><td class="num"><b>${nf(b.tot)}</b></td><td class="num">${nf(b.tot_e)}</td><td class="num">${b.rest!=null?nf(b.tot_e)+' <small>plan</small>':nf(b.mf_e*FC.fp.mf+b.ma_e*FC.fp.ma)}</td><td class="num">${nf(b.tot_p10)} – ${nf(b.tot_p90)}</td></tr>`).join('')+'</tbody>';
+   B.map(b=>`<tr${b.t1<today?' style="opacity:.55" title="Semana ya transcurrida, sin dato de extracción"':''}><td>S${b.h} · ${fmtDs(b.t0)} – ${fmtDs(b.t1)}</td><td class="num">${b.nd}${b.rest!=null?` <small>(${nf(b.rest)} desc.)</small>`:''}</td><td class="num">${nf(b.q)}</td><td class="num">${nf(b.mf)}</td><td class="num">${nf(b.ma)}</td><td class="num"><b>${nf(b.tot)}</b></td><td class="num">${nf(b.tot_e)}</td><td class="num">${b.rest!=null?nf(b.tot_e)+' <small>plan</small>':nf(b.tot_ep)+(b.d_alto?` <small title="días con caudal sobre ${nf(S.P.parada_caudal.umbral)} m³/s">(${b.d_alto} d alto)</small>`:'')}</td><td class="num">${nf(b.tot_p10)} – ${nf(b.tot_p90)}</td></tr>`).join('')+'</tbody>';
   const om=baseOpts(); om.scales.y.beginAtZero=false; om.scales.y.suggestedMin=.7; om.scales.y.suggestedMax=1.5;
   om.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y,2);
   mk('ch-mult',{type:'line',data:{labels:B.map(b=>'S'+b.h),datasets:[
@@ -468,7 +473,9 @@ function renderModel(){
   Pp     = (f + 50) · q_p(h) − 50,  p = 10, 25, 75, 90
   día    = semana / 7 · factor del día de la semana
   E_paros = E · (media de todas las semanas / media de semanas
-            con operación, últimas 104 semanas)
+            con operación, últimas 104 semanas) · k(días > 2.300 m³/s)
+           k flotante 1 / 0,68 / 0,16 y macrófitas 1 / 0,74 / 0,52
+           con 0, 1–3 y 4–7 días de caudal alto pronosticado
 Total = Flotante + Macrófitas`;
   const r=(k,f)=>`<td class="num">${f(P.mf_tot[k])}</td><td class="num">${f(P.ma_tot[k])}</td>`;
   document.getElementById('tbl-params').innerHTML='<thead><tr><th>Parámetro</th><th>Flotante</th><th>Macrófitas</th></tr></thead><tbody>'+
@@ -516,6 +523,13 @@ function renderRezagos(){
   document.getElementById('rez-read').innerHTML=`<p><b>Horas (viaje del agua).</b> La Pintada → Olaya ${V['CaudalPintada->CaudalOlaya'].horas} h y Olaya → Sitio Presa ${V['CaudalOlaya->CaudalSitioPresa'].horas} h (cambios horarios); La Virginia, La Pintada y Bolombolo responden el mismo día en Olaya. El caudal llega en horas, pero en la extracción no aparece a esa escala.</p>
    <p><b>Días y semanas.</b> Con preblanqueo, la correlación diaria y semanal entre caudal y material flotante queda en ±0,1–0,2: no hay un rezago lineal útil. Lo que sí aparece es un umbral: por encima de ~2.300 m³/s el mecanizado opera el ${nf(R.por_caudal[4].opera_mec*100)} % de los días (${nf(R.por_caudal[0].opera_mec*100)} % con menos de 1.000 m³/s) y el flotante por día cae a ~${nf(R.por_caudal[4].mf_rel*100)} % de lo normal durante 2–3 semanas. Después vuelve a lo normal, sin volumen extra neto: la suma de las 8 semanas siguientes queda en la mediana +${nf(E.extra_8sem_mediana)} m³ sobre lo normal.</p>
    <p><b>Meses.</b> La anomalía de caudal se relaciona con el material flotante 5 a 8 meses después (cruda ρ 0,37–0,54; preblanqueada 0,16–0,27, en el límite). Coincide con lo anual: 2021–2022 muy húmedos (La Niña) y 2023 récord de flotante (128.403 m³); 2024 seco y 2024–2025 bajos. Como término del pronóstico baja el error total ${nf((1-bt.rmse/bt.rmse_base)*100,1)} %, pero en 2024 queda por debajo de la mediana histórica, así que se muestra como contexto y no entra al modelo.</p>
+   <h3 style="margin-top:14px">Cómo se mejora la relación</h3>
+   <p>La extracción está limitada por los equipos, no por el material: los viajes por volqueta no cambian con el caudal (ρ ≈ 0) y el volumen semanal lo explica el esfuerzo (volqueta-días, r = ${nf(R.regresion['esfuerzo (volqueta-días)'].r_val,2)} en 2025–2026). Por eso la correlación directa caudal–flotante es débil (ρ semanal ≈ −0,1). Separando los efectos del caudal mejora:</p>
+   <div class="tbl"><table><thead><tr><th>Relación caudal → material flotante semanal</th><th>r 2021–2024</th><th>r 2025–2026 (validación)</th></tr></thead><tbody>
+   ${[['Solo el caudal medio de la semana','solo caudal de la semana'],['Días de caudal alto en la semana (parada por seguridad)','caudal: parada (días >2.300 y 1.866–2.300)'],['Días altos + caudal de las 6 semanas previas','caudal: parada + llegada (media exp. 42 d)'],['Esfuerzo + caudal','esfuerzo + caudal (parada + llegada 56 d)']].map(([l,k])=>`<tr><td>${l}</td><td class="num">${nf(R.regresion[k].r_ent,2)}</td><td class="num">${nf(R.regresion[k].r_val,2)}</td></tr>`).join('')}</tbody></table></div>
+   <p class="note">El caudal medio solo es inestable (0,21 frente a 0,73) porque en 2025–2026 lo domina la parada larga de abr–may 2025, con signo negativo: más caudal, menos extracción. Días altos + caudal previo se sostiene en ambos periodos (≈ 0,5).</p>
+   <p>La llegada de material sí se ve en la <b>composición</b> de lo que cargan las volquetas: frente a su nivel de las 26 semanas previas, la fracción de flotante sube con el caudal de las 6–8 semanas anteriores (r = ${nf(R.composicion.r_ent,2)} en 2021–2024 y ${nf(R.composicion.r_val,2)} en 2025–mar 2026) y en la semana siguiente a una creciente pasa de ${nf(R.composicion.tras_creciente.base*100)} % a ~${nf((R.composicion.tras_creciente.base+R.composicion.tras_creciente.dif[3])*100)} %, y sigue alta unas 6 semanas: material acumulado mientras no se pudo extraer. Abr–sep 2026 queda fuera porque la división flotante/macrófitas del registro es fija (45,7 %).</p>
+   <p><b>Incorporado al pronóstico:</b> el valor «con paros» ahora usa los días de caudal alto pronosticados (> 2.300 m³/s). Validado dejando fuera un año, en las ${R.parada.mf_tot.semanas} semanas con caudal alto el error baja de ${nf(R.parada.mf_tot.en_semanas_altas.constante)} a ${nf(R.parada.mf_tot.en_semanas_altas.por_caudal)} m³ en flotante y de ${nf(R.parada.ma_tot.en_semanas_altas.constante)} a ${nf(R.parada.ma_tot.en_semanas_altas.por_caudal)} m³ en macrófitas, sin empeorar ningún año. Depende de que HydroForecast anticipe bien la creciente.</p>
    <p class="note">Tras ~30 pruebas, los valores p son orientativos. Una revisión anterior reportó «2× en la segunda semana»: medido contra las 4 semanas previas, que ya venían deprimidas por el caudal alto; contra el nivel normal la segunda semana es 1,1×.</p>`;
 }
 
@@ -921,9 +935,9 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=d22d4c20b1',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=40bad96849',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});
 }
-fetch('datos/app/base.json?v=46d82f12bf',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
+fetch('datos/app/base.json?v=aa4039a8b3',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
