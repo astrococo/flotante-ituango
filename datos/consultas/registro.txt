@@ -16,3 +16,9 @@ POST 200 91038 https://servapibi.xm.com.co/daily {"MetricId":"AporCaudal","Start
 POST 200 112751 https://servapibi.xm.com.co/daily {"MetricId":"AporCaudal","StartDate":"2026-10-01","EndDate":"2026-10-30","Entity":"Rio","Filter":[]}
 POST 200 6416 https://servapibi.xm.com.co/lists {"MetricId":"ListadoRios","Entity":"Sistema"}
 POST 200 84852 https://servapibi.xm.com.co/lists {"MetricId":"ListadoMetricas"}
+200 199037 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2021-09-20&hasta=2021-10-05
+200 336057 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2022-12-10&hasta=2023-01-05
+200 199716 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2023-01-05&hasta=2023-01-20
+200 106643 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-04-24&hasta=2026-05-20
+200 380751 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-05-20&hasta=2026-06-18
+200 427896 https://jdguarnizor-hydroforecast-ituango.hf.space/api/historical?desde=2026-06-18&hasta=2026-07-21
