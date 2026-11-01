@@ -13,7 +13,7 @@ from comun_grilla import SH, TR, CRS, Z, SUR, G
 OUT = "datos/satelite/s1"; VIS = "datos/satelite/visor"; os.makedirs(OUT, exist_ok=True); os.makedirs(VIS, exist_ok=True)
 M = np.load("../datos/satelite/series/mascaras.npz")
 un = lambda a: np.unpackbits(a)[:SH[0] * SH[1]].reshape(SH).astype(bool)
-s2 = {pd.Timestamp(f): (un(v), un(g)) for f, v, g in zip(M["fechas"], M["val"], M["veg"])}
+s2 = {pd.Timestamp(str(f)): (un(v), un(g)) for f, v, g in zip(M["fechas"], M["val"], M["veg"])}
 lat, lon = BARRERA
 items = sorted(catalogo().search(collections=["sentinel-1-rtc"], intersects={"type": "Point", "coordinates": [lon, lat]},
                datetime="2019-01-01/2026-12-31").items(), key=lambda i: i.datetime)

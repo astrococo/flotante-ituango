@@ -612,13 +612,14 @@ async function renderSat(){
   const pt=(k)=>S_.map(r=>({x:r.T,y:r[k]})), ptL=(k)=>LS.map(r=>({x:r.T,y:r[k]}));
   const ds=mode==='t'?[{type:'line',label:'Vegetación flotante (total)',data:pt('t'),borderColor:css('--ma'),backgroundColor:css('--ma'),pointRadius:3,borderWidth:1,tension:0},
     {type:'line',label:'Umbral NDVI 0,2–0,4 (sensibilidad)',data:S_.map(r=>({x:r.T,y:r.t20})),borderColor:'transparent',backgroundColor:css('--ma')+'33',pointRadius:0,fill:'+1'},{type:'line',label:'_',data:S_.map(r=>({x:r.T,y:r.t40})),borderColor:'transparent',pointRadius:0,fill:false},{type:'scatter',label:'Landsat 8/9 (30 m)',data:ptL('t'),borderColor:css('--accent'),backgroundColor:css('--accent'),pointStyle:'triangle',pointRadius:4},{type:'scatter',label:'Sentinel-1 radar (sin nubes)',data:S1.map(r=>({x:r.T,y:r.t})),borderColor:css('--muted'),backgroundColor:css('--muted')+'99',pointStyle:'rect',pointRadius:3}]
-   :[{type:'line',label:'Aguas arriba (sur)',data:pt('a'),borderColor:css('--mf'),backgroundColor:css('--mf'),pointRadius:3,borderWidth:1},{type:'line',label:'Aguas abajo (norte)',data:pt('b'),borderColor:css('--ma'),backgroundColor:css('--ma'),pointRadius:3,borderWidth:1},{type:'scatter',label:'Landsat aguas arriba',data:ptL('a'),borderColor:css('--mf'),backgroundColor:css('--mf'),pointStyle:'triangle',pointRadius:4},{type:'scatter',label:'Landsat aguas abajo',data:ptL('b'),borderColor:css('--ma'),backgroundColor:css('--ma'),pointStyle:'triangle',pointRadius:4},{type:'scatter',label:'Radar aguas abajo',data:S1.map(r=>({x:r.T,y:r.b})),borderColor:css('--ma'),backgroundColor:css('--ma')+'55',pointStyle:'rect',pointRadius:3}];
+   :[{type:'line',label:'Aguas arriba (sur)',data:pt('a'),borderColor:css('--mf'),backgroundColor:css('--mf'),pointRadius:3,borderWidth:1},{type:'line',label:'Aguas abajo (norte)',data:pt('b'),borderColor:css('--ma'),backgroundColor:css('--ma'),pointRadius:3,borderWidth:1},{type:'scatter',label:'Landsat aguas arriba',data:ptL('a'),borderColor:css('--mf'),backgroundColor:css('--mf'),pointStyle:'triangle',pointRadius:4},{type:'scatter',label:'Landsat aguas abajo',data:ptL('b'),borderColor:css('--ma'),backgroundColor:css('--ma'),pointStyle:'triangle',pointRadius:4},{type:'scatter',label:'Radar aguas abajo',data:S1.map(r=>({x:r.T,y:r.b})),borderColor:css('--ma'),backgroundColor:css('--ma')+'55',pointStyle:'rect',pointRadius:3},...(S1.some(r=>r.a!=null)?[{type:'scatter',label:'Radar aguas arriba',data:S1.filter(r=>r.a!=null).map(r=>({x:r.T,y:r.a})),borderColor:css('--mf'),backgroundColor:css('--mf')+'55',pointStyle:'rect',pointRadius:3}]:[])];
   if(mode==='mg'){ds.length=0;ds.push(
     {type:'line',label:'Margen derecha (oriental)',data:MG.map(r=>({x:r.T,y:r.ad+r.bd})),borderColor:css('--mf'),backgroundColor:css('--mf'),pointRadius:3,borderWidth:1},
     {type:'line',label:'Margen izquierda (occidental)',data:MG.map(r=>({x:r.T,y:r.ai+r.bi})),borderColor:css('--muted'),backgroundColor:css('--muted'),pointRadius:3,borderWidth:1})}
   o.plugins.legend.labels.filter=it=>it.text!=='_';
+  o.onClick=(ev,els,ch)=>{if(!els.length)return;const e=els[0],d=ch.data.datasets[e.datasetIndex],pt=d.data[e.index];if(!pt)return;const f=new Date(pt.x).toISOString().slice(0,10);if(window.__visorGo)window.__visorGo(f,/radar|Radar/.test(d.label))};
   mk('ch-sat',{data:{datasets:ds},options:o});
-  document.getElementById('sat-note').textContent=`Círculos: Sentinel-2 (${J.n_utiles} escenas). Triángulos: Landsat 8/9 (${LS.length} escenas, NDVI ≥ 0,40; frente a Sentinel-2 en ${J.landsat_validacion?.n||31} fechas cercanas: ρ = 0,82, sesgo −0,6 ha). Cuadros: radar Sentinel-1 (${S1.length} escenas, VH ≥ −14 dB; frente a Sentinel-2 en 90 fechas: ρ = 0,75, sesgo +3 ha; ve a través de las nubes). Aguas arriba el radar no concuerda (agua turbulenta de río) y no se muestra. Las ópticas solo con al menos ${nf(J.metodo.minimo_despejado*100)} % del núcleo despejado. La franja muestra el rango con umbrales de NDVI entre 0,2 y 0,4: la forma de la serie no cambia (correlación ≥ 0,95). Hay meses sin escenas útiles por nubosidad.`;
+  document.getElementById('sat-note').textContent=`Círculos: Sentinel-2 (${J.n_utiles} escenas). Triángulos: Landsat 8/9 (${LS.length} escenas, NDVI ≥ 0,40; frente a Sentinel-2 en ${J.landsat_validacion?.n||31} fechas cercanas: ρ = 0,82, sesgo −0,6 ha). Cuadros: radar Sentinel-1 (${S1.length} escenas, ${J.s1_validacion?.umbral||'VH ≥ −14 dB'}; frente a Sentinel-2 en ${J.s1_validacion?.n||90} fechas: ρ = ${nf(J.s1_validacion?.rho??0.75,2)}, error medio ${nf(J.s1_validacion?.mae_ha??11.3,1)} ha; ve a través de las nubes). ${J.s1_validacion?.usa_arriba?'Aguas arriba también se muestra (ρ = '+nf(J.s1_validacion.rho_arriba,2)+').':'Aguas arriba el radar no concuerda lo suficiente y no se muestra por lado.'} Las ópticas solo con al menos ${nf(J.metodo.minimo_despejado*100)} % del núcleo despejado. La franja muestra el rango con umbrales de NDVI entre 0,2 y 0,4: la forma de la serie no cambia (correlación ≥ 0,95). Hay meses sin escenas útiles por nubosidad.`;
   if(mode==='mg')document.getElementById('sat-note').textContent=`Área de vegetación flotante a cada lado del eje del cauce (aguas arriba + aguas abajo), Sentinel-2 y Landsat 8/9, ${MG.length} escenas con al menos 70 % despejado. La margen derecha (oriental) es hacia donde se extrae el material. Cada margen se estima con su propia fracción despejada, así que la suma puede diferir unas hectáreas del total.`;
   const m=Array.from({length:12},(_,k)=>ALL.filter(r=>new Date(r.T).getUTCMonth()===k).map(r=>r.t));
   const om=baseOpts();om.scales.y.title={display:true,text:'hectáreas (mediana)'};om.plugins.tooltip.callbacks.label=c=>`${nf(c.parsed.y,1)} ha · ${m[c.dataIndex].length} escenas`;
@@ -629,11 +630,12 @@ async function renderSat(){
   document.getElementById('sat-mapa').src=`datos/satelite/app/frecuencia_${sel.value}.png`;
   document.getElementById('sat-ql').src='datos/satelite/app/ultima_escena.jpg';
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
+  renderVisor(J);
   document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
    <li><b>Zona de agua:</b> píxeles con agua (MNDWI &gt; 0) en al menos la mitad de las escenas despejadas, a 2,5 km de la barrera: ${nf(A.total)} ha. El índice de agua del SCL no sirve aquí porque confunde el agua turbia del Cauca con suelo.</li>
    <li><b>Vegetación flotante:</b> NDVI ≥ 0,30 dentro de la zona de agua. Se verificó visualmente en escenas con mucha y poca cobertura.</li>
-   <li><b>Otros sensores:</b> Landsat 8/9 (30 m, NDVI ≥ 0,40) y radar Sentinel-1 corregido por terreno (VH ≥ −14 dB) se calibraron contra Sentinel-2 en fechas cercanas (ρ = 0,82 y 0,75). Con los tres, todos los meses desde 2019 tienen al menos una medición.</li>
+   <li><b>Otros sensores:</b> Landsat 8/9 (30 m, NDVI ≥ 0,40) y radar Sentinel-1 corregido por terreno (${J.s1_validacion?.umbral||'VH ≥ −14 dB'}) se calibraron contra Sentinel-2 en fechas cercanas (ρ = 0,82 y ${nf(J.s1_validacion?.rho??0.75,2)}${J.s1_validacion?.rho_umbral?`; el umbral fijo anterior daba ${nf(J.s1_validacion.rho_umbral,2)}`:''}). Con los tres, todos los meses desde 2019 tienen al menos una medición.</li>
    <li><b>Lo que no se puede medir:</b> madera y residuos no verdes. El índice de residuos flotantes (FDI) del agua turbia (mediana 0,048) se confunde con el del material, así que con 10 m de resolución no se separan.</li></ul>
    <h3>Qué muestra y cómo se validó</h3><ul>
    <li><b>Dos procesos distintos.</b> Al sur de la barrera (aguas arriba, agua turbia de río) se ve lo que la barrera retiene; al norte (aguas abajo, agua quieta del embalse) crecen las macrófitas. La revisión visual de 15 escenas en color real confirma las masas verdes en el lado que reporta cada serie.</li>
@@ -681,6 +683,47 @@ function renderOps(){
   document.getElementById('ops-bt').innerHTML='<thead><tr><th>Serie · horizonte</th><th>Modelo actual</th><th>Con descanso programado conocido</th><th>Con calendario (festivos y fines de semana)</th><th>Con caudal observado (perfecto)</th><th>Sabiendo todos los días operados</th></tr></thead><tbody>'+
     [['Total · semanas 1–4',0],['Total · semanas 5–13',1]].map(([l,k])=>`<tr><td>${l}</td><td class="num">${nf(bt.base.tot[k])}</td><td class="num"><b>${nf(bt.prog.tot[k])}</b> (${pc(bt.base.tot[k],bt.prog.tot[k])} %)</td><td class="num">${nf(bt.calendario.tot[k])} (${pc(bt.base.tot[k],bt.calendario.tot[k])} %)</td><td class="num">${nf(bt.caudal_oraculo.tot[k])} (${pc(bt.base.tot[k],bt.caudal_oraculo.tot[k])} %)</td><td class="num">${nf(bt.oraculo_dias.tot[k])} (${pc(bt.base.tot[k],bt.oraculo_dias.tot[k])} %)</td></tr>`).join('')+
     [['Flotante · semanas 1–4','mf',0],['Macrófitas · semanas 1–4','ma',0]].map(([l,c,k])=>`<tr><td>${l}</td><td class="num">${nf(bt.base[c][k])}</td><td class="num"><b>${nf(bt.prog[c][k])}</b> (${pc(bt.base[c][k],bt.prog[c][k])} %)</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>`).join('')+'</tbody>';
+}
+
+
+/* ---------- visor satelital interactivo (Leaflet, se carga solo al abrir Satélite) ---------- */
+let LF_P=null, VIS=null, MAP=null, VL={};
+function loadLeaflet(){if(window.L)return Promise.resolve();if(LF_P)return LF_P;LF_P=new Promise((ok,ko)=>{
+  const c=document.createElement('link');c.rel='stylesheet';c.href='vendor/leaflet/leaflet.css';document.head.appendChild(c);
+  const s=document.createElement('script');s.src='vendor/leaflet/leaflet.js';s.onload=ok;s.onerror=()=>{LF_P=null;ko(new Error('no se pudo cargar el mapa'))};document.head.appendChild(s)});return LF_P}
+async function renderVisor(J){
+  const box=document.getElementById('visor');if(!box)return;
+  try{await loadLeaflet();if(!VIS)VIS=await fetchJSON('datos/satelite/visor/visor.json',10000)}catch(e){box.innerHTML='<p class="note">El visor no está disponible: '+esc(e.message)+'</p>';return}
+  const sel=document.getElementById('vis-fecha'), sen=document.getElementById('vis-sensor');
+  const lista=()=>sen.value==='s1'?VIS.s1.slice().reverse().map(f=>({f})):VIS.s2.slice().reverse();
+  const area=f=>{const r=(sen.value==='s1'?(J.s1||[]):J.serie).find(x=>x.f===f);return r?` · ${nf(r.t,1)} ha`:''};
+  const fill=()=>{const keep=sel.value;sel.innerHTML=lista().map(r=>`<option value="${r.f}">${fmtD(d0(r.f))}${area(r.f)}</option>`).join('');if([...sel.options].some(o=>o.value===keep))sel.value=keep};
+  if(!MAP){
+    MAP=L.map('visor',{zoomControl:true,attributionControl:true});const cen=L.latLng((VIS.linea[0][0]+VIS.linea[1][0])/2,(VIS.linea[0][1]+VIS.linea[1][1])/2);MAP.fitBounds(cen.toBounds(1800));setTimeout(()=>{MAP.invalidateSize();MAP.fitBounds(cen.toBounds(1800))},200);
+    const esri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagen base © Esri, Maxar, Earthstar Geographics'});
+    const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+    esri.addTo(MAP);
+    VL.zona=L.imageOverlay('datos/satelite/visor/zona.png',VIS.bounds,{opacity:1,interactive:false}).addTo(MAP);
+    VL.barrera=L.polyline(VIS.linea,{color:'#ef4444',weight:4}).bindTooltip('Barrera (identificada en Sentinel-2)').addTo(MAP);
+    VL.punto=L.circleMarker(VIS.punto,{radius:4,color:'#f59e0b',weight:2,fillOpacity:.6}).bindTooltip('Punto informado (orilla occidental)').addTo(MAP);
+    L.control.layers({'Alta resolución (Esri)':esri,'Mapa (OpenStreetMap)':osm},{},{collapsed:true}).addTo(MAP);
+    L.control.scale({imperial:false}).addTo(MAP);
+    sen.onchange=()=>{fill();sel.selectedIndex=0;show()};sel.onchange=show;
+    document.getElementById('vis-prev').onclick=()=>{if(sel.selectedIndex<sel.options.length-1){sel.selectedIndex++;show()}};
+    document.getElementById('vis-next').onclick=()=>{if(sel.selectedIndex>0){sel.selectedIndex--;show()}};
+    document.querySelectorAll('#vis-capas input').forEach(i=>i.onchange=show);
+    document.getElementById('vis-op').oninput=show;
+  }
+  fill();show();
+  function show(){
+    const f=sel.value,isS1=sen.value==='s1',on=id=>document.getElementById(id).checked,op=+document.getElementById('vis-op').value/100;
+    ['img','veg'].forEach(k=>{if(VL[k]){MAP.removeLayer(VL[k]);VL[k]=null}});
+    if(on('vc-img')){const u=isS1?`datos/satelite/visor/s1_${f}.jpg`:`datos/satelite/series/ql_${f}.jpg`;if(isS1||(VIS.s2.find(r=>r.f===f)||{}).ql)VL.img=L.imageOverlay(u,VIS.bounds,{opacity:op}).addTo(MAP)}
+    if(on('vc-veg')&&!isS1)VL.veg=L.imageOverlay(`datos/satelite/visor/veg_${f}.png`,VIS.bounds,{opacity:1}).addTo(MAP);
+    on('vc-zona')?VL.zona.addTo(MAP):MAP.removeLayer(VL.zona); on('vc-bar')?(VL.barrera.addTo(MAP),VL.punto.addTo(MAP)):(MAP.removeLayer(VL.barrera),MAP.removeLayer(VL.punto));
+    document.getElementById('vis-info').textContent=isS1?`Radar Sentinel-1 (VH, ${fmtD(d0(f))}): claro = más retrodispersión (vegetación, orillas); oscuro = agua lisa. Ve a través de las nubes.`:`Sentinel-2 ${fmtD(d0(f))}, color real 10 m. Verde: vegetación flotante detectada (NDVI ≥ 0,30); blanco: nube o sombra. Borde azul: zona de agua analizada.`;
+  }
+  window.__visorGo=(f,s1)=>{sen.value=s1?'s1':'s2';fill();if([...sel.options].some(o=>o.value===f)){sel.value=f;show();box.scrollIntoView({behavior:'smooth',block:'center'})}};
 }
 
 /* ---------- vista datos ---------- */
