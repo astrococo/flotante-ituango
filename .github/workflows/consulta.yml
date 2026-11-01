@@ -1,0 +1,30 @@
+name: Consulta de fuentes externas
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "URLs separadas por espacio"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar
+        env:
+          URLS: ${{ github.event.inputs.urls }}
+        run: |
+          mkdir -p datos/consultas; i=0
+          for u in $URLS; do i=$((i+1)); n=$(echo "$u" | sed 's#https\?://##; s#[^A-Za-z0-9._-]#_#g' | cut -c1-120)
+            curl -sS -L --max-time 240 -o "datos/consultas/$n" -w "%{http_code} %{size_download} $u\n" "$u" >> datos/consultas/registro.txt 2>&1 || echo "error $u" >> datos/consultas/registro.txt; done
+      - name: Guardar
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/consultas; git diff --cached --quiet && exit 0
+          git commit -m "Consulta de fuentes externas $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
