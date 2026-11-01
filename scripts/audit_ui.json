@@ -70,8 +70,8 @@
   ],
   [
    "ok",
-   "Sitio Presa: huecos explicados y estimación validada",
-   "La estación empieza el 1-oct-2021: HydroForecast no tiene registros antes (consultado el 1-nov-2026 por su API). De los 881 días sin dato, 821 son anteriores a esa fecha y 60 son fallas del sensor (dic-2022–ene-2023 y abr–jul-2026), que tampoco están en HydroForecast. XM publica aportes del río Ituango solo desde 2022 y son ~12 % menores que Olaya, así que no sirven de reemplazo. Los huecos se estiman como 1,049·Olaya + 30. Validación dejando fuera un año a la vez (2021–2026): error medio 2,8 % diario y 2,5 % semanal (1,4–3,9 % según el año); agregar el Olaya del día anterior solo lo baja a 2,4 %. Desde la v2.2 el material flotante no usa caudal; en macrófitas este error es mucho menor que el del pronóstico."
+   "Sitio Presa: observado desde oct-2021, estimado antes",
+   "Verificado contra el histórico completo de HydroForecast (413.151 registros de 15 min, ene-2015 a nov-2026, descargados el 1-nov-2026): Sitio Presa tiene su primer registro el 1-oct-2021 00:00 y 1.798 días con dato; Olaya y La Pintada vienen desde 2015. La variable «sitiopresa» que lee la app es ese observado (promedio diario; coincide día a día, diferencia media 0,25 m³/s) y está vacía en 883 días: 821 anteriores a oct-2021 y 60 fallas del sensor (dic-2022–ene-2023 y abr–jul-2026, cuando también falta Olaya del 26-abr al 13-may). Solo en esos días la app usa 1,049·Olaya + 30 (error 2,5 % semanal, validado dejando fuera un año a la vez). Para el futuro usa el pronóstico de Sitio Presa de HydroForecast; si falta, el de Olaya con la misma ecuación."
   ],
   [
    "ok",
@@ -80,8 +80,8 @@
   ],
   [
    "ok",
-   "Afluentes y lluvia: lo que existe y lo que se probó",
-   "No hay caudal público medido de los ríos San Andrés, Ituango ni Espíritu Santo en 2019–2026: en el IDEAM (bucket público, descargado el 1-nov-2026) el San Andrés tiene Yarumal hasta 2000, El Valle hasta 2005 y El Cedral hasta may-2018; Ituango y Espíritu Santo no tienen estación; XM tampoco los publica. Reemplazo: la cuenca intermedia = Sitio Presa − Olaya (desde oct-2021; media 72 m³/s, 10 % de Olaya), que suma todos esos afluentes. Con el material extraído se relaciona igual de poco que Olaya (ρ 0,10–0,16 con 0–2 semanas de rezago), así que no se agrega al modelo. Lluvia: la historia se cubre con CHIRPS (probado, sin mejora) y los pluviómetros de HydroForecast (14 días en la API) se archivan a diario desde el 30-oct. Los totales anuales DHIME con Olaya = La Pintada no afectan: en la serie diaria del modelo solo coinciden 5 de 2.651 días. Una tarea mensual descarga del IDEAM las estaciones vigentes de la zona (Puerto Valdivia y Apaví en el Cauca aguas abajo, Brisas del Nechí, La Galera en el Tonusco)."
+   "Estaciones aguas arriba y afluentes",
+   "HydroForecast expone La Virginia y Bolombolo solo 30 días (/api/aguas_arriba); SA-1 San Andrés La María no está en su API. Del IDEAM (bucket público) se obtuvieron caudales diarios 2019–2026 de La Virginia (26177030), La Pintada (26187110) y Bolombolo (26207080); Olaya del IDEAM (26237100) termina en 1999 y SA-1 no está en el catálogo nacional, que en San Andrés de Cuerquia solo tiene pluviómetros. Con ellas se separó el caudal por tramo (La Virginia; La Virginia→La Pintada; La Pintada→Bolombolo; Bolombolo→Olaya; Olaya→Sitio Presa). Ninguna creciente de los tramos intermedios ni de los afluentes locales cambió la extracción; la respuesta viene de las crecientes grandes del Cauca (ver «Crecientes y material flotante»). Lluvia: CHIRPS probado sin mejora; los pluviómetros de HydroForecast se archivan a diario desde el 30-oct."
   ],
   [
    "ok",
@@ -117,8 +117,8 @@
   ],
   [
    "ok",
-   "Caudal en material flotante: aviso, no multiplicador",
-   "Con las fechas corregidas, aplicar el multiplicador de caudal al material flotante sube el error 2022–2026 de 1.096 a 1.169–1.232 m³/semana (según se aplique solo en crecientes o siempre). En la v2.2 se retira del valor central y la creciente (≥ 2.100 m³/s; 11 eventos con 1,3–1,5× más extracción en las 8 semanas siguientes) se mantiene como aviso."
+   "Crecientes y material flotante",
+   "Desde oct-2021, en 18 crecientes de Sitio Presa sobre 1.866 m³/s (P90), la extracción de material flotante cae la semana del pico (0,6×), sube 2,1× la segunda semana después (2,2× por día con extracción; control con las mismas fechas de otros años: 1,1×; p = 0,003–0,02) y se mantiene 1,0–1,8× hasta la octava. Las macrófitas no aumentan. Es más volumen por día, no más días de trabajo: llega material. Igual con La Virginia (1,6×, p = 0,015) y Olaya. En 2019–2021 no aparece porque el mecanizado de flotante estaba arrancando (30.000 m³ en 2020 frente a 88.000–125.000 m³/año después). Como término del pronóstico central (por semanas desde el pico, o factor de 4–6 semanas) mejora el error 2022–2026 solo 1–2 % y empeora 2025–2026, así que se usa como aviso con la semana esperada del pico de extracción. Se hicieron unas 30 pruebas: tomar los p-valores como orientativos."
   ],
   [
    "warn",
@@ -189,6 +189,11 @@
    "warn",
    "Volumen estimado con el satélite",
    "Inventario = área con vegetación flotante × biomasa fresca (3,8 / 11,8 / 40,8 kg/m², mínimo, mediana y máximo mensual de jacinto de agua, PeerJ 2023) ÷ 160 kg/m³ (densidad de la hoja de viajes): 238 / 738 / 2.550 m³ por hectárea. Generado por mes = extracción + cambio del inventario. No está calibrado con datos de Ituango: en los tres paros con imágenes el área no creció de forma consistente (un caso implica 0,55 m de espesor equivalente, por encima del máximo de la literatura). Es un orden de magnitud; para calibrarlo hay que pesar material en cuadros de 1 m² frente al puerto."
+  ],
+  [
+   "warn",
+   "Material que llega visto por satélite ante crecientes",
+   "El área de vegetación (óptica y radar) aguas arriba y aguas abajo de la barrera no cambia tras las crecientes frente a fechas de control, y en el corredor las imágenes ópticas de esos días están nubladas (2–4 eventos útiles). Se probó el índice de residuos flotantes FDI de Sentinel-2 (detecta material no vegetal como madera): en la cola del embalse sigue a la turbiedad del agua (ρ 0,70 con el caudal) y no a lo extraído (ρ ≤ 0,2), así que a 10–20 m no aísla la madera. El radar no tiene suficientes escenas en las 2 semanas posteriores a cada creciente (revisita de 12 días). Lo que falta para ver la madera: imágenes de 3 m (PlanetScope) o dron en la semana 1–2 después de cada creciente."
   ]
  ],
  "plataforma": [

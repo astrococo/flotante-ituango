@@ -667,17 +667,38 @@
  },
  "version": "2.2 (1-nov-2026)",
  "aviso_creciente": {
-  "umbral": 2100,
-  "semanas": 8,
-  "factor_mf": [
-   1.26,
-   1.52
+  "umbral": 1866,
+  "estacion": "Sitio Presa (observado)",
+  "periodo": "oct-2021 a ago-2026",
+  "eventos": 18,
+  "perfil_mf": [
+   0.62,
+   1.19,
+   2.06,
+   1.46,
+   1.02,
+   1.24,
+   1.57,
+   1.78
   ],
-  "factor_ma": [
-   0.72,
-   0.92
+  "perfil_azar": [
+   0.95,
+   0.99,
+   1.13,
+   1.14,
+   0.92,
+   1.05,
+   0.91,
+   1.02
   ],
-  "eventos": 11
+  "mf_por_dia_semana2": 2.18,
+  "ma_cambio": "no aumenta (0,6–1,1×)",
+  "extra_mf_4sem": [
+   962,
+   -2009,
+   3887
+  ],
+  "nota": "Mediana de 18 crecientes (máximos diarios ≥ 1.866 m³/s, separados ≥ 30 días) frente a la extracción de las 4 semanas previas; control: mismas fechas en otros años."
  },
  "factor_paros_ventana": 104
 }

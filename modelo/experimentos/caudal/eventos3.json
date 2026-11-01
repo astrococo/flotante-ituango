@@ -1,0 +1,74 @@
+{
+ "Olaya desde oct-2021 | MF extraído 0–4 sem": {
+  "n": 19,
+  "evento": 1.68,
+  "azar": 1.18,
+  "p": 0.027
+ },
+ "Olaya desde oct-2021 | MA extraído 0–4 sem": {
+  "n": 18,
+  "evento": 0.89,
+  "azar": 1.03,
+  "p": 0.87
+ },
+ "Olaya desde oct-2021 | MF extraído 4–8 sem": {
+  "n": 19,
+  "evento": 1.43,
+  "azar": 1.06,
+  "p": 0.103
+ },
+ "Olaya desde oct-2021 | MA extraído 4–8 sem": {
+  "n": 18,
+  "evento": 0.95,
+  "azar": 1.03,
+  "p": 0.65
+ },
+ "Sitio Presa con relleno 2019–2026 | MF extraído 0–4 sem": {
+  "n": 24,
+  "evento": 1.52,
+  "azar": 1.14,
+  "p": 0.127
+ },
+ "Sitio Presa con relleno 2019–2026 | MA extraído 0–4 sem": {
+  "n": 23,
+  "evento": 0.9,
+  "azar": 1.05,
+  "p": 0.84
+ },
+ "Sitio Presa con relleno 2019–2026 | MF extraído 4–8 sem": {
+  "n": 24,
+  "evento": 1.15,
+  "azar": 1.11,
+  "p": 0.41
+ },
+ "Sitio Presa con relleno 2019–2026 | MA extraído 4–8 sem": {
+  "n": 23,
+  "evento": 1.13,
+  "azar": 1.04,
+  "p": 0.323
+ },
+ "Sitio Presa obs, umbral P80 | MF extraído 0–4 sem": {
+  "n": 20,
+  "evento": 1.66,
+  "azar": 1.12,
+  "p": 0.023
+ },
+ "Sitio Presa obs, umbral P80 | MA extraído 0–4 sem": {
+  "n": 19,
+  "evento": 0.88,
+  "azar": 1.02,
+  "p": 0.82
+ },
+ "Sitio Presa obs, umbral P80 | MF extraído 4–8 sem": {
+  "n": 20,
+  "evento": 1.27,
+  "azar": 0.92,
+  "p": 0.133
+ },
+ "Sitio Presa obs, umbral P80 | MA extraído 4–8 sem": {
+  "n": 19,
+  "evento": 0.75,
+  "azar": 1.03,
+  "p": 0.943
+ }
+}

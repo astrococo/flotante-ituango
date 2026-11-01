@@ -395,7 +395,7 @@ function renderForecast(){
   else bn.hidden=true;
   // aviso de crecientes (respuesta histórica tras picos > umbral)
   const AV=S.P.aviso_creciente, fb=document.getElementById('flood-banner');
-  if(AV&&FC.qpk.v>=AV.umbral){fb.hidden=false;fb.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M2 12c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1M2 18c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/></svg><div><b>Creciente ${FC.qpk.t>S.T[S.last]?'pronosticada':'reciente'}: Sitio Presa ${nf(FC.qpk.v)} m³/s el ${fmtD(FC.qpk.t)}.</b> En ${AV.eventos} crecientes históricas sobre ${nf(AV.umbral)} m³/s, la extracción de material flotante fue ${nf(AV.factor_mf[0],2)}–${nf(AV.factor_mf[1],2)} veces la previa durante unas ${AV.semanas} semanas, y la de macrófitas ${nf(AV.factor_ma[0],2)}–${nf(AV.factor_ma[1],2)} veces. Úselo como escenario: el pronóstico central incluye solo parte de ese efecto.</div>`}
+  if(AV&&FC.qpk.v>=AV.umbral){fb.hidden=false;const pf=AV.perfil_mf||[],t2=FC.qpk.t+14*DAY;fb.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--warn);margin-top:1px"><path d="M2 12c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1M2 18c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/></svg><div><b>Creciente ${FC.qpk.t>S.T[S.last]?'pronosticada':'reciente'}: Sitio Presa ${nf(FC.qpk.v)} m³/s el ${fmtD(FC.qpk.t)}.</b> En ${AV.eventos} crecientes sobre ${nf(AV.umbral)} m³/s (${AV.periodo}), la extracción de material flotante bajó la semana del pico (${nf(pf[0],2)}×) y subió <b>${nf(pf[2],1)}× en la segunda semana después</b> (semana del ${fmtD(t2)}), y siguió 1,0–1,8× hasta la octava, frente a las 4 semanas previas; las macrófitas no aumentan. Es un escenario para preparar equipos: sumarlo al pronóstico central no redujo el error en 2025–2026.</div>`}
   else fb.hidden=true;
   renderAlertBanner('alert-banner');
   // tarjetas: desde la semana en curso (no desde el último reporte)
@@ -895,9 +895,9 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=51bbe2ae58',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=00d71c1145',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
-fetch('datos/app/base.json?v=b5610e91d4',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
+fetch('datos/app/base.json?v=3d005d168e',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();

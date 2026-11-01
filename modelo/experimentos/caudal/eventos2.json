@@ -1,0 +1,110 @@
+{
+ "Sitio Presa observado | MF extraído 0–4 sem": {
+  "n": 18,
+  "evento": 1.81,
+  "azar": 1.16,
+  "p": 0.027
+ },
+ "Sitio Presa observado | MA extraído 0–4 sem": {
+  "n": 17,
+  "evento": 0.88,
+  "azar": 1.02,
+  "p": 0.847
+ },
+ "Sitio Presa observado | MF extraído 4–8 sem": {
+  "n": 18,
+  "evento": 1.46,
+  "azar": 0.97,
+  "p": 0.083
+ },
+ "Sitio Presa observado | MA extraído 4–8 sem": {
+  "n": 17,
+  "evento": 0.75,
+  "azar": 1.0,
+  "p": 0.877
+ },
+ "Sitio Presa observado | Área arriba barrera": {
+  "n": 13,
+  "evento": 0.97,
+  "azar": 0.89,
+  "p": 0.29
+ },
+ "Sitio Presa observado | Área abajo barrera": {
+  "n": 13,
+  "evento": 1.15,
+  "azar": 1.05,
+  "p": 0.16
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | MF extraído 0–4 sem": {
+  "n": 22,
+  "evento": 1.09,
+  "azar": 1.13,
+  "p": 0.723
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | MA extraído 0–4 sem": {
+  "n": 21,
+  "evento": 0.98,
+  "azar": 1.06,
+  "p": 0.64
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | MF extraído 4–8 sem": {
+  "n": 22,
+  "evento": 0.88,
+  "azar": 1.02,
+  "p": 0.793
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | MA extraído 4–8 sem": {
+  "n": 21,
+  "evento": 1.01,
+  "azar": 1.04,
+  "p": 0.597
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | Área arriba barrera": {
+  "n": 17,
+  "evento": 0.97,
+  "azar": 0.91,
+  "p": 0.35
+ },
+ "Cuenca intermedia (Sitio Presa − Olaya) | Área abajo barrera": {
+  "n": 17,
+  "evento": 1.09,
+  "azar": 1.0,
+  "p": 0.177
+ },
+ "Olaya, alza de 3 días | MF extraído 0–4 sem": {
+  "n": 48,
+  "evento": 1.1,
+  "azar": 1.12,
+  "p": 0.56
+ },
+ "Olaya, alza de 3 días | MA extraído 0–4 sem": {
+  "n": 47,
+  "evento": 1.06,
+  "azar": 1.07,
+  "p": 0.593
+ },
+ "Olaya, alza de 3 días | MF extraído 4–8 sem": {
+  "n": 48,
+  "evento": 1.15,
+  "azar": 1.11,
+  "p": 0.387
+ },
+ "Olaya, alza de 3 días | MA extraído 4–8 sem": {
+  "n": 47,
+  "evento": 1.03,
+  "azar": 1.05,
+  "p": 0.61
+ },
+ "Olaya, alza de 3 días | Área arriba barrera": {
+  "n": 38,
+  "evento": 0.86,
+  "azar": 0.95,
+  "p": 0.957
+ },
+ "Olaya, alza de 3 días | Área abajo barrera": {
+  "n": 38,
+  "evento": 1.08,
+  "azar": 0.98,
+  "p": 0.067
+ }
+}

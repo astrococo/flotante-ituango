@@ -1,0 +1,38 @@
+{
+ "Sitio Presa observado | Días con extracción MF 0–4 sem": {
+  "n": 18,
+  "evento": 1.05,
+  "azar": 1.0,
+  "p": 0.147
+ },
+ "Sitio Presa observado | m³ MF por día con extracción 0–4 sem": {
+  "n": 16,
+  "evento": 1.68,
+  "azar": 1.18,
+  "p": 0.023
+ },
+ "Sitio Presa observado | MF mecanizado 0–4 sem": {
+  "n": 15,
+  "evento": 1.38,
+  "azar": 1.12,
+  "p": 0.117
+ },
+ "Sitio Presa observado | MF manual 0–4 sem": {
+  "n": 17,
+  "evento": 1.04,
+  "azar": 1.03,
+  "p": 0.47
+ },
+ "Sitio Presa observado | Área arriba barrera": {
+  "n": 13,
+  "evento": 0.97,
+  "azar": 0.89,
+  "p": 0.29
+ },
+ "Sitio Presa observado | Área abajo barrera": {
+  "n": 13,
+  "evento": 1.15,
+  "azar": 1.05,
+  "p": 0.16
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "MF extraído": {
+  "n": 23,
+  "mediana_evento": 1.4,
+  "mediana_azar": 1.17,
+  "p_valor": 0.18
+ },
+ "MA extraído": {
+  "n": 22,
+  "mediana_evento": 0.89,
+  "mediana_azar": 1.04,
+  "p_valor": 0.853
+ },
+ "MF extraído 4-8 sem": {
+  "n": 23,
+  "mediana_evento": 1.18,
+  "mediana_azar": 1.11,
+  "p_valor": 0.41
+ },
+ "MA extraído 4-8 sem": {
+  "n": 22,
+  "mediana_evento": 1.16,
+  "mediana_azar": 1.06,
+  "p_valor": 0.277
+ },
+ "Área aguas arriba barrera": {
+  "n": 17,
+  "mediana_evento": 0.97,
+  "mediana_azar": 0.93,
+  "p_valor": 0.403
+ },
+ "Área aguas abajo barrera": {
+  "n": 17,
+  "mediana_evento": 1.14,
+  "mediana_azar": 1.04,
+  "p_valor": 0.117
+ },
+ "Corredor 0–30 km arriba": {
+  "n": 1,
+  "mediana_evento": 0.6,
+  "mediana_azar": 1.1,
+  "p_valor": 1.0
+ }
+}

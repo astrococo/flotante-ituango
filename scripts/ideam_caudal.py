@@ -9,7 +9,8 @@ BB=(6.3,7.6,-76.3,-75.3)   # lat, lat, lon, lon: Cauca medio alrededor de Ituang
 C=pd.DataFrame(json.loads(get('https://www.datos.gov.co/resource/hp9r-jxuu.json?$limit=20000')))
 L('catálogo',len(C),list(C.columns))
 lat=pd.to_numeric(C.get('latitud'),errors='coerce'); lon=pd.to_numeric(C.get('longitud'),errors='coerce')
-E=C[lat.between(BB[0],BB[1])&lon.between(BB[2],BB[3])].copy()
+EXTRA={'0026177030','0026187110','0026207080'}   # La Virginia, La Pintada, Bolombolo (Cauca aguas arriba)
+E=C[(lat.between(BB[0],BB[1])&lon.between(BB[2],BB[3]))|C.codigo.astype(str).str.zfill(10).isin(EXTRA)].drop_duplicates('codigo').copy()
 E.to_csv(f'{O}/estaciones.csv',index=False); L('estaciones en el recuadro',len(E))
 base='https://datos.ideam.gov.co/s3-estacionesideam/observaciones/historicos/csv/Q_MEDIA_D/'
 res=[]
