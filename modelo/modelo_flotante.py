@@ -62,8 +62,8 @@ def pronosticar(ext: pd.DataFrame, q_sitiopresa: pd.Series, params: dict) -> pd.
         E     = (f + 50)·r̄(h) − 50     (valor esperado; usar para volúmenes acumulados)
     L8 = mediana de las últimas 8 semanas con operación; LT = mediana de semanas con operación desde 2020-07-01;
     k = peso de persistencia (adaptativo, recalibrado con el backtest).
-    v2.2 (material flotante, si params trae ewma_hl): EW = media exponencial de semanas con operación (vida media ewma_hl),
-        f(h) = (1 − s)·[a_h·EW + (1 − a_h)·LT] + s·LT, sin multiplicador de caudal (usa_caudal = False)."""
+    v2.3 (si params trae ewma_hl): EW = media exponencial de semanas con operación (vida media ewma_hl),
+        f(h) = {w·[a8_h·L8 + (1−a8_h)·LT] + (1−w)·[(1 − s)·(a_h·EW + (1 − a_h)·LT) + s·LT]}·m(h)."""
     last = ext.index[ext.reportado == 1].max()
     q = q_sitiopresa.sort_index()
     end = q.index.max()
@@ -88,7 +88,8 @@ def pronosticar(ext: pd.DataFrame, q_sitiopresa: pd.Series, params: dict) -> pd.
             mult = 1.0 if p.get("usa_caudal") is False else float(np.clip(np.sqrt(np.exp(p["b0"] + np.dot(p["beta"], xs))), 0.7, 1.5))
             if EW is not None and p.get("a_h"):
                 a, s_ = p["a_h"][hh], p.get("shrink", 0.0)
-                fw = ((1 - s_) * (a * EW + (1 - a) * LT) + s_ * LT) * mult
+                w1 = (p.get("mezcla") or {}).get("w1", 0.0); a8 = p["a8_h"][hh] if p.get("a8_h") else 0.0
+                fw = (w1 * (a8 * L8 + (1 - a8) * LT) + (1 - w1) * ((1 - s_) * (a * EW + (1 - a) * LT) + s_ * LT)) * mult
             else:
                 ah = k * p["a1"] * np.exp(-(h - 1) / p["tau"])
                 fw = (ah * L8 + (1 - ah) * LT) * mult

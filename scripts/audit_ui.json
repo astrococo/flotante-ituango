@@ -97,13 +97,13 @@
  "modelo": [
   [
    "ok",
-   "Material flotante 2024–2026: corregido en la v2.2",
-   "Con las fechas corregidas, la v1 queda 7 % peor que la mediana histórica en 2024, 2 % en 2025 y 6 % en 2026. Se probaron siete alternativas (ventana de 52 semanas, media exponencial, tasa por día activo, estacionalidad y combinaciones). La v2.2 usa la media exponencial de las semanas con operación (vida media 6 semanas), mezclada con la mediana histórica y encogida 50 % hacia ella, sin multiplicador de caudal. Supera a la mediana histórica todos los años: 22 % en 2022, 18 % en 2023, 0,5 % en 2024, 5,5 % en 2025 y 3 % en 2026. La ganancia de 2024–2026 es pequeña porque en esos años la extracción semanal varía sobre todo por esfuerzo (paros y descansos), no por la llegada de material; el plan semanal de descansos de EPM es lo que más puede bajar ese error. La forma se eligió mirando 2024–2026: tiene dos parámetros fijos, pero la cifra es levemente optimista."
+   "Modelo v2.3: mejor que la mediana histórica todos los años",
+   "Se compararon 15 combinaciones (persistencia de 8 semanas, media exponencial, mediana histórica, estacionalidad, selección adaptativa, apilamiento y multiplicador de caudal) con fechas corregidas y origen móvil 2022–2026. Ninguna gana a todas las demás todos los años: dar más peso a lo reciente favorece 2022–2023 y perjudica 2024–2026. La v2.3 es la única que supera a la mediana histórica en los cinco años en ambos componentes y la de menor error total. Material flotante (media exponencial encogida 25 % hacia la mediana, × caudal): 2022: 33,2 %, 2023: 23,1 %, 2024: 0,0 %, 2025: 3,6 %, 2026: 2,3 %; RMSE 1032 m³/sem frente a 1113 de la v1 y 1096 de la v2.2; supera a la v1 todos los años. Macrófitas (mitad persistencia, mitad media exponencial, × caudal): 2022: 0,1 %, 2023: 19,3 %, 2024: 2,4 %, 2025: 7,2 %, 2026: 5,3 %; RMSE 1252 frente a 1256 de la v1; la v1 sigue mejor en 2023 y 2025. Las proporciones (w, s) se eligieron viendo los cinco años: las cifras son levemente optimistas."
   ],
   [
    "ok",
-   "Peso adaptativo de la persistencia",
-   "Macrófitas: el peso de las semanas recientes se elige cada semana entre 0; 0,5 y 1 según el error de las últimas 52 semanas con resultado conocido. En material flotante lo reemplaza la mezcla fija de la v2.2, que fue más estable año a año."
+   "Selección adaptativa probada y descartada",
+   "Elegir cada semana el modelo o el peso con menor error de las últimas 52 semanas (o pesos por mínimos cuadrados en 104 semanas) fue peor que la mezcla fija de la v2.3 en ambos componentes: el mejor modelo cambia de un año a otro sin aviso."
   ],
   [
    "ok",
@@ -112,8 +112,8 @@
   ],
   [
    "ok",
-   "Caudal en macrófitas",
-   "Reduce el error a 1–4 semanas en 38 m³/sem (−4 %, IC95 −74 a −5) incluso con caudal futuro desconocido: la ganancia viene del caudal pasado (lavado tras crecientes)."
+   "Caudal en el modelo",
+   "El multiplicador de caudal acotado (√exp, entre 0,7 y 1,5) reduce el error 2022–2026 en ambos componentes con la mezcla v2.3 (flotante 1.045 → 1.036 m³/sem; macrófitas 1.268 → 1.253). Sin la raíz ni el límite, en flotante lo aumentaba: por eso se había retirado en la v2.2."
   ],
   [
    "ok",
@@ -133,7 +133,7 @@
   [
    "ok",
    "Intervalos P10–P90 fuera de muestra",
-   "Calibrados con 2022–2023 y evaluados en 2024–2026: cubren 76 % (flotante, v2.2) y 78 % (macrófitas), frente al 80 % nominal."
+   "Calibrados con 2022–2023 y evaluados en 2024–2026: cubren 76 % (flotante) y 79 % (macrófitas), frente al 80 % nominal."
   ],
   [
    "ok",
@@ -245,30 +245,30 @@
    "rmse": {
     "clim": 1311,
     "pers": 1135,
-    "v1": 1106,
-    "v2": 1103,
+    "v1": 1113,
+    "v2": 1032,
     "sin_caudal": 1074
    },
    "anual": {
     "2022": {
-     "v1": 0.262,
-     "v2": 0.223
+     "v1": 0.278,
+     "v2": 0.332
     },
     "2023": {
-     "v1": 0.195,
-     "v2": 0.183
+     "v1": 0.186,
+     "v2": 0.231
     },
     "2024": {
-     "v1": -0.072,
-     "v2": 0.005
+     "v1": -0.099,
+     "v2": 0.0
     },
     "2025": {
-     "v1": -0.015,
-     "v2": 0.055
+     "v1": -0.034,
+     "v2": 0.036
     },
     "2026": {
-     "v1": -0.057,
-     "v2": 0.03
+     "v1": -0.092,
+     "v2": 0.023
     }
    },
    "k": 0.0,
@@ -276,38 +276,38 @@
   },
   "ma_tot": {
    "rmse": {
-    "clim": 1333,
-    "pers": 1366,
-    "v1": 1254,
-    "v2": 1276,
+    "clim": 1328,
+    "pers": 1339,
+    "v1": 1256,
+    "v2": 1252,
     "sin_caudal": 1303
    },
    "anual": {
     "2022": {
-     "v1": 0.055,
-     "v2": 0.011
+     "v1": -0.028,
+     "v2": 0.001
     },
     "2023": {
-     "v1": 0.082,
-     "v2": 0.056
+     "v1": 0.242,
+     "v2": 0.193
     },
     "2024": {
-     "v1": 0.061,
-     "v2": 0.071
+     "v1": 0.013,
+     "v2": 0.024
     },
     "2025": {
-     "v1": 0.061,
-     "v2": 0.048
+     "v1": 0.157,
+     "v2": 0.072
     },
     "2026": {
-     "v1": 0.029,
-     "v2": 0.039
+     "v1": 0.002,
+     "v2": 0.053
     }
    },
    "k": 0.5,
    "cob": 0.784
   },
-  "etiqueta_v2": "Versión actual"
+  "etiqueta_v2": "v2.3 (actual)"
  },
  "recomendaciones": [
   "Reemplazar datos/DatosExtraccion.xlsx en el repositorio cada semana (ideal: cada día); la página lo toma al abrir.",

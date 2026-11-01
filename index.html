@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=0264af0dc8" defer></script>
+<script src="app.js?v=eb7ff036e6" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -295,12 +295,12 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <!-- MODELO -->
 <section class="view" id="v-modelo" hidden>
   <div><h2>Modelo de pronóstico y desempeño</h2>
-    <p class="lede">Modelo híbrido v2.2: nivel operativo reciente, nivel de largo plazo y, en macrófitas, multiplicador hidrológico alimentado por el pronóstico de caudal de HydroForecast. En material flotante el caudal se muestra como aviso de creciente, porque en el backtest no redujo el error.</p></div>
+    <p class="lede">Modelo v2.3: mezcla de persistencia (últimas 8 semanas), media exponencial de semanas recientes y nivel de largo plazo, con multiplicador hidrológico acotado alimentado por el pronóstico de caudal de HydroForecast. Es el único probado que supera a la mediana histórica todos los años 2022–2026 en ambos componentes.</p></div>
   <div class="grid">
     <div class="panel c6 prose">
       <h3>Estructura</h3>
       <div class="formula" id="formula"></div>
-      <p class="note" style="margin-top:10px">L₈: mediana de las últimas 8 semanas con operación activa. LT: mediana de semanas activas (flotante: desde julio de 2019; macrófitas: desde julio de 2020). EW: media exponencial de semanas activas. k: peso de la persistencia, elegido con el error de las últimas 52 semanas. x: exceso semanal de caudal Sitio Presa sobre el umbral, en miles de m³/s·día.</p>
+      <p class="note" style="margin-top:10px">L₈: mediana de las últimas 8 semanas con operación activa. LT: mediana de semanas activas desde julio de 2019. EW: media exponencial de semanas activas. k: peso de la persistencia, elegido con el error de las últimas 52 semanas. x: exceso semanal de caudal Sitio Presa sobre el umbral, en miles de m³/s·día.</p>
     </div>
     <div class="panel c6"><h3>Parámetros</h3><div class="tbl"><table id="tbl-params"></table></div></div>
   </div>

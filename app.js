@@ -279,7 +279,8 @@ function forecast(scen){
       let lin=p.b0; for(let l=0;l<7;l++) lin+=p.beta[l]*(xw.get(we-l*7*DAY)||0);
       const mult=p.usa_caudal===false?1:Math.min(1.5,Math.max(0.7,Math.sqrt(Math.exp(lin))));
       let fw;
-      if(EW!=null&&p.a_h){const a=p.a_h[Math.min(h,13)-1],sh=p.shrink??0;fw=((1-sh)*(a*EW+(1-a)*LT)+sh*LT)*mult}
+      if(EW!=null&&p.a_h){const hh=Math.min(h,13)-1,a=p.a_h[hh],sh=p.shrink??0,w1=(p.mezcla&&p.mezcla.w1)||0,a8=p.a8_h?p.a8_h[hh]:0;
+        fw=(w1*(a8*L8+(1-a8)*LT)+(1-w1)*((1-sh)*(a*EW+(1-a)*LT)+sh*LT))*mult}
       else{const ah=k*p.a1*Math.exp(-(h-1)/p.tau);fw=(ah*L8+(1-ah)*LT)*mult}
       days.push({t,h,f:fw/7*p.dow[dowM(t)],mult,fw});
     }
@@ -453,17 +454,16 @@ function renderForecast(){
 function renderModel(){
   const P=S.P;
   document.getElementById('formula').textContent=
-`Semana h (desde el último dato):
-Macrófitas
-  a(h)   = k · a₁ · exp(−(h−1)/τ)
-  nivel  = a(h) · L₈ + (1 − a(h)) · LT
-  m      = clip( √exp(b₀ + Σₗ βₗ · x(semana−ℓ)) , 0,7 , 1,5 )
-  f(h)   = nivel · m
-Material flotante (v2.2)
+`Semana h (desde el último dato), modelo v2.3:
+  L₈     = mediana de las últimas 8 semanas con operación
   EW     = media exponencial de semanas con operación (vida media 6 sem.)
-  f(h)   = ½ · [a(h) · EW + (1 − a(h)) · LT] + ½ · LT    (sin caudal)
-Ambos
-  P50    = (f + 50) · q₅₀(h) − 50      ← valor mostrado (q₅₀ = 1 en flotante)
+  LT     = mediana de semanas con operación desde jul-2019
+  nivel_P = a₈(h) · L₈ + (1 − a₈(h)) · LT            (persistencia)
+  nivel_E = (1 − s) · [a(h) · EW + (1 − a(h)) · LT] + s · LT
+  m      = clip( √exp(b₀ + Σₗ βₗ · x(semana−ℓ)) , 0,7 , 1,5 )
+  f(h)   = [w · nivel_P + (1 − w) · nivel_E] · m
+           Flotante: w = 0, s = 0,25.  Macrófitas: w = 0,5, s = 0,5
+  P50    = f (valor central)
   E      = (f + 50) · r̄(h) − 50       ← valor esperado
   Pp     = (f + 50) · q_p(h) − 50,  p = 10, 25, 75, 90
   día    = semana / 7 · factor del día de la semana
@@ -895,9 +895,9 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=00d71c1145',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=88ebaaed2a',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico'].includes(h))renderView(h)}).catch(()=>{});
 }
-fetch('datos/app/base.json?v=3d005d168e',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
+fetch('datos/app/base.json?v=0ac5518735',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
