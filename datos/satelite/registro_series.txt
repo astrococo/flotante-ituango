@@ -19,3 +19,157 @@ grilla (517, 521) EPSG:32618
 650 2026-08-13 0.82
 escenas usadas: 297
 listo 297
+escenas Landsat: 279
+1 2019-01-22 landsat-8 3.4 ha
+12 2019-07-17 landsat-8 28.3 ha
+14 2019-08-18 landsat-8 27.0 ha
+15 2019-09-03 landsat-8 29.7 ha
+19 2019-11-06 landsat-8 10.5 ha
+20 2019-11-22 landsat-8 10.0 ha
+21 2019-12-08 landsat-8 40.8 ha
+22 2019-12-24 landsat-8 13.3 ha
+23 2020-01-09 landsat-8 8.4 ha
+24 2020-01-25 landsat-8 23.0 ha
+25 2020-02-10 landsat-8 13.4 ha
+27 2020-03-13 landsat-8 8.1 ha
+30 2020-04-30 landsat-8 55.1 ha
+34 2020-07-03 landsat-8 58.3 ha
+35 2020-07-19 landsat-8 31.6 ha
+41 2020-10-23 landsat-8 1.0 ha
+42 2020-11-24 landsat-8 2.2 ha
+43 2020-12-10 landsat-8 3.4 ha
+46 2021-01-27 landsat-8 0.9 ha
+48 2021-02-28 landsat-8 0.9 ha
+49 2021-03-16 landsat-8 1.6 ha
+53 2021-05-19 landsat-8 0.8 ha
+56 2021-07-06 landsat-8 10.0 ha
+58 2021-08-07 landsat-8 34.4 ha
+59 2021-08-23 landsat-8 43.7 ha
+62 2021-10-10 landsat-8 6.8 ha
+64 2021-11-11 landsat-8 52.9 ha
+67 2021-12-13 landsat-8 28.1 ha
+71 2022-01-14 landsat-8 4.5 ha
+72 2022-01-22 landsat-9 3.7 ha
+73 2022-01-30 landsat-8 2.3 ha
+75 2022-02-15 landsat-8 4.2 ha
+76 2022-02-23 landsat-9 4.0 ha
+78 2022-03-11 landsat-9 96.0 ha
+81 2022-04-04 landsat-8 68.2 ha
+82 2022-04-12 landsat-9 88.6 ha
+87 2022-05-22 landsat-8 43.5 ha
+91 2022-06-23 landsat-8 83.3 ha
+92 2022-07-01 landsat-9 81.0 ha
+93 2022-07-09 landsat-8 48.6 ha
+95 2022-07-25 landsat-8 83.1 ha
+103 2022-10-13 landsat-8 47.4 ha
+111 2023-01-01 landsat-8 32.4 ha
+114 2023-01-25 landsat-9 47.8 ha
+115 2023-02-02 landsat-8 34.1 ha
+117 2023-02-18 landsat-8 18.4 ha
+118 2023-02-26 landsat-9 21.8 ha
+119 2023-03-22 landsat-8 39.8 ha
+123 2023-05-01 landsat-9 38.8 ha
+129 2023-06-18 landsat-9 33.1 ha
+133 2023-07-20 landsat-9 53.2 ha
+135 2023-08-05 landsat-9 33.7 ha
+138 2023-08-29 landsat-8 33.5 ha
+139 2023-09-06 landsat-9 14.5 ha
+142 2023-09-30 landsat-8 21.9 ha
+147 2023-11-17 landsat-8 5.7 ha
+149 2023-12-03 landsat-8 7.1 ha
+150 2023-12-11 landsat-9 7.6 ha
+151 2023-12-19 landsat-8 8.0 ha
+152 2023-12-27 landsat-9 12.0 ha
+153 2024-01-04 landsat-8 9.4 ha
+154 2024-01-12 landsat-9 4.7 ha
+155 2024-01-20 landsat-8 2.5 ha
+158 2024-02-13 landsat-9 0.5 ha
+160 2024-02-29 landsat-9 2.5 ha
+161 2024-03-08 landsat-8 2.4 ha
+162 2024-03-16 landsat-9 5.5 ha
+163 2024-03-24 landsat-8 3.4 ha
+170 2024-05-19 landsat-9 31.4 ha
+176 2024-07-14 landsat-8 7.6 ha
+180 2024-08-15 landsat-8 71.1 ha
+182 2024-08-31 landsat-8 106.5 ha
+185 2024-09-24 landsat-9 68.4 ha
+188 2024-10-18 landsat-8 64.4 ha
+194 2024-12-05 landsat-8 42.0 ha
+198 2025-01-06 landsat-8 39.7 ha
+199 2025-01-14 landsat-9 32.6 ha
+200 2025-01-22 landsat-8 29.9 ha
+206 2025-03-11 landsat-8 33.7 ha
+207 2025-03-19 landsat-9 30.5 ha
+208 2025-03-27 landsat-8 33.3 ha
+209 2025-04-04 landsat-9 37.7 ha
+217 2025-06-07 landsat-9 48.2 ha
+221 2025-07-09 landsat-9 56.7 ha
+222 2025-07-17 landsat-8 53.0 ha
+225 2025-08-10 landsat-9 58.5 ha
+226 2025-08-18 landsat-8 64.6 ha
+227 2025-08-26 landsat-9 57.8 ha
+234 2025-10-21 landsat-8 44.1 ha
+236 2025-11-06 landsat-8 47.2 ha
+240 2025-12-08 landsat-8 30.5 ha
+243 2026-01-09 landsat-8 30.7 ha
+244 2026-01-17 landsat-9 31.8 ha
+249 2026-02-26 landsat-8 35.2 ha
+251 2026-03-14 landsat-8 31.8 ha
+252 2026-03-22 landsat-9 28.6 ha
+253 2026-03-30 landsat-8 29.1 ha
+256 2026-04-23 landsat-9 27.8 ha
+257 2026-05-01 landsat-8 37.7 ha
+258 2026-05-09 landsat-9 36.8 ha
+267 2026-07-28 landsat-9 35.4 ha
+269 2026-08-13 landsat-9 32.2 ha
+274 2026-09-22 landsat-8 24.9 ha
+listo 103
+escenas S1: 625
+20 2019-04-10 SENTINEL-1B -20.04
+80 2020-01-28 SENTINEL-1B -20.6
+100 2020-04-21 SENTINEL-1B -19.56
+120 2020-07-09 SENTINEL-1B -19.79
+140 2020-10-06 SENTINEL-1B -20.56
+160 2021-01-05 SENTINEL-1B -20.12
+180 2021-04-23 SENTINEL-1B -19.73
+220 2021-10-08 SENTINEL-1B -19.69
+240 2022-03-19 SENTINEL-1A -18.85
+280 2022-11-26 SENTINEL-1A -17.59
+300 2023-03-26 SENTINEL-1A -19.16
+320 2023-08-05 SENTINEL-1A -19.82
+400 2025-02-19 SENTINEL-1A -19.01
+420 2025-05-02 sentinel-1a -17.86
+500 2025-12-04 sentinel-1a -18.32
+540 2026-03-22 sentinel-1a -19.04
+580 2026-06-26 sentinel-1a -18.54
+600 2026-08-20 sentinel-1d -20.02
+620 2026-10-18 sentinel-1c -21.46
+listo 351
+S2: 674
+0 2019-01-02
+75 2020-01-07
+125 2020-09-13
+150 2021-02-10
+175 2021-06-15
+200 2021-10-18
+225 2022-02-05
+250 2022-04-21
+275 2022-07-25
+325 2023-01-26
+375 2023-06-20
+400 2023-08-24
+425 2023-11-07
+450 2024-02-15
+500 2024-11-06
+625 2026-04-25
+650 2026-08-13
+S2 listo 265
+Landsat: 279
+Landsat listo 103
+Traceback (most recent call last):
+  File "/home/runner/work/flotante-ituango/flotante-ituango/satelite/s1ml.py", line 16, in <module>
+    s2 = {pd.Timestamp(f): (un(v), un(g)) for f, v, g in zip(M["fechas"], M["val"], M["veg"])}
+          ^^^^^^^^^^^^^^^
+  File "timestamps.pyx", line 1865, in pandas._libs.tslibs.timestamps.Timestamp.__new__
+  File "conversion.pyx", line 364, in pandas._libs.tslibs.conversion.convert_to_tsobject
+TypeError: Expected unicode, got numpy.str_
