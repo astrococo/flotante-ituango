@@ -10,3 +10,9 @@
 200 185083 https://jdguarnizor-hydroforecast-ituango.hf.space/api/climatology/daily
 200 348110 https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&q=caudal&limit=50
 200 8151 https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&q=IDEAM%20hidrometeorologicos&limit=50
+200 6070 https://www.datos.gov.co/api/views/jxnq-r3i9.json
+403 84 https://www.datos.gov.co/resource/jxnq-r3i9.json?$limit=3
+POST 200 91038 https://servapibi.xm.com.co/daily {"MetricId":"AporCaudal","StartDate":"2021-08-01","EndDate":"2021-08-30","Entity":"Rio","Filter":[]}
+POST 200 112751 https://servapibi.xm.com.co/daily {"MetricId":"AporCaudal","StartDate":"2026-10-01","EndDate":"2026-10-30","Entity":"Rio","Filter":[]}
+POST 200 6416 https://servapibi.xm.com.co/lists {"MetricId":"ListadoRios","Entity":"Sistema"}
+POST 200 84852 https://servapibi.xm.com.co/lists {"MetricId":"ListadoMetricas"}

@@ -1,0 +1,127 @@
+{
+  "id" : "jxnq-r3i9",
+  "name" : "Caudales Medios Diarios de los Ríos de Colombia",
+  "assetType" : "href",
+  "attribution" : "Instituto de Hidrología, Meteorología y Estudios Ambientales - IDEAM, Bogotá D.C.",
+  "attributionLink" : "https://www.ideam.gov.co/",
+  "averageRating" : 0,
+  "category" : "Ambiente y Desarrollo Sostenible",
+  "createdAt" : 1785530913,
+  "description" : "El caudal se refiere a la cantidad de agua que pasa por un punto de un río en un tiempo determinado. Se expresa en metros cúbicos por segundo (m³/s).\n\nEn la etiqueta Q_MEDIA_D encontrará datos medios diarios históricos de caudal estimados por el IDEAM.\n\nLa información se puede encontrar en 3 estados:\n\nPreliminar: dato crudo recolectado en campo y/o registrado u obtenido de los sensores automáticos, sujeto a cambios, modificaciones o a ser reemplazado a medida que se avanza en el proceso de validación de la información.\nEn revisión: es el dato que supera la evaluación preliminar y continúa en verificación y análisis, sujeto a cambios.\nDefinitivo: elemento de información que ha sido revisado y aprobado, que ha surtido todo el proceso de validación y que se considera confiable y preciso para su uso en un contexto específico.\n\nImportante: La descarga está disponible únicamente para los archivos finales. Intentar descargar carpetas o directorios principales no está soportado debido al volumen de información que contienen. Por favor, navegue hasta el archivo específico que desea descargar.",
+  "diciBackend" : false,
+  "displayType" : "href",
+  "downloadCount" : 0,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "CC_40_BY_SA",
+  "locked" : false,
+  "newBackend" : false,
+  "numberOfComments" : 0,
+  "oid" : 42376625,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1785531019,
+  "publicationGroup" : 20506597,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1785530913,
+  "tableId" : 20506597,
+  "totalTimesRated" : 0,
+  "viewCount" : 683,
+  "viewLastModified" : 1785531019,
+  "viewType" : "href",
+  "approvals" : [ {
+    "reviewedAt" : 1785774599,
+    "reviewedAutomatically" : false,
+    "state" : "approved",
+    "submissionId" : 7601507,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1785531020,
+    "targetAudience" : "public",
+    "workflowId" : 2188,
+    "reviewer" : {
+      "id" : "r4qn-dwdd",
+      "displayName" : "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+    },
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1785774599,
+      "failureCount" : 0,
+      "startedAt" : 1785774599,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "xac7-ivuv",
+      "displayName" : "Oficina de Informática IDEAM"
+    }
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Creative Commons Attribution | Share Alike 4.0 International",
+    "logoUrl" : "images/licenses/cc30bysa.png",
+    "termsLink" : "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+  },
+  "metadata" : {
+    "additionalAccessPoints" : [ {
+      "urls" : {
+        "Q_MEDIA_D" : "https://datos.ideam.gov.co/objectsbrowser/index.html?public=#/app/ostore-buckets/s3-estacionesideam/objects/observaciones/historicos/csv/Q_MEDIA_D?startAfter=&maxKeys=200&searchFor=&isExactSearch=0",
+        "Guia de Descarga Datos Parquet" : "https://datos.ideam.gov.co/objectsbrowser/index.html?public=#/app/ostore-buckets/s3-estacionesideam/objects/guia?startAfter=&maxKeys=200&searchFor=&isExactSearch=0"
+      },
+      "title" : "Caudales Medios Diarios de los Ríos de Colombia"
+    } ],
+    "custom_fields" : {
+      "Información de la Entidad" : {
+        "Municipio" : "Bogotá D.C.",
+        "Nombre de la Entidad" : "Instituto de Hidrología, Meteorología y Estudios Ambientales - IDEAM, Bogotá D.C.",
+        "DIVIPOLA Municipio" : "11001",
+        "Orden" : "Nacional",
+        "Área o dependencia" : "Subdirección de Hidrología",
+        "Departamento" : "Bogotá D.C."
+      },
+      "Información de Datos" : {
+        "Cobertura Geográfica" : "Nacional",
+        "Idioma" : "Español",
+        "Frecuencia de Actualización" : "Anual"
+      }
+    },
+    "accessPoints" : {
+      "Q_MEDIA_D" : "https://datos.ideam.gov.co/objectsbrowser/index.html?public=#/app/ostore-buckets/s3-estacionesideam/objects/observaciones/historicos/csv/Q_MEDIA_D?startAfter=&maxKeys=200&searchFor=&isExactSearch=0",
+      "Guia de Descarga Datos Parquet" : "https://datos.ideam.gov.co/objectsbrowser/index.html?public=#/app/ostore-buckets/s3-estacionesideam/objects/guia?startAfter=&maxKeys=200&searchFor=&isExactSearch=0"
+    },
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "xac7-ivuv",
+    "displayName" : "Oficina de Informática IDEAM",
+    "profileImageUrlLarge" : "/api/users/xac7-ivuv/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/xac7-ivuv/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/xac7-ivuv/profile_images/TINY",
+    "screenName" : "Oficina de Informática IDEAM",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "xac7-ivuv",
+    "displayName" : "Oficina de Informática IDEAM",
+    "profileImageUrlLarge" : "/api/users/xac7-ivuv/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/xac7-ivuv/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/xac7-ivuv/profile_images/TINY",
+    "screenName" : "Oficina de Informática IDEAM",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "flags" : [ "default", "ownerMayBeContacted" ]
+}
