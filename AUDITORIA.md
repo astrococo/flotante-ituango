@@ -107,4 +107,13 @@ Error medio absoluto (m³/semana) en 4.908 pronósticos con origen móvil 2022�
 8. Medir el volumen real de algunas cargas y separar la composición por viaje: hoy el volumen y la división flotante/macrófitas son estimaciones.
 9. Armar el informe integrado por fecha (BUSCARV/XLOOKUP sobre la fecha) y no por posición de fila: así se originaron los desfases de 1 a 3 días.
 10. Para calibrar el volumen satelital: pesar y medir el volumen suelto del material de 3–5 cuadros de 1 m² en la mancha frente al puerto, en fechas con imagen despejada.
-11. Registrar en la hoja de viajes la división real flotante/macrófitas por viaje (desde abr-2026 es fija en 45,7 %) y, en crecientes, una estimación diaria de la mancha retenida (área o % de barrera ocupada): es la medida directa del material que llega.
+11. Registrar en la hoja de viajes la división real flotante/macrófitas por viaje (desde abr-2026 es fija en 45,7 %) y, en crecientes, una estimación diaria de la mancha retenida y de si el material pasa por encima o por los lados de la barrera: el satélite ya la mide cada 3–5 días, pero no en días nublados ni entre pasadas.
+
+
+## Mancha retenida, corredor ±30 km y batería de 100 pruebas (1-nov-2026)
+
+- Satélite (`satelite/retenido.py`, flujo diario `retenido.yml`): Sentinel-2 NDVI ≥ 0,30 (330 fechas útiles) y Sentinel-1 VH ≥ −12 dB (518 fechas; frente al óptico ±3 días, ρ = 0,74, error medio 4 ha). Zona de agua MNDWI fija, erosionada 20 m. Métricas: mancha retenida 0–2,5 km aguas arriba, ocupación de la franja de 100 m frente a la barrera y 10 tramos de −30 a +30 km.
+- La mancha retenida no crece con el caudal (ρ ≈ 0); la vegetación 0–2,5 km aguas abajo sí (ρ = 0,47, q = 0,02; solo óptico 0,38): en crecientes parte del material sobrepasa la barrera.
+- Balance semanal (250 semanas): extraído vs caudal r = −0,28; + mancha retenida (738 m³/ha) −0,19; + aguas abajo −0,02. Lo que llega no baja en crecientes; baja lo que se extrae.
+- La mancha no mejora el pronóstico de extracción: monitoreo y riesgo, no entra al modelo.
+- 100 pruebas (A–G), p por desplazamiento circular, Benjamini–Hochberg: 12 con q < 0,05, 18 con q < 0,10. Detalle en `modelo/experimentos/bateria/`.

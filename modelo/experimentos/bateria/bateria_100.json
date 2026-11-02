@@ -1,0 +1,846 @@
+[
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Sitio Presa: flotante por día, semana 0 tras creciente (P90 1854 m³/s)",
+  "estadistico": 0.847,
+  "p": 0.02,
+  "control": 1.047,
+  "eventos": 19,
+  "q": 0.1
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Sitio Presa: flotante por día, semana 1 tras creciente (P90 1854 m³/s)",
+  "estadistico": 0.825,
+  "p": 0.1347,
+  "control": 1.14,
+  "eventos": 19,
+  "q": 0.2928
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Sitio Presa: flotante por día, semana 2 tras creciente (P90 1854 m³/s)",
+  "estadistico": 1.121,
+  "p": 0.0574,
+  "control": 1.063,
+  "eventos": 19,
+  "q": 0.1913
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Sitio Presa: flotante por día, semanas 3–4 tras creciente (P90 1854 m³/s)",
+  "estadistico": 0.904,
+  "p": 0.2294,
+  "control": 0.977,
+  "eventos": 19,
+  "q": 0.4328
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Sitio Presa: flotante por día, semanas 5–8 tras creciente (P90 1854 m³/s)",
+  "estadistico": 1.028,
+  "p": 0.0499,
+  "control": 1.132,
+  "eventos": 19,
+  "q": 0.1913
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Olaya: flotante por día, semana 0 tras creciente (P90 1752 m³/s)",
+  "estadistico": 0.847,
+  "p": 0.0125,
+  "control": 1.047,
+  "eventos": 19,
+  "q": 0.0893
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Olaya: flotante por día, semana 1 tras creciente (P90 1752 m³/s)",
+  "estadistico": 0.779,
+  "p": 0.0673,
+  "control": 1.14,
+  "eventos": 19,
+  "q": 0.2171
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Olaya: flotante por día, semana 2 tras creciente (P90 1752 m³/s)",
+  "estadistico": 1.121,
+  "p": 0.0873,
+  "control": 1.032,
+  "eventos": 19,
+  "q": 0.2373
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Olaya: flotante por día, semanas 3–4 tras creciente (P90 1752 m³/s)",
+  "estadistico": 0.904,
+  "p": 0.2594,
+  "control": 0.977,
+  "eventos": 19,
+  "q": 0.4551
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Olaya: flotante por día, semanas 5–8 tras creciente (P90 1752 m³/s)",
+  "estadistico": 1.002,
+  "p": 0.02,
+  "control": 1.149,
+  "eventos": 19,
+  "q": 0.1
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Virginia: flotante por día, semana 0 tras creciente (P90 1120 m³/s)",
+  "estadistico": 0.901,
+  "p": 0.2868,
+  "control": 1.238,
+  "eventos": 12,
+  "q": 0.4677
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Virginia: flotante por día, semana 1 tras creciente (P90 1120 m³/s)",
+  "estadistico": 0.882,
+  "p": 0.9352,
+  "control": 0.89,
+  "eventos": 12,
+  "q": 0.9742
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Virginia: flotante por día, semana 2 tras creciente (P90 1120 m³/s)",
+  "estadistico": 1.013,
+  "p": 0.7332,
+  "control": 0.981,
+  "eventos": 12,
+  "q": 0.8526
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Virginia: flotante por día, semanas 3–4 tras creciente (P90 1120 m³/s)",
+  "estadistico": 0.867,
+  "p": 0.409,
+  "control": 1.097,
+  "eventos": 12,
+  "q": 0.5453
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Virginia: flotante por día, semanas 5–8 tras creciente (P90 1120 m³/s)",
+  "estadistico": 0.804,
+  "p": 0.2993,
+  "control": 1.043,
+  "eventos": 12,
+  "q": 0.4677
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Bolombolo: flotante por día, semana 0 tras creciente (P90 1723 m³/s)",
+  "estadistico": 0.89,
+  "p": 0.2968,
+  "control": 1.018,
+  "eventos": 19,
+  "q": 0.4677
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Bolombolo: flotante por día, semana 1 tras creciente (P90 1723 m³/s)",
+  "estadistico": 0.638,
+  "p": 0.0025,
+  "control": 0.98,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Bolombolo: flotante por día, semana 2 tras creciente (P90 1723 m³/s)",
+  "estadistico": 1.144,
+  "p": 0.2544,
+  "control": 1.07,
+  "eventos": 19,
+  "q": 0.4551
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Bolombolo: flotante por día, semanas 3–4 tras creciente (P90 1723 m³/s)",
+  "estadistico": 0.849,
+  "p": 0.0349,
+  "control": 1.031,
+  "eventos": 19,
+  "q": 0.1517
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "Bolombolo: flotante por día, semanas 5–8 tras creciente (P90 1723 m³/s)",
+  "estadistico": 1.001,
+  "p": 0.1172,
+  "control": 1.187,
+  "eventos": 19,
+  "q": 0.2664
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Pintada: flotante por día, semana 0 tras creciente (P90 1296 m³/s)",
+  "estadistico": 1.239,
+  "p": 0.1022,
+  "control": 1.077,
+  "eventos": 17,
+  "q": 0.2433
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Pintada: flotante por día, semana 1 tras creciente (P90 1296 m³/s)",
+  "estadistico": 0.709,
+  "p": 0.3342,
+  "control": 0.65,
+  "eventos": 17,
+  "q": 0.4988
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Pintada: flotante por día, semana 2 tras creciente (P90 1296 m³/s)",
+  "estadistico": 1.166,
+  "p": 0.0973,
+  "control": 0.875,
+  "eventos": 17,
+  "q": 0.2373
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Pintada: flotante por día, semanas 3–4 tras creciente (P90 1296 m³/s)",
+  "estadistico": 0.954,
+  "p": 0.404,
+  "control": 1.031,
+  "eventos": 17,
+  "q": 0.5453
+ },
+ {
+  "familia": "A. Evento flotante",
+  "prueba": "La Pintada: flotante por día, semanas 5–8 tras creciente (P90 1296 m³/s)",
+  "estadistico": 0.995,
+  "p": 0.1746,
+  "control": 0.879,
+  "eventos": 17,
+  "q": 0.3638
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Sitio Presa: macrófitas por día, semana 0 tras creciente",
+  "estadistico": 0.73,
+  "p": 0.0025,
+  "control": 1.416,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Sitio Presa: macrófitas por día, semana 1 tras creciente",
+  "estadistico": 0.748,
+  "p": 0.0025,
+  "control": 1.536,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Sitio Presa: macrófitas por día, semana 2 tras creciente",
+  "estadistico": 0.831,
+  "p": 0.0025,
+  "control": 1.29,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Sitio Presa: macrófitas por día, semanas 3–4 tras creciente",
+  "estadistico": 0.975,
+  "p": 0.0175,
+  "control": 1.303,
+  "eventos": 19,
+  "q": 0.0972
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Sitio Presa: macrófitas por día, semanas 5–8 tras creciente",
+  "estadistico": 0.963,
+  "p": 0.0175,
+  "control": 1.406,
+  "eventos": 19,
+  "q": 0.0972
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Olaya: macrófitas por día, semana 0 tras creciente",
+  "estadistico": 0.73,
+  "p": 0.0025,
+  "control": 1.501,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Olaya: macrófitas por día, semana 1 tras creciente",
+  "estadistico": 0.748,
+  "p": 0.0025,
+  "control": 1.465,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Olaya: macrófitas por día, semana 2 tras creciente",
+  "estadistico": 0.831,
+  "p": 0.0025,
+  "control": 1.312,
+  "eventos": 19,
+  "q": 0.0208
+ },
+ {
+  "familia": "A. Evento macrófitas",
+  "prueba": "Olaya: macrófitas por día, semanas 3–4 tras creciente",
+  "estadistico": 0.981,
+  "p": 0.1072,
+  "control": 1.227,
+  "eventos": 19,
+  "q": 0.2493
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "Sitio Presa: caudal diario vs día con mecanizado (ρ)",
+  "estadistico": -0.131,
+  "p": 0.342,
+  "n": 1836,
+  "q": 0.5028
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "Olaya: caudal diario vs día con mecanizado (ρ)",
+  "estadistico": -0.128,
+  "p": 0.354,
+  "n": 1836,
+  "q": 0.5028
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "La Virginia: caudal diario vs día con mecanizado (ρ)",
+  "estadistico": -0.128,
+  "p": 0.291,
+  "n": 1831,
+  "q": 0.4677
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "Bolombolo: caudal diario vs día con mecanizado (ρ)",
+  "estadistico": -0.144,
+  "p": 0.269,
+  "n": 1794,
+  "q": 0.4638
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "La Pintada: caudal diario vs día con mecanizado (ρ)",
+  "estadistico": -0.129,
+  "p": 0.332,
+  "n": 1836,
+  "q": 0.4988
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "Sitio Presa > 1866 m³/s vs día con mecanizado (r)",
+  "estadistico": -0.126,
+  "p": 0.028,
+  "n": 1836,
+  "opera_si": 0.437,
+  "opera_no": 0.644,
+  "q": 0.1333
+ },
+ {
+  "familia": "B. Operación",
+  "prueba": "Sitio Presa > 2300 m³/s vs día con mecanizado (r)",
+  "estadistico": -0.133,
+  "p": 0.001,
+  "n": 1836,
+  "opera_si": 0.209,
+  "opera_no": 0.635,
+  "q": 0.02
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 7 d)",
+  "estadistico": 0.31,
+  "p": 0.057,
+  "n": 184,
+  "q": 0.1913
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 14 d)",
+  "estadistico": 0.315,
+  "p": 0.076,
+  "n": 184,
+  "q": 0.2303
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 28 d)",
+  "estadistico": 0.301,
+  "p": 0.081,
+  "n": 184,
+  "q": 0.2314
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 42 d)",
+  "estadistico": 0.296,
+  "p": 0.09,
+  "n": 184,
+  "q": 0.2373
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 56 d)",
+  "estadistico": 0.298,
+  "p": 0.122,
+  "n": 184,
+  "q": 0.2711
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "Sitio Presa: fracción flotante vs caudal (media exp. 84 d)",
+  "estadistico": 0.307,
+  "p": 0.091,
+  "n": 184,
+  "q": 0.2373
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 7 d)",
+  "estadistico": 0.375,
+  "p": 0.04,
+  "n": 184,
+  "q": 0.1667
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 14 d)",
+  "estadistico": 0.383,
+  "p": 0.03,
+  "n": 184,
+  "q": 0.1364
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 28 d)",
+  "estadistico": 0.371,
+  "p": 0.051,
+  "n": 184,
+  "q": 0.1913
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 42 d)",
+  "estadistico": 0.367,
+  "p": 0.052,
+  "n": 184,
+  "q": 0.1913
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 56 d)",
+  "estadistico": 0.368,
+  "p": 0.057,
+  "n": 184,
+  "q": 0.1913
+ },
+ {
+  "familia": "C. Composición",
+  "prueba": "La Virginia: fracción flotante vs caudal (media exp. 84 d)",
+  "estadistico": 0.371,
+  "p": 0.001,
+  "n": 184,
+  "q": 0.02
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 3 meses antes (preblanqueado)",
+  "estadistico": 0.08,
+  "p": 0.53,
+  "n": 82,
+  "q": 0.6883
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 4 meses antes (preblanqueado)",
+  "estadistico": 0.039,
+  "p": 0.757,
+  "n": 81,
+  "q": 0.8659
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 5 meses antes (preblanqueado)",
+  "estadistico": 0.159,
+  "p": 0.095,
+  "n": 80,
+  "q": 0.2373
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 6 meses antes (preblanqueado)",
+  "estadistico": 0.223,
+  "p": 0.014,
+  "n": 79,
+  "q": 0.0933
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 7 meses antes (preblanqueado)",
+  "estadistico": -0.045,
+  "p": 0.635,
+  "n": 78,
+  "q": 0.784
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "flotante por día vs caudal 8 meses antes (preblanqueado)",
+  "estadistico": 0.013,
+  "p": 0.859,
+  "n": 77,
+  "q": 0.9337
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 3 meses antes (preblanqueado)",
+  "estadistico": 0.013,
+  "p": 0.91,
+  "n": 82,
+  "q": 0.9642
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 4 meses antes (preblanqueado)",
+  "estadistico": -0.015,
+  "p": 0.833,
+  "n": 81,
+  "q": 0.9154
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 5 meses antes (preblanqueado)",
+  "estadistico": 0.142,
+  "p": 0.143,
+  "n": 80,
+  "q": 0.3043
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 6 meses antes (preblanqueado)",
+  "estadistico": 0.015,
+  "p": 0.869,
+  "n": 79,
+  "q": 0.9344
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 7 meses antes (preblanqueado)",
+  "estadistico": 0.041,
+  "p": 0.682,
+  "n": 78,
+  "q": 0.8179
+ },
+ {
+  "familia": "D. Mensual",
+  "prueba": "macrófitas por día vs caudal 8 meses antes (preblanqueado)",
+  "estadistico": -0.054,
+  "p": 0.58,
+  "n": 77,
+  "q": 0.7436
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "flotante por día vs caudal máximo 0 semanas antes (preblanqueado)",
+  "estadistico": -0.017,
+  "p": 0.824,
+  "n": 245,
+  "q": 0.9154
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "flotante por día vs caudal máximo 1 semanas antes (preblanqueado)",
+  "estadistico": -0.051,
+  "p": 0.404,
+  "n": 244,
+  "q": 0.5453
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "flotante por día vs caudal máximo 2 semanas antes (preblanqueado)",
+  "estadistico": 0.05,
+  "p": 0.406,
+  "n": 243,
+  "q": 0.5453
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "flotante por día vs caudal máximo 3 semanas antes (preblanqueado)",
+  "estadistico": -0.074,
+  "p": 0.256,
+  "n": 242,
+  "q": 0.4551
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "flotante por día vs caudal máximo 4 semanas antes (preblanqueado)",
+  "estadistico": 0.065,
+  "p": 0.354,
+  "n": 241,
+  "q": 0.5028
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "macrófitas por día vs caudal máximo 0 semanas antes (preblanqueado)",
+  "estadistico": -0.083,
+  "p": 0.202,
+  "n": 251,
+  "q": 0.404
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "macrófitas por día vs caudal máximo 1 semanas antes (preblanqueado)",
+  "estadistico": -0.083,
+  "p": 0.286,
+  "n": 250,
+  "q": 0.4677
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "macrófitas por día vs caudal máximo 2 semanas antes (preblanqueado)",
+  "estadistico": -0.013,
+  "p": 0.831,
+  "n": 249,
+  "q": 0.9154
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "macrófitas por día vs caudal máximo 3 semanas antes (preblanqueado)",
+  "estadistico": -0.074,
+  "p": 0.276,
+  "n": 248,
+  "q": 0.4677
+ },
+ {
+  "familia": "E. Semanal",
+  "prueba": "macrófitas por día vs caudal máximo 4 semanas antes (preblanqueado)",
+  "estadistico": 0.047,
+  "p": 0.5,
+  "n": 247,
+  "q": 0.6579
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km) vs caudal (media exp. 3 d)",
+  "estadistico": -0.001,
+  "p": 0.993,
+  "n": 205,
+  "q": 0.993
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km) vs caudal (media exp. 7 d)",
+  "estadistico": 0.011,
+  "p": 0.948,
+  "n": 205,
+  "q": 0.9773
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km) vs caudal (media exp. 14 d)",
+  "estadistico": 0.028,
+  "p": 0.916,
+  "n": 205,
+  "q": 0.9642
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Cambio semanal de la mancha retenida vs días > 2.300 m³/s en la semana",
+  "estadistico": -0.089,
+  "p": 0.225,
+  "n": 155,
+  "q": 0.4328
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Ocupación de la barrera (franja 100 m) vs caudal (media exp. 7 d)",
+  "estadistico": 0.179,
+  "p": 0.252,
+  "n": 214,
+  "q": 0.4551
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Ocupación de la barrera vs días > 2.300 m³/s en las 2 semanas previas",
+  "estadistico": 0.058,
+  "p": 0.731,
+  "n": 214,
+  "q": 0.8526
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs fracción flotante de las 2 semanas siguientes",
+  "estadistico": -0.106,
+  "p": 0.683,
+  "n": 131,
+  "q": 0.8179
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs flotante por día de las 2 semanas siguientes",
+  "estadistico": 0.101,
+  "p": 0.613,
+  "n": 192,
+  "q": 0.7662
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs macrófitas por día de las 2 semanas siguientes",
+  "estadistico": 0.144,
+  "p": 0.198,
+  "n": 196,
+  "q": 0.404
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 0..2.5 km aguas abajo vs caudal (media exp. 7 d)",
+  "estadistico": 0.467,
+  "p": 0.001,
+  "n": 243,
+  "q": 0.02
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 2.5..7.5 km aguas abajo vs caudal (media exp. 7 d)",
+  "estadistico": 0.14,
+  "p": 0.357,
+  "n": 250,
+  "q": 0.5028
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 7.5..15 km aguas abajo vs caudal (media exp. 7 d)",
+  "estadistico": 0.124,
+  "p": 0.304,
+  "n": 212,
+  "q": 0.4677
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 15..22.5 km aguas abajo vs caudal (media exp. 7 d)",
+  "estadistico": -0.037,
+  "p": 0.687,
+  "n": 206,
+  "q": 0.8179
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo -7.5..-2.5 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": -0.27,
+  "p": 0.072,
+  "n": 216,
+  "q": 0.225
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo -15..-7.5 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": 0.05,
+  "p": 0.964,
+  "n": 220,
+  "q": 0.9828
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo -22.5..-15 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": 0.106,
+  "p": 0.613,
+  "n": 221,
+  "q": 0.7662
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo -30..-22.5 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": 0.315,
+  "p": 0.096,
+  "n": 225,
+  "q": 0.2373
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida en semanas con caudal > 2.300 m³/s (r punto-biserial)",
+  "estadistico": -0.006,
+  "p": 0.973,
+  "n": 208,
+  "q": 0.9828
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs días seguidos sin mecanizado",
+  "estadistico": 0.06,
+  "p": 0.762,
+  "n": 205,
+  "q": 0.8659
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "flotante: multiplicador de caudal acotado (v2.3) vs sin caudal",
+  "estadistico": 1.211,
+  "p": 0.2257,
+  "rmse_sin": 1040,
+  "rmse_con": 1032,
+  "q": 0.4328
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "macrófitas: multiplicador de caudal acotado (v2.3) vs sin caudal",
+  "estadistico": 2.415,
+  "p": 0.0157,
+  "rmse_sin": 1266,
+  "rmse_con": 1252,
+  "q": 0.0972
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "flotante: perfil por semanas desde la creciente (Olaya ≥ 1.750)",
+  "estadistico": -3.882,
+  "p": 0.0001,
+  "rmse_base": 1032,
+  "rmse_termino": 1053,
+  "q": 0.01
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "flotante: anomalía de caudal 5–7 meses antes",
+  "estadistico": 1.759,
+  "p": 0.0785,
+  "rmse_base": 1032,
+  "rmse_termino": 1022,
+  "q": 0.2309
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "flotante: factor de parada por días > 2.300 m³/s (valor con paros)",
+  "estadistico": 2.634,
+  "p": 0.0084,
+  "rmse_base": 1191,
+  "rmse_termino": 1174,
+  "q": 0.0646
+ },
+ {
+  "familia": "G. Pronóstico",
+  "prueba": "macrófitas: factor de parada por días > 2.300 m³/s (valor con paros)",
+  "estadistico": 3.622,
+  "p": 0.0003,
+  "rmse_base": 1323,
+  "rmse_termino": 1297,
+  "q": 0.015
+ }
+]

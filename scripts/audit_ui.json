@@ -199,6 +199,16 @@
    "ok",
    "Caudal: extracción limitada por equipos y seguridad",
    "Los viajes por volqueta no cambian con el caudal (ρ ≈ 0) y el esfuerzo (volqueta-días) explica el volumen semanal (r 0,91 en 2021–2024 y 0,98 en 2025–2026): la extracción mide capacidad, no llegada. Con caudal sobre 2.300 m³/s se suspende por seguridad de las lanchas. Separando efectos, la relación caudal → flotante semanal (días altos + caudal de las 6 semanas previas) sube a r ≈ 0,5 en ambos periodos, frente a ρ ≈ −0,1 directa. La llegada se ve en la composición: la fracción de flotante sube con el caudal de las 6–8 semanas previas frente a su nivel reciente (r 0,35 y 0,31 en validación) y pasa de 50 % a ~62 % la semana siguiente a una creciente, alta unas 6 semanas. Incorporado: el valor «con paros» usa los días de caudal alto pronosticados (factor flotante 0,68/0,16 y macrófitas 0,74/0,52 con 1–3/4–7 días); en las 60 semanas con caudal alto el error baja 22 % (flotante) y 33 % (macrófitas), ningún año empeora. Abr–sep 2026: división flotante/macrófitas fija en el registro (45,7 %), excluida del análisis de composición."
+  ],
+  [
+   "info",
+   "Mancha retenida y corredor ±30 km por satélite (1-nov)",
+   "Sentinel-2 (330 fechas útiles) y Sentinel-1 radar (518 fechas, umbral calibrado contra el óptico: ρ = 0,74, error medio 4 ha) miden desde 2019 la vegetación flotante en 10 tramos de 30 km aguas arriba a 30 km aguas abajo de la barrera, la mancha retenida (0–2,5 km aguas arriba) y la ocupación de la franja de 100 m frente a la barrera; se actualiza a diario con las imágenes nuevas (una medición cada 3–5 días, no diaria). La mancha retenida no crece con el caudal; la vegetación 0–2,5 km aguas abajo sí (ρ = 0,47, q = 0,02): en crecientes parte del material sobrepasa la barrera. El balance semanal (extraído + cambio de mancha retenida y aguas abajo) elimina la relación negativa con el caudal (r −0,28 → −0,02 con 738 m³/ha). La mancha no mejora el pronóstico de extracción: se usa como monitoreo y riesgo, no entra al modelo."
+  ],
+  [
+   "info",
+   "Batería de 100 pruebas con corrección por comparaciones múltiples",
+   "100 pruebas en 7 familias (crecientes, operación, composición, mensual, semanal, satélite, pronóstico), p por desplazamiento circular y corrección Benjamini–Hochberg: 12 se sostienen con q < 0,05 y 18 con q < 0,10. Firmes: parada por seguridad (mecanizado y macrófitas), factor de parada en macrófitas, composición con caudal de ~3 meses, sobrepaso aguas abajo en crecientes. Sin relación: extracción semanal frente a caudal con rezagos de 0 a 4 semanas."
   ]
  ],
  "plataforma": [
@@ -325,7 +335,7 @@
   "Medir el volumen real de algunas cargas y separar la composición por viaje: hoy el volumen y la división flotante/macrófitas son estimaciones.",
   "Armar el informe integrado por fecha (BUSCARV/XLOOKUP sobre la fecha) y no por posición de fila: así se originaron los desfases de 1 a 3 días.",
   "Para calibrar el volumen satelital: pesar y medir el volumen suelto del material de 3–5 cuadros de 1 m² en la mancha frente al puerto, en fechas con imagen despejada.",
-  "Registrar en la hoja de viajes la división real flotante/macrófitas por viaje (desde abr-2026 es fija en 45,7 %) y, en crecientes, una estimación diaria de la mancha retenida (área o % de barrera ocupada): es la medida directa del material que llega."
+  "Registrar en la hoja de viajes la división real flotante/macrófitas por viaje (desde abr-2026 es fija en 45,7 %) y, en crecientes, una estimación diaria de la mancha retenida y de si el material pasa por encima o por los lados de la barrera: el satélite ya la mide cada 3–5 días, pero no en días nublados ni entre pasadas."
  ],
  "experimento": {
   "cols": [

@@ -533,6 +533,15 @@ function renderRezagos(){
    <p class="note">Tras ~30 pruebas, los valores p son orientativos. Una revisión anterior reportó «2× en la segunda semana»: medido contra las 4 semanas previas, que ya venían deprimidas por el caudal alto; contra el nivel normal la segunda semana es 1,1×.</p>`;
 }
 
+
+function renderBateria(){
+  const R=S.src.rezagos, box=document.getElementById('bat-panel'); if(!box) return; const B=R&&R.bateria; if(!B){box.hidden=true;return} box.hidden=false;
+  const fam={}; B.pruebas.forEach(t=>{const f=fam[t.familia]||(fam[t.familia]={n:0,p05:0,q05:0});f.n++;if(t.p!=null&&t.p<0.05)f.p05++;if(t.q!=null&&t.q<0.05)f.q05++});
+  document.getElementById('bat-resumen').innerHTML='<thead><tr><th>Familia</th><th>Pruebas</th><th>p < 0,05</th><th>Se sostienen tras corregir (q < 0,05)</th></tr></thead><tbody>'+Object.entries(fam).map(([k,f])=>`<tr><td>${esc(k)}</td><td class="num">${f.n}</td><td class="num">${f.p05}</td><td class="num"><b>${f.q05}</b></td></tr>`).join('')+`<tr><td><b>Total</b></td><td class="num">${B.pruebas.length}</td><td class="num">${B.pruebas.filter(t=>t.p!=null&&t.p<0.05).length}</td><td class="num"><b>${B.pruebas.filter(t=>t.q!=null&&t.q<0.05).length}</b></td></tr></tbody>`;
+  document.getElementById('bat-read').innerHTML=B.lectura;
+  document.getElementById('bat-todas').innerHTML='<thead><tr><th>#</th><th>Familia</th><th>Prueba</th><th>Estadístico</th><th>p</th><th>q (BH)</th></tr></thead><tbody>'+B.pruebas.map((t,i)=>`<tr${t.q!=null&&t.q<0.05?' style="font-weight:600"':''}><td class="num">${i+1}</td><td>${esc(t.familia)}</td><td>${esc(t.prueba)}</td><td class="num">${t.estadistico==null?'—':nf(t.estadistico,3)}</td><td class="num">${t.p==null?'—':nf(t.p,3)}</td><td class="num">${t.q==null?'—':nf(t.q,3)}</td></tr>`).join('')+'</tbody>';
+}
+
 /* ---------- pronóstico real de HydroForecast vs observado (sombra) ---------- */
 let HFH=null;
 async function loadHFHist(){
@@ -680,7 +689,7 @@ async function renderSat(){
   document.getElementById('sat-ql').src='datos/satelite/app/ultima_escena.jpg';
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
   renderVisor(J);
-  renderCorredor(); renderVolumen(J,ALL);
+  renderCorredor(); renderVolumen(J,ALL); renderRetenido();
   renderAlertas();renderAlertBanner('sat-alert');
   document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
@@ -801,6 +810,46 @@ async function renderCorredor(){
 
 
 
+
+/* ---------- mancha retenida en la barrera (óptico + radar) ---------- */
+let RET=null;
+async function renderRetenido(){
+  const box=document.getElementById('ret-panel'); if(!box) return;
+  try{if(!RET)RET=await fetchJSON('datos/satelite/retenido/serie.json',15000)}catch(e){box.hidden=true;return}
+  if(!RET||!Object.keys(RET.optico||{}).length){box.hidden=true;return} box.hidden=false;
+  const seg=document.getElementById('ret-var'); if(!seg.dataset.on){seg.dataset.on=1;seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderRetenido()})}
+  const v=[...seg.querySelectorAll('button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
+  const pts=src=>Object.entries(RET[src]||{}).filter(([f,o])=>o[v]!=null).map(([f,o])=>({x:d0(f),y:o[v]})).sort((a,b)=>a.x-b.x);
+  const O=pts('optico'), R=pts('radar'), all=[...O,...R].sort((a,b)=>a.x-b.x);
+  const qs=[]; for(let i=S.first;i<S.n;i++){if(S.q[i]!=null&&S.T[i]>=d0('2019-01-01'))qs.push({x:S.T[i],y:S.q[i]})}
+  const o=baseOpts(); o.scales.x={type:'linear',grid:{color:css('--line')},ticks:{callback:x=>{const d=new Date(x);return MES[d.getUTCMonth()]+' '+String(d.getUTCFullYear()).slice(2)},maxTicksLimit:10}};
+  o.scales.x.min=d0('2019-01-01');o.scales.y.title={display:true,text:v==='ret'?'hectáreas':'% de la franja'}; o.scales.y2={position:'right',grid:{display:false},title:{display:true,text:'Sitio Presa m³/s'}};
+  o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x);
+  mk('ch-ret',{type:'line',data:{datasets:[
+    {label:'Óptico (Sentinel-2)',data:O,borderColor:css('--ma'),backgroundColor:css('--ma'),showLine:false,pointRadius:2.5},
+    {label:'Radar (Sentinel-1)',data:R,borderColor:css('--mf'),backgroundColor:css('--mf'),showLine:false,pointRadius:2.5,pointStyle:'rect'},
+    {label:'Caudal Sitio Presa',data:qs,yAxisID:'y2',borderColor:css('--flow2'),backgroundColor:css('--flow2'),pointRadius:0,borderWidth:1}]},options:o});
+  const vals=all.map(p=>p.y).sort((a,b)=>a-b), pct=p=>vals[Math.min(vals.length-1,Math.floor(p*vals.length))], last=all[all.length-1];
+  const lastO=O[O.length-1], lastR=R[R.length-1], rank=last?vals.filter(x=>x<=last.y).length/vals.length:0;
+  const u=v==='ret'?' ha':' %';
+  document.getElementById('ret-cards').innerHTML=[
+    [rank>=0.9?'warn':'info',v==='ret'?'Mancha retenida (0–2,5 km aguas arriba)':'Ocupación de la barrera (franja de 100 m)',last?`${nf(last.y,1)}<small>${u}</small>`:'—',last?`${fmtD(last.x)} · ${R.includes(last)?'radar':'óptico'} · percentil ${nf(rank*100)}${v==='bar'&&rank>=0.9?' · <b>≥ P90: vigilar la barrera</b>':''} · mediana ${nf(pct(0.5),1)}${u}, P90 ${nf(pct(0.9),1)}${u}`:''],
+    ['info','Mediciones',`${nf(O.length)} + ${nf(R.length)}`,`ópticas + radar desde 2019 · última óptica ${lastO?fmtD(lastO.x):'—'}, último radar ${lastR?fmtD(lastR.x):'—'}`]
+  ].map(([s,t,b,n])=>`<div class="st ${s} c6"><h2>${t}</h2><div class="big">${b}</div><div class="note">${n}</div></div>`).join('');
+  const lab=t=>{const [a,b]=t.split('..').map(Number);return b<=0?`${nf(Math.abs(b),1)}–${nf(Math.abs(a),1)} km aguas arriba`:`${nf(a,1)}–${nf(b,1)} km aguas abajo`};
+  const ult=k=>{let best=null;for(const src of ['optico','radar'])for(const [f,o] of Object.entries(RET[src]||{}))if(o[k]!=null&&(!best||f>best.f))best={f,v:o[k],src};return best};
+  const med=k=>median([...Object.values(RET.optico||{}),...Object.values(RET.radar||{})].map(o=>o[k]).filter(x=>x!=null));
+  document.getElementById('ret-tabla').innerHTML='<thead><tr><th>Tramo</th><th>Agua (ha)</th><th>Última medición</th><th>Vegetación (ha)</th><th>Mediana histórica (ha)</th></tr></thead><tbody>'+
+    RET.tramos.map(t=>{const k='t'+t.replace('..','_');const u_=ult(k);return `<tr><td>${lab(t)}</td><td class="num">${nf(RET.agua_ha[k]??null)}</td><td>${u_?fmtD(d0(u_.f))+' · '+(u_.src==='radar'?'radar':'óptico'):'—'}</td><td class="num"><b>${u_?nf(u_.v,1):'—'}</b></td><td class="num">${nf(med(k),1)}</td></tr>`}).join('')+'</tbody>';
+  const SA=S.src.rezagos&&S.src.rezagos.satelite, rr=document.getElementById('ret-read');
+  if(SA&&rr){const b0=SA.balance['0'],bc=SA.balance['738'],bd=SA.balance_abajo['738'],B=SA.bar;
+    rr.innerHTML=`<p><b>Qué muestra.</b> La mancha retenida aguas arriba de la barrera <b>no crece con el caudal</b> (ρ ≈ 0 en 205 semanas con medición, óptica o de radar). En cambio, la vegetación en los <b>2,5 km aguas abajo</b> sí aumenta con el caudal (ρ = 0,47, q = 0,02, confirmado solo con óptico, ρ = 0,38): en crecientes parte del material <b>pasa la barrera</b>.</p>
+<p><b>Balance semanal</b> (llegada = extraído + cambio de la mancha × m³/ha, ${nf(b0.n)} semanas, valor central ${nf(VOLK.central)} m³/ha): solo con lo extraído la relación con el caudal es r = ${nf(b0.r_q,2)} (p = ${nf(b0.p_q,3)}); sumando la mancha retenida, r = ${nf(bc.r_q,2)}; sumando además lo que pasa aguas abajo, r = ${nf(bd.r,2)} (p = ${nf(bd.p,2)}). Es decir, en crecientes lo que llega no disminuye: baja lo que se alcanza a extraer, y la diferencia queda retenida o, sobre todo, sobrepasa la barrera. El rango de m³/ha es amplio (bajo–alto ${nf(VOLK.bajo)}–${nf(VOLK.alto)}), así que el balance es indicativo.</p>
+<p><b>Riesgo para la barrera.</b> La ocupación de la franja de 100 m se compara con su historia (mediana y P90 en la tarjeta de arriba, opción «Ocupación de la barrera»); una ocupación ≥ P90 se marca en ámbar. Solo ${nf(B.n_q_alto)} mediciones coinciden con caudal > 2.300 m³/s (${nf(B.p_alto_q_alto*100)} % de ellas ≥ P90 frente a ${nf(B.p_alto_q_bajo*100)} % con caudal menor): son pocas para concluir. La mancha retenida no mejora el pronóstico de extracción, por eso se usa como monitoreo y no entra al modelo.</p>`}
+  const C=RET.calibracion_radar||{}, ce=C.elegido?C[C.elegido]:null;
+  document.getElementById('ret-nota').innerHTML=`Mancha retenida: vegetación flotante en el agua de los 2,5 km aguas arriba de la línea de la barrera. Ocupación: % de la franja de 0–100 m frente a la barrera cubierta. Óptico: NDVI ≥ 0,30 a 20 m, solo con ≥ 60 % de la zona despejada. Radar: VH ≥ ${C.elegido?'−'+C.elegido.slice(2):'−14'} dB, ve a través de nubes, útil en crecientes${ce?`; frente al óptico (±3 días, ${ce.n} pares): ρ = ${nf(ce.rho,2)}, sesgo ${nf(ce.sesgo_ha,1)} ha, error medio ${nf(ce.mae_ha,1)} ha`:''}. Zona de agua erosionada 20 m para no contar orillas. Sentinel-2 pasa cada 5 días y Sentinel-1 cada 12 (6 desde 2025): no es una medición diaria. Madera y residuos no se distinguen de la vegetación en el radar ni se ven en el óptico. Actualización diaria automática (${RET.generado} UTC).`;
+}
+
 /* ---------- volumen estimado a partir del área satelital ---------- */
 // Biomasa fresca por m² de jacinto de agua (Eichhornia crassipes): mínimo 3,8, mediana 11,8 y máximo 40,8 kg/m² (PeerJ 2023, 12 meses, llanura del Brahmaputra).
 // Densidad aparente del proyecto: 160 kg/m³ (conversión de la hoja de viajes manual). m³/ha = kg/m² × 10.000 / 160.
@@ -885,7 +934,7 @@ function show(){
 function renderView(v){
   if(v==='pronostico')renderForecast();else if(v==='historico')renderHist();else if(v==='relacion')renderRel();
   if(v==='relacion'){const n=document.getElementById('rel-note');n.hidden=!S.src._xlsxName||S.src._same;n.textContent=`Análisis de crecientes y correlaciones calculados con el archivo base (hasta ${fmtD(S.T[ORIGLAST])}). El histórico, la calidad y el pronóstico sí usan el archivo cargado.`}
-  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel();renderHFSkill();renderRezagos()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();else if(v==='operacion')renderOps();
+  if(v==='calidad')renderQuality();else if(v==='modelo'){if(!FC)FC=forecast('mean');renderModel();renderHFSkill();renderRezagos();renderBateria()}else if(v==='auditoria')renderAudit();else if(v==='satelite')renderSat();else if(v==='operacion')renderOps();
   else if(v==='actualizar')renderUpdate();else if(v==='requisitos')renderReq();
 }
 function seg(id,cb){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
@@ -935,7 +984,7 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=40bad96849',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=041a2763aa',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo','satelite'].includes(h))renderView(h)}).catch(()=>{});
 }
 fetch('datos/app/base.json?v=aa4039a8b3',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});

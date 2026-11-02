@@ -15,7 +15,7 @@ old="  (async()=>{await loadRepoExcel();await loadLive()})();"
 assert old in JS
 JS=JS.replace(old,"""  S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo'].includes(h))renderView(h)}).catch(()=>{});""")
+  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo','satelite'].includes(h))renderView(h)}).catch(()=>{});""")
 old="if(window.Chart) init(); else window.addEventListener('load',init);"
 assert old in JS
 JS=JS.replace(old,"""fetch('datos/app/base.json?v=__VB__',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
