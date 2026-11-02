@@ -1,0 +1,135 @@
+[
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km por el río) vs caudal (media exp. 3 d)",
+  "estadistico": 0.077,
+  "p": 0.887,
+  "n": 131
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km por el río) vs caudal (media exp. 7 d)",
+  "estadistico": 0.086,
+  "p": 0.906,
+  "n": 131
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida (0–2,5 km por el río) vs caudal (media exp. 14 d)",
+  "estadistico": 0.113,
+  "p": 0.85,
+  "n": 131
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Cambio semanal de la mancha retenida vs días > 2.300 m³/s en la semana",
+  "estadistico": 0.054,
+  "p": 0.585,
+  "n": 73
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Ocupación de la barrera (100 m) vs caudal (media exp. 7 d)",
+  "estadistico": 0.152,
+  "p": 0.371,
+  "n": 156
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Ocupación de la barrera vs días > 2.300 m³/s en las 2 semanas previas",
+  "estadistico": 0.064,
+  "p": 0.616,
+  "n": 156
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs fracción flotante de las 2 semanas siguientes",
+  "estadistico": -0.118,
+  "p": 0.684,
+  "n": 88
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs flotante por día de las 2 semanas siguientes",
+  "estadistico": 0.11,
+  "p": 0.388,
+  "n": 124
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs macrófitas por día de las 2 semanas siguientes",
+  "estadistico": 0.175,
+  "p": 0.191,
+  "n": 125
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Todo el contorno aguas arriba (23.88 km) vs caudal (media exp. 7 d)",
+  "estadistico": -0.295,
+  "p": 0.174,
+  "n": 143
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Todo el contorno aguas arriba vs extracción total por día de las 2 semanas siguientes",
+  "estadistico": 0.243,
+  "p": 0.027,
+  "n": 137
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 0–2,5 km aguas abajo vs caudal (media exp. 7 d)",
+  "estadistico": 0.414,
+  "p": 0.001,
+  "n": 141
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 12.5–15 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": 0.016,
+  "p": 0.991,
+  "n": 162
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 7.5–10 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": -0.071,
+  "p": 0.71,
+  "n": 155
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 2.5–5 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": -0.489,
+  "p": 0.001,
+  "n": 149
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Tramo 22.5–25 km aguas arriba vs caudal (media exp. 7 d)",
+  "estadistico": 0.131,
+  "p": 0.181,
+  "n": 154
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida en semanas con caudal > 2.300 m³/s (r punto-biserial)",
+  "estadistico": 0.128,
+  "p": 0.479,
+  "n": 132
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Mancha retenida vs días seguidos sin mecanizado",
+  "estadistico": 0.076,
+  "p": 0.801,
+  "n": 131
+ },
+ {
+  "familia": "F. Satélite",
+  "prueba": "Vegetación a más de 10 km aguas arriba vs mancha retenida 1–2 semanas después",
+  "estadistico": -0.167,
+  "p": 0.088,
+  "n": 33
+ }
+]

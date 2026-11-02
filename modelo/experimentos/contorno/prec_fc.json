@@ -1,0 +1,35 @@
+{
+ "1": {
+  "n": 190,
+  "obs_mediana": 4564,
+  "err_abs_mediano_pct": 23.2,
+  "err_p80_pct": 41.2,
+  "dentro_20pct": 45,
+  "clim_err_abs_mediano_pct": 27.6,
+  "mf_err_mediano_pct": 30.2,
+  "ma_err_mediano_pct": 26.7,
+  "sesgo_pct": -2.2
+ },
+ "4": {
+  "n": 163,
+  "obs_mediana": 18848,
+  "err_abs_mediano_pct": 16.4,
+  "err_p80_pct": 30.1,
+  "dentro_20pct": 58,
+  "clim_err_abs_mediano_pct": 19.0,
+  "mf_err_mediano_pct": 18.8,
+  "ma_err_mediano_pct": 19.9,
+  "sesgo_pct": -1.6
+ },
+ "8": {
+  "n": 131,
+  "obs_mediana": 37474,
+  "err_abs_mediano_pct": 12.7,
+  "err_p80_pct": 28.1,
+  "dentro_20pct": 66,
+  "clim_err_abs_mediano_pct": 15.0,
+  "mf_err_mediano_pct": 14.2,
+  "ma_err_mediano_pct": 17.7,
+  "sesgo_pct": -3.3
+ }
+}

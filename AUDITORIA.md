@@ -117,3 +117,10 @@ Error medio absoluto (m³/semana) en 4.908 pronósticos con origen móvil 2022�
 - Balance semanal (250 semanas): extraído vs caudal r = −0,28; + mancha retenida (738 m³/ha) −0,19; + aguas abajo −0,02. Lo que llega no baja en crecientes; baja lo que se extrae.
 - La mancha no mejora el pronóstico de extracción: monitoreo y riesgo, no entra al modelo.
 - 100 pruebas (A–G), p por desplazamiento circular, Benjamini–Hochberg: 12 con q < 0,05, 18 con q < 0,10. Detalle en `modelo/experimentos/bateria/`.
+
+## Contorno de análisis del usuario (2-nov-2026)
+
+- `satelite/contorno.py` + `contorno.yml` (diario 17:41 UTC): contorno `satelite/contorno_analisis.kml` (41,5 km²), grilla UTM 18N de 10 m, distancia por el cauce desde la barrera (23,9 km aguas arriba, 3,4 km aguas abajo), tramos de 2,5 km. Sentinel-2 (NDVI 0,20/0,30/0,40, FAI, NDVI a 20 m), Landsat 8/9 y Sentinel-1. Reemplaza en la app al corredor ±30 km en línea recta (`retenido.yml` queda solo manual).
+- Precisión: umbral/índice 8–14 % (mediana); píxel < 1 %; orillas +42 %; Landsat vs S2 ρ 0,87 (27 %); radar vs S2 ρ 0,47 (54 %, solo referencia); ha→m³ ×0,32 a ×3,5.
+- Pronóstico: error mediano del total a 1/4/8 semanas 23/16/13 % (semanas con operación normal, 2022–2026).
+- Batería: familia F rehecha con el contorno; 13 pruebas con q < 0,05 y 21 con q < 0,10. Vegetación aguas arriba en el pronóstico: no mejora (detalle `modelo/experimentos/contorno/`).

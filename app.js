@@ -815,39 +815,39 @@ async function renderCorredor(){
 let RET=null;
 async function renderRetenido(){
   const box=document.getElementById('ret-panel'); if(!box) return;
-  try{if(!RET)RET=await fetchJSON('datos/satelite/retenido/serie.json',15000)}catch(e){box.hidden=true;return}
+  try{if(!RET)RET=await fetchJSON('datos/satelite/contorno/serie.json',15000)}catch(e){box.hidden=true;return}
   if(!RET||!Object.keys(RET.optico||{}).length){box.hidden=true;return} box.hidden=false;
   const seg=document.getElementById('ret-var'); if(!seg.dataset.on){seg.dataset.on=1;seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderRetenido()})}
-  const v=[...seg.querySelectorAll('button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
+  const v=[...seg.querySelectorAll('button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v, u=v==='bar'?' %':' ha';
   const pts=src=>Object.entries(RET[src]||{}).filter(([f,o])=>o[v]!=null).map(([f,o])=>({x:d0(f),y:o[v]})).sort((a,b)=>a.x-b.x);
-  const O=pts('optico'), R=pts('radar'), all=[...O,...R].sort((a,b)=>a.x-b.x);
+  const O=pts('optico'), LS=pts('landsat'), R=pts('radar'), OL=[...O,...LS].sort((a,b)=>a.x-b.x);
   const qs=[]; for(let i=S.first;i<S.n;i++){if(S.q[i]!=null&&S.T[i]>=d0('2019-01-01'))qs.push({x:S.T[i],y:S.q[i]})}
   const o=baseOpts(); o.scales.x={type:'linear',grid:{color:css('--line')},ticks:{callback:x=>{const d=new Date(x);return MES[d.getUTCMonth()]+' '+String(d.getUTCFullYear()).slice(2)},maxTicksLimit:10}};
-  o.scales.x.min=d0('2019-01-01');o.scales.y.title={display:true,text:v==='ret'?'hectáreas':'% de la franja'}; o.scales.y2={position:'right',grid:{display:false},title:{display:true,text:'Sitio Presa m³/s'}};
-  o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x);
+  o.scales.x.min=d0('2019-01-01');o.scales.y.title={display:true,text:v==='bar'?'% de la franja':'hectáreas'}; o.scales.y2={position:'right',grid:{display:false},title:{display:true,text:'Sitio Presa m³/s'}};
+  o.plugins.tooltip.callbacks.title=it=>fmtD(it[0].parsed.x); o.interaction={mode:'nearest',intersect:false};
+  o.plugins.tooltip.callbacks.label=c=>c.dataset.label+': '+nf(c.parsed.y,c.dataset.yAxisID==='y2'?0:1)+(c.dataset.yAxisID==='y2'?' m³/s':u);
   mk('ch-ret',{type:'line',data:{datasets:[
-    {label:'Óptico (Sentinel-2)',data:O,borderColor:css('--ma'),backgroundColor:css('--ma'),showLine:false,pointRadius:2.5},
-    {label:'Radar (Sentinel-1)',data:R,borderColor:css('--mf'),backgroundColor:css('--mf'),showLine:false,pointRadius:2.5,pointStyle:'rect'},
+    {label:'Óptico (Sentinel-2, 10 m)',data:O,borderColor:css('--ma'),backgroundColor:css('--ma'),showLine:false,pointRadius:2.8},
+    {label:'Landsat 8/9 (30 m)',data:LS,borderColor:css('--accent'),backgroundColor:css('--accent'),showLine:false,pointRadius:3,pointStyle:'triangle'},
+    {label:'Radar (Sentinel-1), menos preciso',data:R,borderColor:css('--mf')+'aa',backgroundColor:css('--mf')+'88',showLine:false,pointRadius:2,pointStyle:'rect'},
     {label:'Caudal Sitio Presa',data:qs,yAxisID:'y2',borderColor:css('--flow2'),backgroundColor:css('--flow2'),pointRadius:0,borderWidth:1}]},options:o});
-  const vals=all.map(p=>p.y).sort((a,b)=>a-b), pct=p=>vals[Math.min(vals.length-1,Math.floor(p*vals.length))], last=all[all.length-1];
-  const lastO=O[O.length-1], lastR=R[R.length-1], rank=last?vals.filter(x=>x<=last.y).length/vals.length:0;
-  const u=v==='ret'?' ha':' %';
+  const vals=OL.map(p=>p.y).sort((a,b)=>a-b), pct=p=>vals[Math.min(vals.length-1,Math.floor(p*vals.length))], last=OL[OL.length-1], lastR=R[R.length-1];
+  const rank=last?vals.filter(x=>x<=last.y).length/vals.length:0, src=last&&LS.includes(last)?'Landsat':'Sentinel-2';
+  const tit={ret:'Mancha retenida (0–2,5 km de río antes de la barrera)',bar:'Ocupación de la barrera (franja de 100 m)',arriba:`Todo el río aguas arriba (${nf(RET.km_aguas_arriba,1)} km)`}[v];
   document.getElementById('ret-cards').innerHTML=[
-    [rank>=0.9?'warn':'info',v==='ret'?'Mancha retenida (0–2,5 km aguas arriba)':'Ocupación de la barrera (franja de 100 m)',last?`${nf(last.y,1)}<small>${u}</small>`:'—',last?`${fmtD(last.x)} · ${R.includes(last)?'radar':'óptico'} · percentil ${nf(rank*100)}${v==='bar'&&rank>=0.9?' · <b>≥ P90: vigilar la barrera</b>':''} · mediana ${nf(pct(0.5),1)}${u}, P90 ${nf(pct(0.9),1)}${u}`:''],
-    ['info','Mediciones',`${nf(O.length)} + ${nf(R.length)}`,`ópticas + radar desde 2019 · última óptica ${lastO?fmtD(lastO.x):'—'}, último radar ${lastR?fmtD(lastR.x):'—'}`]
-  ].map(([s,t,b,n])=>`<div class="st ${s} c6"><h2>${t}</h2><div class="big">${b}</div><div class="note">${n}</div></div>`).join('');
+    [rank>=0.9?'warn':'info',tit,last?`${nf(last.y,1)}<small>${u}</small>`:'—',last?`${fmtD(last.x)} · ${src} · percentil ${nf(rank*100)}${v==='bar'&&rank>=0.9?' · <b>≥ P90: vigilar la barrera</b>':''} · mediana ${nf(pct(0.5),1)}${u}, P90 ${nf(pct(0.9),1)}${u}${v!=='bar'?` · ≈ ${nf(last.y*VOLK.central)} m³`:''}`:''],
+    ['info','Mediciones',`${nf(O.length)} + ${nf(LS.length)} + ${nf(R.length)}`,`Sentinel-2 + Landsat + radar desde 2019 · último radar ${lastR?fmtD(lastR.x)+': '+nf(lastR.y,1)+u:'—'} (solo orientativo)`]
+  ].map(([s_,t,b,n])=>`<div class="st ${s_} c6"><h2>${t}</h2><div class="big">${b}</div><div class="note">${n}</div></div>`).join('');
   const lab=t=>{const [a,b]=t.split('..').map(Number);return b<=0?`${nf(Math.abs(b),1)}–${nf(Math.abs(a),1)} km aguas arriba`:`${nf(a,1)}–${nf(b,1)} km aguas abajo`};
-  const ult=k=>{let best=null;for(const src of ['optico','radar'])for(const [f,o] of Object.entries(RET[src]||{}))if(o[k]!=null&&(!best||f>best.f))best={f,v:o[k],src};return best};
-  const med=k=>median([...Object.values(RET.optico||{}),...Object.values(RET.radar||{})].map(o=>o[k]).filter(x=>x!=null));
-  document.getElementById('ret-tabla').innerHTML='<thead><tr><th>Tramo</th><th>Agua (ha)</th><th>Última medición</th><th>Vegetación (ha)</th><th>Mediana histórica (ha)</th></tr></thead><tbody>'+
-    RET.tramos.map(t=>{const k='t'+t.replace('..','_');const u_=ult(k);return `<tr><td>${lab(t)}</td><td class="num">${nf(RET.agua_ha[k]??null)}</td><td>${u_?fmtD(d0(u_.f))+' · '+(u_.src==='radar'?'radar':'óptico'):'—'}</td><td class="num"><b>${u_?nf(u_.v,1):'—'}</b></td><td class="num">${nf(med(k),1)}</td></tr>`}).join('')+'</tbody>';
-  const SA=S.src.rezagos&&S.src.rezagos.satelite, rr=document.getElementById('ret-read');
-  if(SA&&rr){const b0=SA.balance['0'],bc=SA.balance['738'],bd=SA.balance_abajo['738'],B=SA.bar;
-    rr.innerHTML=`<p><b>Cómo leer este panel.</b> Cada punto es una medición: verde = óptico (Sentinel-2), naranja = radar (Sentinel-1). «Mancha retenida» son las hectáreas de vegetación flotante en los 2,5 km de río justo antes de la barrera; «Ocupación» es qué parte de la franja de 100 m pegada a la barrera está cubierta. La tabla da cada tramo del corredor, de 30 km aguas arriba a 30 km aguas abajo. Para pasar hectáreas a m³ se multiplica por ${nf(VOLK.central)} (cuenta completa arriba, en «Cómo salen las cuentas»).</p><p><b>Lectura.</b> La mancha retenida suele ser pequeña y <b>no crece cuando sube el caudal</b>. Justo aguas abajo de la barrera sí aparece más vegetación con caudal alto: indicio de que parte del material pasa la barrera. Lo seguro es que en crecientes se extrae menos; el balance por tipo de semana está en el resumen de arriba.</p><details><summary class="note" style="cursor:pointer">Detalle técnico</summary><p><b>Qué muestra.</b> La mancha retenida aguas arriba de la barrera <b>no crece con el caudal</b> (ρ ≈ 0 en 205 semanas con medición, óptica o de radar). En cambio, la vegetación en los <b>2,5 km aguas abajo</b> sí aumenta con el caudal (ρ = 0,47, q = 0,02, confirmado solo con óptico, ρ = 0,38): en crecientes parte del material <b>pasa la barrera</b>.</p>
-<p><b>Balance semanal</b> (llegada = extraído + cambio de la mancha × m³/ha, ${nf(b0.n)} semanas, valor central ${nf(VOLK.central)} m³/ha): solo con lo extraído la relación con el caudal es r = ${nf(b0.r_q,2)} (p = ${nf(b0.p_q,3)}); sumando la mancha retenida, r = ${nf(bc.r_q,2)}; sumando además lo que pasa aguas abajo, r = ${nf(bd.r,2)} (p = ${nf(bd.p,2)}). Es decir, en crecientes lo que llega no disminuye: baja lo que se alcanza a extraer, y la diferencia queda retenida o, sobre todo, sobrepasa la barrera. El rango de m³/ha es amplio (bajo–alto ${nf(VOLK.bajo)}–${nf(VOLK.alto)}), así que el balance es indicativo.</p>
-<p><b>Riesgo para la barrera.</b> La ocupación de la franja de 100 m se compara con su historia (mediana y P90 en la tarjeta de arriba, opción «Ocupación de la barrera»); una ocupación ≥ P90 se marca en ámbar. Solo ${nf(B.n_q_alto)} mediciones coinciden con caudal > 2.300 m³/s (${nf(B.p_alto_q_alto*100)} % de ellas ≥ P90 frente a ${nf(B.p_alto_q_bajo*100)} % con caudal menor): son pocas para concluir. La mancha retenida no mejora el pronóstico de extracción, por eso se usa como monitoreo y no entra al modelo.</p></details>`}
-  const C=RET.calibracion_radar||{}, ce=C.elegido?C[C.elegido]:null;
-  document.getElementById('ret-nota').innerHTML=`Mancha retenida: vegetación flotante en el agua de los 2,5 km aguas arriba de la línea de la barrera. Ocupación: % de la franja de 0–100 m frente a la barrera cubierta. Óptico: NDVI ≥ 0,30 a 20 m, solo con ≥ 60 % de la zona despejada. Radar: VH ≥ ${C.elegido?'−'+C.elegido.slice(2):'−14'} dB, ve a través de nubes, útil en crecientes${ce?`; frente al óptico (±3 días, ${ce.n} pares): ρ = ${nf(ce.rho,2)}, sesgo ${nf(ce.sesgo_ha,1)} ha, error medio ${nf(ce.mae_ha,1)} ha`:''}. Zona de agua erosionada 20 m para no contar orillas. Sentinel-2 pasa cada 5 días y Sentinel-1 cada 12 (6 desde 2025): no es una medición diaria. Madera y residuos no se distinguen de la vegetación en el radar ni se ven en el óptico. Actualización diaria automática (${RET.generado} UTC).`;
+  const ult=k=>{let best=null;for(const sr of ['optico','landsat'])for(const [f,oo] of Object.entries(RET[sr]||{}))if(oo[k]!=null&&(!best||f>best.f))best={f,v:oo[k],sr};return best};
+  const med=k=>median([...Object.values(RET.optico||{}),...Object.values(RET.landsat||{})].map(oo=>oo[k]).filter(x=>x!=null));
+  document.getElementById('ret-tabla').innerHTML='<thead><tr><th>Tramo (distancia por el río)</th><th>Agua (ha)</th><th>Última medición óptica</th><th>Vegetación (ha)</th><th>≈ m³</th><th>Mediana histórica (ha)</th></tr></thead><tbody>'+
+    RET.tramos.map(t=>{const k='t'+t.replace('..','_');const u_=ult(k);return `<tr><td>${lab(t)}</td><td class="num">${nf(RET.agua_ha[k]??null)}</td><td>${u_?fmtD(d0(u_.f))+' · '+(u_.sr==='landsat'?'Landsat':'Sentinel-2'):'—'}</td><td class="num"><b>${u_?nf(u_.v,1):'—'}</b></td><td class="num">${u_?nf(u_.v*VOLK.central):'—'}</td><td class="num">${nf(med(k),1)}</td></tr>`}).join('')+'</tbody>';
+  const C=S.src.rezagos&&S.src.rezagos.satelite&&S.src.rezagos.satelite.contorno, rr=document.getElementById('ret-read');
+  if(rr)rr.innerHTML=`<p><b>Cómo leer este panel.</b> Cada punto es una medición: círculos = Sentinel-2, triángulos = Landsat, cuadros = radar. El área analizada es el contorno entregado el 2-nov-2026: ${nf(RET.km_aguas_arriba,1)} km de río aguas arriba de la barrera y ${nf(RET.km_aguas_abajo,1)} km aguas abajo, con las distancias medidas siguiendo el cauce. La tabla da cada tramo de 2,5 km; para pasar hectáreas a m³ se multiplica por ${nf(VOLK.central)} (cuenta completa arriba).</p>
+<p><b>Lectura.</b> La mancha retenida contra la barrera suele ser pequeña y <b>no crece cuando sube el caudal</b>. Lo que sí cambia con el caudal: <b>baja</b> la vegetación de los 2,5–5 km aguas arriba y <b>sube</b> la de los 2,5 km aguas abajo de la barrera. El material se mueve con la creciente y parte pasa la barrera.</p>`;
+  const cr=RET.calibracion_radar||{}, cl=RET.calibracion_landsat||{}, er=cr.elegido?cr[cr.elegido]:null, el=cl.elegido?cl[cl.elegido]:null, P=RET.precision||{};
+  document.getElementById('ret-nota').innerHTML=`Método: grilla de 10 m; zona de agua = agua (MNDWI &gt; 0) en al menos la mitad de 60 fechas despejadas dentro del contorno, sin el borde de 10 m. Sentinel-2: NDVI ≥ 0,30 con al menos 60 % del tramo despejado. ${el?`Landsat: NDVI ≥ 0,${cl.elegido.slice(4)}; frente a Sentinel-2 el mismo día o a 1 día (${el.n} pares): ρ = ${nf(el.rho,2)}, error medio ${nf(el.mae_ha,1)} ha sobre una mediana de ${nf(el.mediana_ref_ha,1)} ha. `:''}${er?`Radar: VH ≥ −${cr.elegido.slice(2)} dB; frente a Sentinel-2 (±3 días, ${er.n} pares) ρ = ${nf(er.rho,2)}, error medio ${nf(er.mae_ha,1)} ha sobre ${nf(er.mediana_ref_ha,1)} ha: en el cañón el radar confunde agua agitada y laderas con vegetación, por eso se muestra pero no se usa para las cifras. `:''}Sentinel-2 pasa cada 5 días y Landsat cada 8, pero las nubes dejan útil una medición cada 1–2 semanas en promedio. Madera y residuos no se ven. Actualización diaria automática (${RET.generado} UTC).`;
 }
 
 /* ---------- volumen estimado a partir del área satelital ---------- */
@@ -1020,7 +1020,9 @@ function exPronostico(){
       `Eso es <b>${pc_(ratio-1)}</b> frente a ${n4} semanas típicas (${nf(ref)} m³), calculadas con la mediana de semanas con operación desde 2019.`,
       plan?`Con el descanso programado que ingresó: <b>${nf(sp)} m³</b>.`:`Si se repiten los paros habituales${dA?' y se detiene la extracción en los días de caudal alto':''}: <b>${nf(sp)} m³</b>. Esta es la cifra prudente para planear.`,
       qs.length?`Caudal pronosticado en Sitio Presa: entre <b>${nf(Math.min(...qs))} y ${nf(Math.max(...qs))} m³/s</b> (promedio semanal). Días por encima de ${nf(U)} m³/s, el límite de seguridad para las lanchas: <b>${dA}</b>.`:'Sin pronóstico de caudal para estas semanas.',
-      `Material flotante: ${nf(s('mf'))} m³ · macrófitas: ${nf(s('ma'))} m³. La división entre ambos del mecanizado es estimada en el registro; el total es la cifra más firme.`],
+      `Material flotante: ${nf(s('mf'))} m³ · macrófitas: ${nf(s('ma'))} m³. La división entre ambos del mecanizado es estimada en el registro; el total es la cifra más firme.`,
+      (()=>{const PP=S.src.rezagos&&S.src.rezagos.precision_pronostico;if(!PP)return '';const a=PP['1'],b=PP['4'],c=PP['8'];
+        return `<b>Qué tan preciso es.</b> Pronosticando 2022–2026 solo con lo que se sabía en cada momento (semanas con operación normal), el total de <b>4 semanas</b> se equivocó un <b>${nf(b.err_abs_mediano_pct)} %</b> en la mediana y 8 de cada 10 veces menos de ${nf(b.err_p80_pct)} %. A 1 semana: ${nf(a.err_abs_mediano_pct)} %; a 8 semanas: ${nf(c.err_abs_mediano_pct)} %. Sin sesgo apreciable (${nf(b.sesgo_pct,1)} %).`})()].filter(Boolean),
     calcTitle:`Cómo sale la semana S${b.h} (${fmtDs(b.t0)} – ${fmtDs(b.t1)}), en m³`,
     open:false,calc:calcT(['Paso','Flotante','Macrófitas','Total'],rows)+`<p class="note">El paso 3 difiere unas decenas de m³ de multiplicar 1 × 2 porque el ajuste por caudal cambia día a día y cada día de la semana pesa distinto (los fines de semana se extrae menos). El rango probable (P25–P75) y la franja del gráfico (P10–P90) salen de los errores reales del modelo en 2022–2026 para cada horizonte. El caudal pronosticado viene de HydroForecast (${LIVE.state==='live'?'en vivo':LIVE.state==='archive'?'archivo diario':'respaldo'}, emitido ${S.fc.generated_at.replace('T',' ').slice(0,16)}).</p>`});
 }
@@ -1148,41 +1150,53 @@ function exRequisitos(){
 }
 
 async function exSatelite(){
-  let J=null; try{J=await loadSat()}catch(e){return}
-  try{if(!RET)RET=await fetchJSON('datos/satelite/retenido/serie.json',15000)}catch(e){}
-  const R=S.src.rezagos, T=R&&R.satelite&&R.satelite.tabla, K=VOLK.central;
-  const S_=J.serie.map(r=>({t:r.t,T:d0(r.f),src:'Sentinel-2'})), LS=(J.landsat||[]).map(r=>({t:r.t,T:d0(r.f),src:'Landsat'})), S1=(J.s1||[]).map(r=>({t:r.t,T:d0(r.f),src:'radar'}));
-  const ALL=[...S_,...LS,...S1].sort((a,b)=>a.T-b.T), last=ALL[ALL.length-1];
+  try{if(!RET)RET=await fetchJSON('datos/satelite/contorno/serie.json',15000)}catch(e){return}
+  if(!RET||!RET.optico)return;
+  const R=S.src.rezagos, T=R&&R.satelite&&R.satelite.tabla, CT=R&&R.satelite&&R.satelite.contorno, K=VOLK.central, P=RET.precision||{};
   let e8=0; for(let i=S.last-55;i<=S.last;i++)e8+=(S.mf[i]||0)+(S.ma[i]||0); const eDia=e8/56;
-  const ult=k=>{let best=null;if(RET)for(const src of ['optico','radar'])for(const [f,o] of Object.entries(RET[src]||{}))if(o[k]!=null&&(!best||f>best.f))best={f,v:o[k],src};return best};
-  const hist=k=>RET?[...Object.values(RET.optico||{}),...Object.values(RET.radar||{})].map(o=>o[k]).filter(x=>x!=null).sort((a,b)=>a-b):[];
-  const pq=(a,p)=>a.length?a[Math.min(a.length-1,Math.floor(p*a.length))]:null;
-  const ret=ult('ret'), bar=ult('bar'), hb=hist('bar'), hr=hist('ret');
-  const g=T?T.grupos:null, d=T?T.dif_alta_vs_resto:null;
+  const ult=k=>{let best=null;for(const src of ['optico','landsat'])for(const [f,o] of Object.entries(RET[src]||{}))if(o[k]!=null&&(!best||f>best.f))best={f,v:o[k],src};return best};
+  const hist=k=>[...Object.values(RET.optico||{}),...Object.values(RET.landsat||{})].map(o=>o[k]).filter(x=>x!=null).sort((a,b)=>a-b);
+  const pq=(a,p)=>a.length?a[Math.min(a.length-1,Math.floor(p*a.length))]:null, sn=x=>x.src==='landsat'?'Landsat':'Sentinel-2';
+  const arr=ult('arriba'), ret=ult('ret'), bar=ult('bar'), hb=hist('bar'), ha=hist('arriba');
+  const g=T?T.grupos:null, d=T?T.dif_alta_vs_resto:null, cl=RET.calibracion_landsat||{}, cr=RET.calibracion_radar||{}, el=cl[cl.elegido]||{}, er=cr[cr.elegido]||{};
+  const bt=CT&&CT.bt_sat, bmf=bt&&bt['arriba|optico+landsat|mf_tot'], bma=bt&&bt['arriba|optico+landsat|ma_tot'];
+  const r2=(x,dg=2)=>nf(x,dg), rz=k=>P[k]?`${r2(P[k].razon_mediana)} (${r2(P[k].p10)} a ${r2(P[k].p90)})`:'—';
   const items=[
-    `<b>Qué mide.</b> El satélite ve la vegetación flotante verde (buchón, lechuga de agua y material vegetal) sobre el agua. No ve madera ni basura, y mide cada 3–5 días, no a diario: el óptico (Sentinel-2) no ve con nubes y el radar (Sentinel-1) sí.`,
-    `<b>Hoy.</b> En la zona de 2,5 km alrededor de la barrera (${nf(J.area_ha.total)} ha de agua) se ven <b>${nf(last.t,1)} ha</b> (${fmtD(last.T)}, ${last.src}), unos <b>${nf(last.t*K)} m³</b>: equivalen a <b>${nf(last.t*K/Math.max(eDia,1))} días</b> de extracción al ritmo de las últimas 8 semanas (${nf(eDia)} m³/día).`+
-      (ret?` Retenidos contra la barrera (los 2,5 km aguas arriba): <b>${nf(ret.v,1)} ha</b> ≈ ${nf(ret.v*K)} m³ (${fmtD(d0(ret.f))}).`:'')+
-      (bar?` La franja de 100 m frente a la barrera está ocupada al <b>${nf(bar.v)} %</b>${hb.length?` (lo normal es ${nf(pq(hb,.5))} %; se vigila desde ${nf(pq(hb,.9))} %)`:''}.`:''),
-    `<b>Sirve para vigilar, no para pronosticar.</b> En 2019–2026, cuánta vegetación se ve no anticipa cuánto se extraerá las semanas siguientes. Por eso no entra al pronóstico; sirve para ver qué viene río abajo y el estado de la barrera.`];
-  if(g)items.push(`<b>Qué pasa en las crecientes.</b> Lo único seguro es que se extrae menos: <b>${nf(Math.abs(d.E.dif))} m³ menos por semana</b> (entre ${nf(Math.abs(d.E.ic90[1]))} y ${nf(Math.abs(d.E.ic90[0]))}). Frente a la barrera no se ve acumulación en promedio; justo aguas abajo de la barrera sí aparece más vegetación, señal de que parte del material pasa. Esta segunda parte es un indicio, con mucha incertidumbre.`);
+    `<b>Qué mide.</b> La vegetación flotante verde (buchón, lechuga de agua y material vegetal) sobre el agua del contorno de análisis: <b>${nf(RET.km_aguas_arriba,1)} km de río aguas arriba</b> de la barrera y ${nf(RET.km_aguas_abajo,1)} km aguas abajo, con distancias medidas siguiendo el cauce. No ve madera ni basura. Por las nubes, hay una medición útil cada 1–2 semanas en promedio, no a diario.`,
+    `<b>Hoy.</b> `+(arr?`En todo el río aguas arriba hay <b>${nf(arr.v,1)} ha</b> de vegetación (${fmtD(d0(arr.f))}, ${sn(arr)}), unos <b>${nf(arr.v*K)} m³</b>: ${nf(arr.v*K/Math.max(eDia,1))} días de extracción al ritmo de las últimas 8 semanas (${nf(eDia)} m³/día). Lo normal es ${nf(pq(ha,.5),1)} ha.`:'')+
+      (ret?` Contra la barrera (los últimos 2,5 km de río): <b>${nf(ret.v,1)} ha</b> ≈ ${nf(ret.v*K)} m³ (${fmtD(d0(ret.f))}).`:'')+
+      (bar?` La franja de 100 m frente a la barrera está ocupada al <b>${nf(bar.v)} %</b> (lo normal es ${nf(pq(hb,.5))} %; se vigila desde ${nf(pq(hb,.9))} %).`:''),
+    `<b>Qué tan preciso es.</b> En una fecha despejada típica, cambiar el umbral o el índice mueve el área un <b>8–14 %</b> (hasta ~40 % en 1 de cada 10 fechas, casi siempre con poca vegetación) y el tamaño del píxel (10 o 20 m) menos de 1 %. Landsat y Sentinel-2 el mismo día coinciden bien (ρ = ${r2(el.rho)}). La mayor duda geométrica es dónde termina el agua: contar también las orillas que se inundan a veces sube el área un ${nf((P.zona25_arriba?.razon_mediana-1)*100)} %. El radar coincide poco en el cañón (ρ = ${r2(er.rho)}) y solo se muestra como referencia. <b>El paso a m³ es lo más incierto</b>: el valor real puede ser 3 veces menor o 3,5 veces mayor.`,
+    `<b>Qué pasa en las crecientes.</b> Lo seguro es que se extrae menos: <b>${g?nf(Math.abs(d.E.dif)):'—'} m³ menos por semana</b>. Además, con caudal alto <b>baja</b> la vegetación de los 2,5–5 km aguas arriba y <b>sube</b> la de los 2,5 km aguas abajo de la barrera (ambas se sostienen en la batería de 100 pruebas): el material se mueve con la creciente y parte pasa la barrera. Los m³ de ese movimiento son inciertos (tabla de abajo).`,
+    `<b>Sirve para vigilar, no para pronosticar.</b> La vegetación aguas arriba se relaciona algo con lo que se extrae las 2 semanas siguientes, pero al usarla en el pronóstico (2022–2026, dejando fuera un año) ${bmf?`el flotante empeora ${nf(bmf.cambio_pct,1)} % y las macrófitas mejoran solo ${nf(Math.abs(bma.cambio_pct),1)} %, sin certeza`:'no mejora'}. Por eso no entra al modelo; sirve para ver qué viene río abajo y el estado de la barrera.`];
+  const calc0=calcT(['Prueba de precisión','Comparación','Resultado'],[
+    ['Umbral más bajo (NDVI 0,20)','área ÷ área con NDVI 0,30; mediana (rango de 8 de cada 10 fechas)',rz('ndvi20_arriba')],
+    ['Umbral más alto (NDVI 0,40)','ídem',rz('ndvi40_arriba')],
+    ['Otro índice (algas flotantes FAI ≥ 0,05)','ídem',rz('fai05_arriba')],
+    ['Píxel de 20 m en vez de 10 m','ídem',rz('ndvi30_20m_arriba')],
+    ['Contar orillas que a veces se inundan','ídem',rz('zona25_arriba')],
+    ['Landsat frente a Sentinel-2 (mismo día o 1 día)',`${el.n||'—'} pares`,el.rho!=null?`ρ = ${r2(el.rho)} · error medio ${nf(el.mae_ha,1)} ha sobre ${nf(el.mediana_ref_ha,1)} ha (${nf(el.mae_ha/el.mediana_ref_ha*100)} %)`:'—'],
+    ['Radar frente a Sentinel-2 (± 3 días)',`${er.n||'—'} pares`,er.rho!=null?`ρ = ${r2(er.rho)} · error medio ${nf(er.mae_ha,1)} ha sobre ${nf(er.mediana_ref_ha,1)} ha (${nf(er.mae_ha/er.mediana_ref_ha*100)} %)`:'—'],
+    ['Dos fechas ópticas a ≤ 5 días (mancha retenida)',`${P.repetibilidad_ret_5d?.n||'—'} pares; incluye cambios reales`,P.repetibilidad_ret_5d?`mediana ${nf(P.repetibilidad_ret_5d.mediana_ha,1)} ha · 9 de cada 10 bajo ${nf(P.repetibilidad_ret_5d.p90_ha,1)} ha`:'—'],
+    ['Hectáreas a m³','3,8 a 40,8 kg/m² publicados',`${nf(VOLK.bajo)} a ${nf(VOLK.alto)} m³/ha (× ${r2(VOLK.bajo/K)} a × ${r2(VOLK.alto/K,1)} el valor central)`]]);
   const calc1=calcT(['Paso','Cuenta','Resultado'],[
     ['Hectáreas a metros cuadrados','1 ha = 10.000 m²','10.000 m²'],
     ['Peso del material por m²','11,8 kg/m² (valor central publicado para buchón; rango 3,8 a 40,8)','118.000 kg por ha'],
     ['Peso a volumen','118.000 kg ÷ 160 kg/m³ (densidad usada en la hoja de viajes)',`<b>${nf(K)} m³ por ha</b>`],
-    ['Rango posible','3,8 a 40,8 kg/m² con la misma cuenta',`${nf(VOLK.bajo)} a ${nf(VOLK.alto)} m³ por ha`],
-    ['Ejemplo de hoy',`${nf(last.t,1)} ha × ${nf(K)} m³/ha`,`<b>${nf(last.t*K)} m³</b> (rango ${nf(last.t*VOLK.bajo)} a ${nf(last.t*VOLK.alto)})`]]);
+    ['Rango posible','3,8 a 40,8 kg/m² con la misma cuenta',`${nf(VOLK.bajo)} a ${nf(VOLK.alto)} m³ por ha`]].concat(arr?[
+    ['Ejemplo de hoy',`${nf(arr.v,1)} ha × ${nf(K)} m³/ha`,`<b>${nf(arr.v*K)} m³</b> (rango ${nf(arr.v*VOLK.bajo)} a ${nf(arr.v*VOLK.alto)})`]]:[]));
   let calc2='';
   const sg=v=>(v>=0?'+':'−')+nf(Math.abs(v)), seg_=x=>(x.ic90[0]>0||x.ic90[1]<0)?`<b>Sí</b>: entre ${sg(x.ic90[0])} y ${sg(x.ic90[1])} m³`:`No: entre ${sg(x.ic90[0])} y ${sg(x.ic90[1])} m³ (incluye el cero)`;
-  if(g){const row=(k,l)=>{const x=g[k];return [`${l}<br><span class="muted">${nf(x.n)} semanas · caudal medio ${nf(x.q)} m³/s</span>`,nf(x.E),(x.acu>=0?'+':'−')+nf(Math.abs(x.acu)),(x.pasa>=0?'+':'−')+nf(Math.abs(x.pasa)),`<b>${nf(x.lleg)}</b>`]};
+  if(g){const row=(k,l)=>{const x=g[k];return [`${l}<br><span class="muted">${nf(x.n)} semanas · caudal medio ${nf(x.q)} m³/s</span>`,nf(x.E),sg(x.acu),sg(x.pasa),`<b>${nf(x.lleg)}</b>`]};
     calc2=`<h4>Balance semanal: lo que llega = lo extraído + lo que se acumula frente a la barrera + lo que aparece aguas abajo</h4>`+
-      calcT(['Tipo de semana','Extraído (m³)','Cambio frente a la barrera (m³)','Cambio 0–2,5 km aguas abajo (m³)','Llegada estimada (m³)'],[
+      calcT(['Tipo de semana','Extraído (m³)','Cambio en los 2,5 km antes de la barrera (m³)','Cambio en los 2,5 km después (m³)','Llegada estimada (m³)'],[
         row('baja','Caudal bajo (menos de 1.500 m³/s)'),row('media','Caudal medio (1.500 m³/s o más, sin días sobre 2.300)'),{c:row('alta','Creciente (al menos 1 día sobre 2.300 m³/s)'),cls:'sum'}])+
       calcT(['Creciente frente al resto','Diferencia por semana','¿Es seguro?'],[
-        ['Extraído',sg(d.E.dif)+' m³',seg_(d.E)],['Acumulado frente a la barrera',sg(d.acu.dif)+' m³',seg_(d.acu)],['Aparece aguas abajo',sg(d.pasa.dif)+' m³',seg_(d.pasa)],['Llegada total',sg(d.lleg.dif)+' m³',seg_(d.lleg)]],'calc2')+
-      `<p class="note">Cómo se lee: en una semana de creciente se extraen ${nf(g.alta.E)} m³ frente a ${nf(g.baja.E)} en una de caudal bajo. Cada cambio de hectáreas entre el inicio y el fin de la semana se pasa a m³ con ${nf(K)} m³/ha (si la mancha crece 1 ha, suma ${nf(K)} m³). «¿Es seguro?» usa un intervalo del 90 %: si incluye el cero, la diferencia no está demostrada. ${nf(T.n)} semanas entre ${fmtD(d0(T.desde))} y ${fmtD(d0(T.hasta))} con medición satelital a menos de 21 días de distancia. La vegetación aguas abajo también crece y se mueve por sí sola, por eso esa columna es la más incierta.</p>`}
-  exBox('ex-satelite',{when:`Imágenes hasta ${fmtD(last.T)}`,items,calcTitle:'Cómo salen las cuentas',calc:`<h4>De hectáreas a metros cúbicos</h4>`+calc1+calc2,
-    foot:'El paso de hectáreas a m³ no está calibrado en campo: pesar y medir el material de 3 a 5 cuadros de 1 m² en una fecha con imagen despejada fijaría esta cifra.'});
+        ['Extraído',sg(d.E.dif)+' m³',seg_(d.E)],['Acumulado antes de la barrera',sg(d.acu.dif)+' m³',seg_(d.acu)],['Aparece después de la barrera',sg(d.pasa.dif)+' m³',seg_(d.pasa)],['Llegada total',sg(d.lleg.dif)+' m³',seg_(d.lleg)]],'calc2')+
+      `<p class="note">Cómo se lee: en una semana de creciente se extraen ${nf(g.alta.E)} m³ frente a ${nf(g.baja.E)} en una de caudal bajo. Cada cambio de hectáreas entre el inicio y el fin de la semana se pasa a m³ con ${nf(K)} m³/ha (si la mancha crece 1 ha, suma ${nf(K)} m³). «¿Es seguro?» usa un intervalo del 90 %: si incluye el cero, la diferencia no está demostrada. ${nf(T.n)} semanas entre ${fmtD(d0(T.desde))} y ${fmtD(d0(T.hasta))} con medición satelital a menos de 21 días de distancia (Sentinel-2, Landsat y, donde faltan, radar). La vegetación también crece y se mueve por sí sola, por eso las columnas satelitales son inciertas.</p>`}
+  const lastD=[...Object.keys(RET.optico||{}),...Object.keys(RET.landsat||{})].sort().pop();
+  exBox('ex-satelite',{when:`Contorno del 2-nov-2026 · imágenes ópticas hasta ${lastD?fmtD(d0(lastD)):'—'}`,items,calcTitle:'Cómo salen las cuentas y qué tan precisas son',calc:`<h4>Qué tan preciso es el área medida</h4>`+calc0+`<h4>De hectáreas a metros cúbicos</h4>`+calc1+calc2,
+    foot:'El paso de hectáreas a m³ no está calibrado en campo: pesar y medir el material de 3 a 5 cuadros de 1 m² en una fecha con imagen despejada fijaría esta cifra y quitaría la mayor fuente de error.'});
 }
 
 function renderExec(v){try{
@@ -1253,7 +1267,7 @@ function init(){
   refreshAll();
   S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=eccfebc520',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(VIEWS.includes(h))renderView(h)}).catch(()=>{});
+  fetch('datos/app/extra.json?v=97e18cb91f',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(VIEWS.includes(h))renderView(h)}).catch(()=>{});
 }
 fetch('datos/app/base.json?v=aa4039a8b3',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
   .catch(e=>{const m=document.getElementById('load-msg');if(m){m.hidden=false;m.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}});

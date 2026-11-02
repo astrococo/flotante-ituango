@@ -209,6 +209,11 @@
    "info",
    "Batería de 100 pruebas con corrección por comparaciones múltiples",
    "100 pruebas en 7 familias (crecientes, operación, composición, mensual, semanal, satélite, pronóstico), p por desplazamiento circular y corrección Benjamini–Hochberg: 12 se sostienen con q < 0,05 y 18 con q < 0,10. Firmes: parada por seguridad (mecanizado y macrófitas), factor de parada en macrófitas, composición con caudal de ~3 meses, sobrepaso aguas abajo en crecientes. Sin relación: extracción semanal frente a caudal con rezagos de 0 a 4 semanas."
+  ],
+  [
+   "info",
+   "Contorno de análisis del usuario (2-nov-2026): precisión del satélite",
+   "Desde el 2-nov la vegetación flotante se mide dentro del contorno entregado (41,5 km²; 23,9 km de río aguas arriba y 3,4 km aguas abajo, distancias por el cauce) a 10 m con Sentinel-2 (322 fechas útiles), Landsat 8/9 (147) y radar Sentinel-1 (518). Precisión: umbral e índice mueven el área 8–14 % en la mediana; píxel 10 vs 20 m < 1 %; incluir orillas que a veces se inundan +42 %; Landsat vs Sentinel-2 ρ = 0,87 (error 27 %); radar vs Sentinel-2 ρ = 0,47 (error 54 %, solo referencia). Con caudal alto baja la vegetación 2,5–5 km aguas arriba (ρ = −0,48) y sube la de 0–2,5 km aguas abajo (ρ = +0,50), ambas con q = 0,02. Usar la vegetación aguas arriba en el pronóstico no mejora (flotante +5 %, macrófitas −1 % de error, sin certeza): no entra al modelo."
   ]
  ],
  "plataforma": [

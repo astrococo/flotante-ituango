@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=0513f5b615" defer></script>
+<script src="app.js?v=d90efa8af0" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -419,8 +419,8 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     <p class="note">Reglas, revisadas a diario con las imágenes de los últimos 10 días: llegada de material (un tramo de 2,5–30 km aguas arriba sobre su percentil 90), acumulación entre el puerto y la barrera (sobre su percentil 90), poco material a 500 m del puerto (bajo su percentil 10 en dos imágenes seguidas) y posible paso por la barrera. En 2019–2026 el área frente al puerto y entre el puerto y la barrera no se relacionó con lo extraído (ρ ≈ 0); es un dato de contexto para la operación, no entra al pronóstico. Cada alerta nueva también abre un aviso en GitHub (le llega por correo si sigue el repositorio).</p>
   </div>
   <div class="panel" id="ret-panel">
-    <div class="toolbar"><h3>Mancha retenida en la barrera y corredor ±30 km</h3>
-      <div class="seg" id="ret-var"><button data-v="ret" aria-pressed="true">Mancha retenida (ha)</button><button data-v="bar">Ocupación de la barrera (%)</button></div></div>
+    <div class="toolbar"><h3>Vegetación flotante en el contorno de análisis: barrera y río aguas arriba</h3>
+      <div class="seg" id="ret-var"><button data-v="ret" aria-pressed="true">Mancha retenida (ha)</button><button data-v="bar">Ocupación de la barrera (%)</button><button data-v="arriba">Todo aguas arriba (ha)</button></div></div>
     <div class="grid" id="ret-cards"></div>
     <div class="chart"><canvas id="ch-ret"></canvas></div>
     <div class="tbl" style="margin-top:8px"><table id="ret-tabla"></table></div>

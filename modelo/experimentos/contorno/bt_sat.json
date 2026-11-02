@@ -1,0 +1,134 @@
+{
+ "arriba|optico+landsat|mf_tot": {
+  "n": 680,
+  "rmse_base": 1035,
+  "rmse_sat": 1089,
+  "cambio_pct": 5.2,
+  "ic90": [
+   36,
+   73
+  ],
+  "rho_resid": -0.064
+ },
+ "arriba|optico+landsat|ma_tot": {
+  "n": 680,
+  "rmse_base": 1176,
+  "rmse_sat": 1161,
+  "cambio_pct": -1.3,
+  "ic90": [
+   -31,
+   2
+  ],
+  "rho_resid": 0.277
+ },
+ "arriba|con radar|mf_tot": {
+  "n": 750,
+  "rmse_base": 1032,
+  "rmse_sat": 1074,
+  "cambio_pct": 4.1,
+  "ic90": [
+   26,
+   60
+  ],
+  "rho_resid": -0.009
+ },
+ "arriba|con radar|ma_tot": {
+  "n": 750,
+  "rmse_base": 1177,
+  "rmse_sat": 1175,
+  "cambio_pct": -0.2,
+  "ic90": [
+   -12,
+   7
+  ],
+  "rho_resid": 0.16
+ },
+ "ret|optico+landsat|mf_tot": {
+  "n": 643,
+  "rmse_base": 1033,
+  "rmse_sat": 1044,
+  "cambio_pct": 1.0,
+  "ic90": [
+   1,
+   20
+  ],
+  "rho_resid": -0.142
+ },
+ "ret|optico+landsat|ma_tot": {
+  "n": 643,
+  "rmse_base": 1194,
+  "rmse_sat": 1175,
+  "cambio_pct": -1.6,
+  "ic90": [
+   -38,
+   1
+  ],
+  "rho_resid": 0.182
+ },
+ "ret|con radar|mf_tot": {
+  "n": 754,
+  "rmse_base": 1030,
+  "rmse_sat": 1043,
+  "cambio_pct": 1.2,
+  "ic90": [
+   7,
+   19
+  ],
+  "rho_resid": -0.038
+ },
+ "ret|con radar|ma_tot": {
+  "n": 754,
+  "rmse_base": 1189,
+  "rmse_sat": 1185,
+  "cambio_pct": -0.3,
+  "ic90": [
+   -22,
+   15
+  ],
+  "rho_resid": 0.183
+ },
+ "lejos|optico+landsat|mf_tot": {
+  "n": 640,
+  "rmse_base": 1060,
+  "rmse_sat": 1063,
+  "cambio_pct": 0.3,
+  "ic90": [
+   -3,
+   10
+  ],
+  "rho_resid": -0.096
+ },
+ "lejos|optico+landsat|ma_tot": {
+  "n": 640,
+  "rmse_base": 1194,
+  "rmse_sat": 1249,
+  "cambio_pct": 4.6,
+  "ic90": [
+   36,
+   76
+  ],
+  "rho_resid": 0.163
+ },
+ "lejos|con radar|mf_tot": {
+  "n": 750,
+  "rmse_base": 1032,
+  "rmse_sat": 1037,
+  "cambio_pct": 0.5,
+  "ic90": [
+   2,
+   8
+  ],
+  "rho_resid": -0.021
+ },
+ "lejos|con radar|ma_tot": {
+  "n": 750,
+  "rmse_base": 1177,
+  "rmse_sat": 1170,
+  "cambio_pct": -0.6,
+  "ic90": [
+   -25,
+   10
+  ],
+  "rho_resid": -0.134
+ }
+}

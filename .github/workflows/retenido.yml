@@ -1,8 +1,6 @@
 name: Mancha retenida y corredor ±30 km (óptico y radar)
 
 on:
-  schedule:
-    - cron: "11 16 * * *"   # todos los días, 11:11 hora de Colombia: solo fechas nuevas
   workflow_dispatch:
     inputs:
       modo:
@@ -19,7 +17,7 @@ concurrency:
 
 jobs:
   s2:
-    if: ${{ github.event.inputs.modo == '' || github.event.inputs.modo == 's2' || github.event_name == 'schedule' }}
+    if: ${{ github.event.inputs.modo == '' || github.event.inputs.modo == 's2'  }}
     runs-on: ubuntu-latest
     timeout-minutes: 340
     steps:
@@ -42,7 +40,7 @@ jobs:
           for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
   s1:
     needs: s2
-    if: ${{ always() && (github.event.inputs.modo == '' || github.event.inputs.modo == 's1' || github.event_name == 'schedule') }}
+    if: ${{ always() && (github.event.inputs.modo == '' || github.event.inputs.modo == 's1' ) }}
     runs-on: ubuntu-latest
     timeout-minutes: 340
     steps:
