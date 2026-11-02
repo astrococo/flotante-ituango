@@ -83,9 +83,11 @@ def swot():
             u = ("https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/timeseries?feature=Node&feature_id=" + k +
                  "&start_time=2023-07-01T00:00:00%2b00:00&end_time=" + HOY + "T23:59:59%2b00:00&fields=" + campos)
             try:
-                r = requests.get(u, headers={"Accept": "text/csv"}, timeout=120)
+                r = requests.get(u, timeout=120)
                 if r.status_code == 200:
-                    df = pd.read_csv(io.StringIO(r.text)); df["node_id"] = k; filas.append(df); break
+                    txt = r.json().get("results", {}).get("csv", "")
+                    df = pd.read_csv(io.StringIO(txt), dtype={"node_id": str}); df = df[df.time_str.astype(str) != "no_data"]
+                    df["node_id"] = k; filas.append(df); break
                 elif r.status_code == 400 and campos.count(",") > 2: continue
                 else: print("hydrocron", k, r.status_code, r.text[:120], flush=True); break
             except Exception as e: print("error hydrocron", k, str(e)[:120], flush=True); break
