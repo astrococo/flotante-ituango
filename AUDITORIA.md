@@ -124,3 +124,9 @@ Error medio absoluto (m³/semana) en 4.908 pronósticos con origen móvil 2022�
 - Precisión: umbral/índice 8–14 % (mediana); píxel < 1 %; orillas +42 %; Landsat vs S2 ρ 0,87 (27 %); radar vs S2 ρ 0,47 (54 %, solo referencia); ha→m³ ×0,32 a ×3,5.
 - Pronóstico: error mediano del total a 1/4/8 semanas 23/16/13 % (semanas con operación normal, 2022–2026).
 - Batería: familia F rehecha con el contorno; 13 pruebas con q < 0,05 y 21 con q < 0,10. Vegetación aguas arriba en el pronóstico: no mejora (detalle `modelo/experimentos/contorno/`).
+
+## Contorno ajustado y NASA Earthdata (2-nov-2026)
+
+- `satelite/contorno_analisis.kml` = contorno ajustado (15,1 km²); el anterior queda como `contorno_analisis_v1.kml` y sus datos en `datos/satelite/contorno_v1/`. Misma zona de agua (23,5 km aguas arriba, 3,6 km aguas abajo); resultados sin cambios.
+- Terreno (`contorno.py terreno`): Copernicus DEM GLO-30 (pendientes, perfil del lecho original 385 → 331 m), JRC GSW (14 % de la zona con agua > 50 % en 1984–2021: el embalse es de 2019, no sirve de referencia), ESA WorldCover. Radar lejos de laderas ≥ 35°: ρ 0,48 → 0,52.
+- `satelite/earthdata.py` + `earthdata.yml` (solo manual; secreto EARTHDATA_TOKEN): OPERA DSWx-HLS ρ 0,65/0,75 con Sentinel-2; DSWx-S1 ρ 0,18; NISAR GCOV AUC 0,78 (HH) vs Sentinel-1 0,89 en 8 fechas; SWOT sin observaciones válidas (Hydrocron, 141 nodos).

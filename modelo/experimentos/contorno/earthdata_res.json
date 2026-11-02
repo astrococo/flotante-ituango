@@ -1,0 +1,50 @@
+{
+ "opera": {
+  "DSWX-HLS|arriba": {
+   "n": 55,
+   "rho_noagua": 0.65,
+   "rho_noagua_parcial": 0.511,
+   "med_noagua": 66.0,
+   "med_parcial": 14.0,
+   "med_s2": 47.5,
+   "sesgo": 3.8,
+   "mae": 20.4
+  },
+  "DSWX-HLS|ret": {
+   "n": 49,
+   "rho_noagua": 0.754,
+   "rho_noagua_parcial": 0.723,
+   "med_noagua": 6.1,
+   "med_parcial": 1.4,
+   "med_s2": 2.8,
+   "sesgo": -0.7,
+   "mae": 5.7
+  },
+  "DSWX-S1|arriba": {
+   "n": 56,
+   "rho_noagua": 0.179,
+   "mae": 293.5,
+   "med_s2": 25.6,
+   "med_noagua": 329.5
+  },
+  "DSWX-S1|ret": {
+   "n": 46,
+   "rho_noagua": 0.368,
+   "mae": 47.0,
+   "med_s2": 5.4,
+   "med_noagua": 56.0
+  }
+ },
+ "nisar": {
+  "fechas": 25,
+  "con_s2": 11,
+  "auc_hh": 0.775,
+  "auc_hv": 0.745,
+  "pares_s1": 8,
+  "auc_hh_p": 0.787,
+  "auc_hv_p": 0.78,
+  "auc_s1_p": 0.888,
+  "s1_mejor": 8,
+  "mb": 7155
+ }
+}

@@ -2,33 +2,33 @@
  "arriba|optico+landsat|mf_tot": {
   "n": 680,
   "rmse_base": 1035,
-  "rmse_sat": 1089,
-  "cambio_pct": 5.2,
+  "rmse_sat": 1090,
+  "cambio_pct": 5.3,
   "ic90": [
    36,
    73
   ],
-  "rho_resid": -0.064
+  "rho_resid": -0.063
  },
  "arriba|optico+landsat|ma_tot": {
   "n": 680,
   "rmse_base": 1176,
-  "rmse_sat": 1161,
+  "rmse_sat": 1160,
   "cambio_pct": -1.3,
   "ic90": [
    -31,
    2
   ],
-  "rho_resid": 0.277
+  "rho_resid": 0.278
  },
  "arriba|con radar|mf_tot": {
   "n": 750,
   "rmse_base": 1032,
-  "rmse_sat": 1074,
-  "cambio_pct": 4.1,
+  "rmse_sat": 1075,
+  "cambio_pct": 4.2,
   "ic90": [
    26,
-   60
+   61
   ],
   "rho_resid": -0.009
  },
@@ -41,7 +41,7 @@
    -12,
    7
   ],
-  "rho_resid": 0.16
+  "rho_resid": 0.161
  },
  "ret|optico+landsat|mf_tot": {
   "n": 643,
@@ -49,7 +49,7 @@
   "rmse_sat": 1044,
   "cambio_pct": 1.0,
   "ic90": [
-   1,
+   2,
    20
   ],
   "rho_resid": -0.142
@@ -69,66 +69,66 @@
   "n": 754,
   "rmse_base": 1030,
   "rmse_sat": 1043,
-  "cambio_pct": 1.2,
+  "cambio_pct": 1.3,
   "ic90": [
    7,
    19
   ],
-  "rho_resid": -0.038
+  "rho_resid": -0.039
  },
  "ret|con radar|ma_tot": {
   "n": 754,
   "rmse_base": 1189,
-  "rmse_sat": 1185,
+  "rmse_sat": 1186,
   "cambio_pct": -0.3,
   "ic90": [
    -22,
-   15
+   16
   ],
   "rho_resid": 0.183
  },
  "lejos|optico+landsat|mf_tot": {
-  "n": 640,
-  "rmse_base": 1060,
-  "rmse_sat": 1063,
+  "n": 644,
+  "rmse_base": 1057,
+  "rmse_sat": 1060,
   "cambio_pct": 0.3,
   "ic90": [
-   -3,
+   -4,
    10
   ],
-  "rho_resid": -0.096
+  "rho_resid": -0.106
  },
  "lejos|optico+landsat|ma_tot": {
-  "n": 640,
-  "rmse_base": 1194,
-  "rmse_sat": 1249,
-  "cambio_pct": 4.6,
+  "n": 644,
+  "rmse_base": 1199,
+  "rmse_sat": 1263,
+  "cambio_pct": 5.3,
   "ic90": [
-   36,
-   76
+   44,
+   86
   ],
-  "rho_resid": 0.163
+  "rho_resid": 0.156
  },
  "lejos|con radar|mf_tot": {
   "n": 750,
   "rmse_base": 1032,
-  "rmse_sat": 1037,
+  "rmse_sat": 1038,
   "cambio_pct": 0.5,
   "ic90": [
    2,
-   8
+   9
   ],
-  "rho_resid": -0.021
+  "rho_resid": -0.025
  },
  "lejos|con radar|ma_tot": {
   "n": 750,
   "rmse_base": 1177,
-  "rmse_sat": 1170,
-  "cambio_pct": -0.6,
+  "rmse_sat": 1167,
+  "cambio_pct": -0.9,
   "ic90": [
-   -25,
-   10
+   -28,
+   8
   ],
-  "rho_resid": -0.134
+  "rho_resid": -0.137
  }
 }

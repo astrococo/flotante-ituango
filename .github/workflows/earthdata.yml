@@ -1,8 +1,6 @@
 name: NASA Earthdata (SWOT, OPERA, NISAR) sobre el contorno
 
 on:
-  schedule:
-    - cron: "23 19 * * 1"   # lunes, 14:23 hora de Colombia
   workflow_dispatch:
     inputs:
       que:
@@ -41,7 +39,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install -r satelite/requirements.txt pyshp==2.3.1 shapely==2.0.6 h5py==3.12.1 requests
       - name: Procesar
-        if: ${{ github.event.inputs.que == '' || github.event.inputs.que == 'todo' || github.event.inputs.que == matrix.s || github.event_name == 'schedule' }}
+        if: ${{ github.event.inputs.que == '' || github.event.inputs.que == 'todo' || github.event.inputs.que == matrix.s }}
         run: |
           mkdir -p satelite/datos/satelite/earthdata && cp datos/satelite/earthdata/* satelite/datos/satelite/earthdata/ 2>/dev/null || true
           cd satelite && (timeout 280m python -u earthdata.py ${{ matrix.s }} 2>&1 | tee datos/satelite/earthdata/registro_${{ matrix.s }}.txt || true)
