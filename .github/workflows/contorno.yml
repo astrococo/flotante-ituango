@@ -84,7 +84,7 @@ jobs:
       - run: |
           mkdir -p satelite/datos/satelite/contorno && cp datos/satelite/contorno/* satelite/datos/satelite/contorno/
           cd satelite && python -u contorno.py serie 2>&1 | tee datos/satelite/contorno/registro_serie.txt
-          cd .. && cp satelite/datos/satelite/contorno/serie.json satelite/datos/satelite/contorno/registro_serie.txt datos/satelite/contorno/
+          cd .. && cp satelite/datos/satelite/contorno/serie.json satelite/datos/satelite/contorno/registro_serie.txt satelite/datos/satelite/contorno/mapa.geojson datos/satelite/contorno/
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A datos/satelite/contorno; git diff --cached --quiet && exit 0
           git commit -m "Contorno: serie $(date -u '+%F %H:%M')"

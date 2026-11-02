@@ -340,6 +340,28 @@ def serie():
               open(f"{OUT}/serie.json", "w"), separators=(",", ":"))
     print("serie: ópticas", len(O), "radar", len(R), "landsat", len(Lt), "\nradar", cal, "\nlandsat", cl, "\nprecisión", json.dumps(prec, ensure_ascii=False), flush=True)
 
+def geojson():
+    """Contorno, zona de agua analizada y marcas de distancia por el río (cada 2,5 km) en lon/lat para el visor."""
+    from rasterio.features import shapes
+    from shapely.geometry import shape, mapping
+    from shapely.ops import unary_union, transform as shp_tr
+    z = np.load(f"{OUT}/zona.npz") if os.path.exists(f"{OUT}/zona.npz") else np.load(f"{PREV}/zona.npz")
+    Z50, D = z["Z50"], z["D"]; inv = Transformer.from_crs(CRS, "EPSG:4326", always_xy=True)
+    geo = lambda g: shp_tr(lambda x, y, z_=None: inv.transform(x, y), g)
+    agua = unary_union([shape(g) for g, v in shapes(erosion(Z50).astype("uint8"), mask=erosion(Z50), transform=TR) if v == 1]).simplify(8)
+    F = [dict(type="Feature", properties=dict(tipo="contorno", nombre="Contorno de análisis"), geometry=dict(type="Polygon", coordinates=[[list(p) for p in POLY]])),
+         dict(type="Feature", properties=dict(tipo="agua", nombre="Zona de agua analizada"), geometry=mapping(geo(agua)))]
+    for k in range(int(np.floor(np.nanmin(D) / 2.5)), int(np.floor(np.nanmax(D) / 2.5)) + 1):
+        km = k * 2.5
+        if km == 0: continue
+        m = np.isfinite(D) & (np.abs(D - km) < 0.03)
+        if m.sum() < 3: continue
+        ii, jj = np.nonzero(m); x = x0 + (jj.mean() + 0.5) * RES; y = y1 - (ii.mean() + 0.5) * RES
+        lo, la = inv.transform(x, y)
+        F.append(dict(type="Feature", properties=dict(tipo="km", km=km, nombre=f"{abs(km):g} km {'aguas arriba' if km < 0 else 'aguas abajo'}"), geometry=dict(type="Point", coordinates=[round(lo, 6), round(la, 6)])))
+    json.dump(dict(type="FeatureCollection", features=F), open(f"{OUT}/mapa.geojson", "w"), separators=(",", ":"))
+    print("mapa.geojson:", len(F), "elementos", flush=True)
+
 # ---------------- exploración de catálogos ----------------
 def explorar():
     import urllib.request
@@ -377,4 +399,5 @@ if __name__ == "__main__":
     if modo == "s2": corre_s2()
     if modo == "s1": corre_s1()
     if modo == "ls": corre_ls()
-    if modo == "serie": serie()
+    if modo == "serie": serie(); geojson()
+    if modo == "mapa": geojson()

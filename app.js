@@ -770,6 +770,14 @@ async function renderVisor(J){
     VL.puerto=L.circleMarker(PU,{radius:7,color:'#fff',weight:2,fillColor:'#0ea5e9',fillOpacity:1}).bindTooltip('Punto de extracción (margen derecha)').addTo(MAP);
     VL.radio=L.circle(PU,{radius:500,color:'#0ea5e9',weight:1,dashArray:'4 4',fill:false}).addTo(MAP);
     VL.deposito=L.circleMarker(DE,{radius:6,color:'#fff',weight:2,fillColor:'#a855f7',fillOpacity:1}).bindTooltip('Depósito').addTo(MAP);
+    try{const G=await fetchJSON('datos/satelite/contorno/mapa.geojson',10000);
+      VL.cont=L.layerGroup([
+        L.geoJSON(G,{filter:f=>f.properties.tipo==='contorno',style:{color:'#facc15',weight:2.5,dashArray:'6 5',fill:false}}).bindTooltip('Contorno de análisis (entregado el 2-nov-2026)',{sticky:true}),
+        L.geoJSON(G,{filter:f=>f.properties.tipo==='agua',style:{color:'#22d3ee',weight:1.2,fillColor:'#22d3ee',fillOpacity:.08}}).bindTooltip('Zona de agua analizada dentro del contorno',{sticky:true}),
+        L.geoJSON(G,{filter:f=>f.properties.tipo==='km',pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4,color:'#111827',weight:1,fillColor:'#facc15',fillOpacity:1}).bindTooltip(`${nf(Math.abs(f.properties.km),1)} km ${f.properties.km<0?'arriba':'abajo'}`,{permanent:true,direction:'right',className:'kmlab',offset:[6,0]})})]).addTo(MAP);
+      VL.contB=L.geoJSON(G,{filter:f=>f.properties.tipo==='contorno'}).getBounds();
+      const bt=document.getElementById('vis-todo'); if(bt)bt.onclick=()=>{document.getElementById('vc-cont').checked=true;show();MAP.fitBounds(VL.contB,{padding:[10,10]})};
+    }catch(e){VL.cont=null}
     L.control.layers({'Alta resolución (Esri)':esri,'Mapa (OpenStreetMap)':osm},{},{collapsed:true}).addTo(MAP);
     L.control.scale({imperial:false}).addTo(MAP);
     sen.onchange=()=>{fill();sel.selectedIndex=0;show()};sel.onchange=show;
@@ -784,8 +792,8 @@ async function renderVisor(J){
     ['img','veg'].forEach(k=>{if(VL[k]){MAP.removeLayer(VL[k]);VL[k]=null}});
     if(on('vc-img')){const u=isS1?`datos/satelite/visor/s1_${f}.jpg`:`datos/satelite/series/ql_${f}.jpg`;if(isS1||(VIS.s2.find(r=>r.f===f)||{}).ql)VL.img=L.imageOverlay(u,VIS.bounds,{opacity:op}).addTo(MAP)}
     if(on('vc-veg')&&!isS1)VL.veg=L.imageOverlay(`datos/satelite/visor/veg_${f}.png`,VIS.bounds,{opacity:1}).addTo(MAP);
-    on('vc-zona')?VL.zona.addTo(MAP):MAP.removeLayer(VL.zona); on('vc-bar')?(VL.barrera.addTo(MAP),VL.punto.addTo(MAP)):(MAP.removeLayer(VL.barrera),MAP.removeLayer(VL.punto));
-    document.getElementById('vis-info').textContent=isS1?`Radar Sentinel-1 (VH, ${fmtD(d0(f))}): claro = más retrodispersión (vegetación, orillas); oscuro = agua lisa. Ve a través de las nubes.`:`Sentinel-2 ${fmtD(d0(f))}, color real 10 m. Verde: vegetación flotante detectada (NDVI ≥ 0,30); blanco: nube o sombra. Borde azul: zona de agua analizada.`;
+    on('vc-zona')?VL.zona.addTo(MAP):MAP.removeLayer(VL.zona); if(VL.cont){on('vc-cont')?VL.cont.addTo(MAP):MAP.removeLayer(VL.cont)} on('vc-bar')?(VL.barrera.addTo(MAP),VL.punto.addTo(MAP)):(MAP.removeLayer(VL.barrera),MAP.removeLayer(VL.punto));
+    document.getElementById('vis-info').textContent=isS1?`Radar Sentinel-1 (VH, ${fmtD(d0(f))}): claro = más retrodispersión (vegetación, orillas); oscuro = agua lisa. Ve a través de las nubes. Línea amarilla discontinua: contorno de análisis.`:`Sentinel-2 ${fmtD(d0(f))}, color real 10 m. Verde: vegetación flotante detectada (NDVI ≥ 0,30); blanco: nube o sombra. Borde azul: zona de agua analizada cerca del puerto. Línea amarilla discontinua: contorno de análisis; puntos amarillos: distancia por el río cada 2,5 km.`;
   }
   window.__visorGo=(f,s1)=>{sen.value=s1?'s1':'s2';fill();if([...sel.options].some(o=>o.value===f)){sel.value=f;show();box.scrollIntoView({behavior:'smooth',block:'center'})}};
 }
