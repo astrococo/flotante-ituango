@@ -81,7 +81,7 @@ def swot():
     for k in nodos:
         for campos in ("node_id,time_str,wse,wse_u,width,node_q", "node_id,time_str,wse"):
             u = ("https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/timeseries?feature=Node&feature_id=" + k +
-                 "&start_time=2023-07-01T00:00:00%2b00:00&end_time=" + HOY + "T23:59:59%2b00:00&output=csv&fields=" + campos)
+                 "&start_time=2023-07-01T00:00:00%2b00:00&end_time=" + HOY + "T23:59:59%2b00:00&fields=" + campos)
             try:
                 r = requests.get(u, headers={"Accept": "text/csv"}, timeout=120)
                 if r.status_code == 200:
