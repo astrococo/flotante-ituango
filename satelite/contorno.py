@@ -142,7 +142,49 @@ def mascaras(Z50, Z25, D):
     M = {"ret": Ze & fin & (D > -2.5) & (D <= 0), "bar": Ze & fin & (D > -0.1) & (D <= 0)}
     for a, b in tramos(D): M[f"t{a}_{b}"] = Ze & fin & (D >= a) & (D < b)
     M["arriba"] = Ze & fin & (D <= 0); M["arriba25"] = Ze25 & fin & (D <= 0); M["ret25"] = Ze25 & fin & (D > -2.5) & (D <= 0)
+    ter = terreno_cargar()
+    if ter is not None:                                 # agua lejos de laderas empinadas (menos sombra y rebote de radar)
+        L_ = ter["ladera"]; M["arriba_ll"] = M["arriba"] & ~L_; M["ret_ll"] = M["ret"] & ~L_
     return M
+
+def terreno_cargar():
+    for p in (f"{OUT}/terreno.npz", f"{PREV}/terreno.npz"):
+        if os.path.exists(p):
+            t = np.load(p)
+            if tuple(t["dem"].shape) == SH: return t
+    return None
+
+def terreno():
+    """Copernicus DEM GLO-30 (elevación y pendiente), JRC Global Surface Water (frecuencia de agua 1984–2021) y ESA WorldCover 2021,
+    todos remuestreados a la grilla de 10 m. El DEM es anterior al llenado del embalse (2011–2015): muestra el cañón original."""
+    z = np.load(f"{OUT}/zona.npz") if os.path.exists(f"{OUT}/zona.npz") else np.load(f"{PREV}/zona.npz")
+    Z25, D = z["Z25"], z["D"]
+    it = firmar(next(iter(catalogo().search(collections=["cop-dem-glo-30"], bbox=BBOX).items())))
+    dem = a_grilla(it.assets["data"].href, Resampling.bilinear, "float32", -32767, np.nan)
+    gy, gx = np.gradient(dem, RES); pend = np.degrees(np.arctan(np.hypot(gx, gy))).astype("float32")
+    gsw = np.full(SH, 255, "uint8"); wc = np.zeros(SH, "uint8")
+    try:
+        for it in catalogo().search(collections=["jrc-gsw"], bbox=BBOX).items():
+            it = firmar(it); x = a_grilla(it.assets["occurrence"].href, Resampling.nearest, "uint8", 255, 255); gsw = np.where(gsw == 255, x, gsw)
+    except Exception as e: print("error gsw", str(e)[:120], flush=True)
+    try:
+        for it in catalogo().search(collections=["esa-worldcover"], bbox=BBOX).items():
+            it = firmar(it); x = a_grilla(it.assets["map"].href, Resampling.nearest, "uint8", 0, 0); wc = np.where(wc == 0, x, wc)
+    except Exception as e: print("error worldcover", str(e)[:120], flush=True)
+    ladera = dilata((pend >= 35) & ~Z25 & DENTRO, 3) & Z25    # agua a ≤ 30 m de una ladera de 35° o más
+    np.savez_compressed(f"{OUT}/terreno.npz", dem=dem, pend=pend, gsw=gsw, wc=wc, ladera=ladera)
+    # perfil del cauce original (mínimo del DEM por cada 250 m de río) y pendiente de las laderas junto al agua
+    perfil = []
+    for a in np.arange(np.floor(np.nanmin(D) * 4) / 4, np.nanmax(D), 0.25):
+        m = np.isfinite(D) & (D >= a) & (D < a + 0.25) & np.isfinite(dem)
+        if m.sum() < 20: continue
+        perfil.append(dict(km=round(float(a + 0.125), 3), lecho_m=round(float(np.nanpercentile(dem[m], 2)), 1), agua_ha=round(float(m.sum()) * HA, 2)))
+    print("terreno: elevación del agua (mediana)", round(float(np.nanmedian(dem[Z25])), 1), "m · laderas ≥35° junto al agua", int(ladera.sum()), "px de", int(Z25.sum()),
+          "· GSW>50 % en zona", round(float(((gsw > 50) & (gsw <= 100) & Z25).sum() / max(1, Z25.sum())), 3), flush=True)
+    json.dump(dict(perfil=perfil, ladera_px=int(ladera.sum()), zona25_px=int(Z25.sum()),
+                   gsw_zona=dict(mayor50=round(float(((gsw > 50) & (gsw <= 100) & Z25).sum() / max(1, Z25.sum())), 3), nunca=round(float(((gsw == 0) & Z25).sum() / max(1, Z25.sum())), 3)),
+                   worldcover_zona={int(k): int(((wc == k) & Z25).sum()) for k in np.unique(wc[Z25])}),
+              open(f"{OUT}/terreno.json", "w"), indent=1)
 
 def cuenta(row, M, v, inds):
     for k, m in M.items():
@@ -256,7 +298,10 @@ def serie():
     R = {}; Lt = {}
     if len(s1):
         for t in (16, 15, 14, 13, 12): cal[f"vh{t}"] = acuerdo(pares(O, tabla(s1, f"vh{t}", ["arriba"]), "arriba", 3))
-        ok = {k: v for k, v in cal.items() if v.get("rho") is not None}
+        if "arriba_ll_area_px" in s1.columns and "arriba_ll_area_px" in s2.columns:
+            Oll = tabla(s2, "ndvi30", ["arriba_ll"])
+            for t in (16, 15, 14, 13, 12): cal[f"lejos_laderas_vh{t}"] = acuerdo(pares(Oll, tabla(s1, f"vh{t}", ["arriba_ll"]), "arriba_ll", 3))
+        ok = {k: v for k, v in cal.items() if k.startswith("vh") and v.get("rho") is not None}
         el = min(ok, key=lambda k: ok[k]["mae_ha"]) if ok else None; cal["elegido"] = el
         if el: R = tabla(s1, el)
     cl = {}
@@ -290,6 +335,7 @@ def serie():
                    km_aguas_arriba=round(float(-np.nanmin(D)), 2), km_aguas_abajo=round(float(np.nanmax(D)), 2),
                    tramos=[f"{a}..{b}" for a, b in TRM], claves=keys, agua_ha=agua, optico=O, radar=R, landsat=Lt,
                    calibracion_radar=cal, calibracion_landsat=cl, precision=prec,
+                   terreno=(json.load(open(f"{OUT}/terreno.json")) if os.path.exists(f"{OUT}/terreno.json") else None),
                    definiciones=dict(ret="0–2,5 km aguas arriba por el río", bar="0–100 m aguas arriba de la barrera (% cubierto)", arriba="todo el contorno aguas arriba")),
               open(f"{OUT}/serie.json", "w"), separators=(",", ":"))
     print("serie: ópticas", len(O), "radar", len(R), "landsat", len(Lt), "\nradar", cal, "\nlandsat", cl, "\nprecisión", json.dumps(prec, ensure_ascii=False), flush=True)
@@ -326,7 +372,8 @@ if __name__ == "__main__":
     modo = sys.argv[1] if len(sys.argv) > 1 else "s2"
     print("grilla", SH, "contorno", int(DENTRO.sum()) * HA, "ha", flush=True)
     if modo == "explorar": explorar(); zona(force=True)
-    if modo == "zona": zona(force=True)
+    if modo == "zona": zona(force=True); terreno()
+    if modo == "terreno": terreno()
     if modo == "s2": corre_s2()
     if modo == "s1": corre_s1()
     if modo == "ls": corre_ls()

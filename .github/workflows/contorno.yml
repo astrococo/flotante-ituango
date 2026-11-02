@@ -35,7 +35,7 @@ jobs:
       - run: pip install -r satelite/requirements.txt
       - run: |
           mkdir -p satelite/datos/satelite/contorno
-          cd satelite && python -u contorno.py explorar 2>&1 | tee datos/satelite/contorno/registro_zona.txt
+          cd satelite && python -u contorno.py zona 2>&1 | tee datos/satelite/contorno/registro_zona.txt
       - name: Guardar
         run: |
           mkdir -p datos/satelite/contorno && cp -r satelite/datos/satelite/contorno/. datos/satelite/contorno/
