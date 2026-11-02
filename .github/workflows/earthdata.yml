@@ -1,0 +1,55 @@
+name: NASA Earthdata (SWOT, OPERA, NISAR) sobre el contorno
+
+on:
+  schedule:
+    - cron: "23 19 * * 1"   # lunes, 14:23 hora de Colombia
+  workflow_dispatch:
+    inputs:
+      que:
+        description: "swot, opera, nisar o todo"
+        required: false
+        default: "todo"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: earthdata
+  cancel-in-progress: false
+
+jobs:
+  ed:
+    strategy:
+      fail-fast: false
+      matrix: { s: [swot, opera, nisar] }
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      EARTHDATA_TOKEN: ${{ secrets.EARTHDATA_TOKEN }}
+      GDAL_HTTP_MAX_RETRY: "5"
+      GDAL_HTTP_RETRY_DELAY: "3"
+      GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.tiff,.TIF"
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - name: Comprobar el secreto
+        run: |
+          if [ -z "$EARTHDATA_TOKEN" ]; then echo "::error::Falta el secreto EARTHDATA_TOKEN"; exit 1; fi
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r satelite/requirements.txt pyshp==2.3.1 shapely==2.0.6 h5py==3.12.1 requests
+      - name: Procesar
+        if: ${{ github.event.inputs.que == '' || github.event.inputs.que == 'todo' || github.event.inputs.que == matrix.s || github.event_name == 'schedule' }}
+        run: |
+          mkdir -p satelite/datos/satelite/earthdata && cp datos/satelite/earthdata/* satelite/datos/satelite/earthdata/ 2>/dev/null || true
+          cd satelite && (timeout 280m python -u earthdata.py ${{ matrix.s }} 2>&1 | tee datos/satelite/earthdata/registro_${{ matrix.s }}.txt || true)
+      - name: Guardar
+        if: always()
+        run: |
+          mkdir -p datos/satelite/earthdata && cp satelite/datos/satelite/earthdata/* datos/satelite/earthdata/ 2>/dev/null || true
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A datos/satelite/earthdata; git diff --cached --quiet && exit 0
+          git commit -m "Earthdata: ${{ matrix.s }} $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5 6; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*9)); done
