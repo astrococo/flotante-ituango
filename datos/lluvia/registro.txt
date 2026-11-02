@@ -2,109 +2,109 @@ cola primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta c
 CHIRPS falló cola no se reconocieron filas
 media primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n    <meta name="description" content="">\n    <title>dlauth</title>\n    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">\n    <link rel="stylesheet" href="https://use.fontawes'
 CHIRPS falló media no se reconocieron filas
-POWER barrera 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
-POWER olaya 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
-POWER sabanalarga 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
-POWER pintada 2856 2019-01-01 00:00:00 2026-10-26 00:00:00
+POWER barrera 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
+POWER olaya 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
+POWER sabanalarga 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
+POWER pintada 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
        power_barrera  power_olaya  power_sabanalarga  power_pintada
-count        2856.00      2856.00            2856.00        2856.00
-mean            5.65         5.74               5.65           5.69
+count        2858.00      2858.00            2858.00        2858.00
+mean            5.66         5.74               5.66           5.69
 std             8.40         8.59               8.40           6.70
 min             0.00         0.00               0.00           0.00
 25%             0.80         0.98               0.80           1.24
 50%             3.20         3.25               3.20           3.67
-75%             7.51         7.55               7.51           8.00
+75%             7.51         7.56               7.51           8.00
 max           170.50       186.97             170.50         109.77
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2019: 365 días, media 4.44, 6 s
+   chirps cola 2019: 365 días, media 4.44, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2020: 366 días, media 4.64, 6 s
+   chirps cola 2020: 366 días, media 4.64, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2021: 365 días, media 4.95, 11 s
+   chirps cola 2021: 365 días, media 4.95, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2022: 365 días, media 5.48, 6 s
+   chirps cola 2022: 365 días, media 5.48, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2023: 365 días, media 5.26, 6 s
+   chirps cola 2023: 365 días, media 5.26, 13 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2024: 366 días, media 4.71, 11 s
+   chirps cola 2024: 366 días, media 4.71, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2025: 365 días, media 5.52, 11 s
+   chirps cola 2025: 365 días, media 5.52, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2026: 273 días, media 3.51, 11 s
+   chirps cola 2026: 273 días, media 3.51, 14 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2019: 365 días, media 5.17, 11 s
+   chirps media 2019: 365 días, media 5.17, 14 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2020: 366 días, media 5.40, 6 s
+   chirps media 2020: 366 días, media 5.40, 14 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2021: 365 días, media 5.69, 10 s
+   chirps media 2021: 365 días, media 5.69, 14 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2022: 365 días, media 6.46, 6 s
+   chirps media 2022: 365 días, media 6.46, 12 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2023: 365 días, media 5.93, 6 s
+   chirps media 2023: 365 días, media 5.93, 14 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2024: 366 días, media 5.47, 6 s
+   chirps media 2024: 366 días, media 5.47, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2025: 365 días, media 6.80, 6 s
+   chirps media 2025: 365 días, media 6.80, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2026: 273 días, media 4.32, 6 s
+   chirps media 2026: 273 días, media 4.32, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2019: 364 días, media 3.51, 51 s
+   imerg cola 2019: 364 días, media 3.51, 54 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2020: 366 días, media 3.66, 50 s
+   imerg cola 2020: 366 días, media 3.66, 56 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2021: 365 días, media 4.30, 49 s
+   imerg cola 2021: 365 días, media 4.30, 50 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2022: 365 días, media 6.23, 46 s
+   imerg cola 2022: 365 días, media 6.23, 56 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2023: 365 días, media 4.77, 46 s
+   imerg cola 2023: 365 días, media 4.77, 52 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2024: 153 días, media 3.41, 26 s
-   imerg cola 2025: 0 días, media nan, 6 s
-   imerg cola 2026: 0 días, media nan, 6 s
+   imerg cola 2024: 153 días, media 3.41, 27 s
+   imerg cola 2025: 0 días, media nan, 7 s
+   imerg cola 2026: 0 días, media nan, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:43: FutureWarning: The behavior of array concatenation with empty entries is deprecated. In a future version, this will no longer exclude empty items when determining the result dtype. To retain the old behavior, exclude the empty entries before the concat operation.
   s = pd.concat(partes).sort_index(); series[f"{fuente}_{area}"] = s[~s.index.duplicated()]
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2019: 364 días, media 4.64, 46 s
+   imerg media 2019: 364 días, media 4.64, 48 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2020: 366 días, media 4.80, 46 s
+   imerg media 2020: 366 días, media 4.80, 47 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2021: 365 días, media 5.62, 45 s
+   imerg media 2021: 365 días, media 5.62, 47 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2022: 365 días, media 7.59, 44 s
+   imerg media 2022: 365 días, media 7.59, 47 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2023: 365 días, media 5.92, 49 s
+   imerg media 2023: 365 días, media 5.92, 48 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2024: 153 días, media 4.15, 25 s
+   imerg media 2024: 153 días, media 4.15, 27 s
    imerg media 2025: 0 días, media nan, 6 s
-   imerg media 2026: 0 días, media nan, 6 s
+   imerg media 2026: 0 días, media nan, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:43: FutureWarning: The behavior of array concatenation with empty entries is deprecated. In a future version, this will no longer exclude empty items when determining the result dtype. To retain the old behavior, exclude the empty entries before the concat operation.
   s = pd.concat(partes).sort_index(); series[f"{fuente}_{area}"] = s[~s.index.duplicated()]
 total (2830, 4) 2019-01-01 00:00:00 2026-09-30 00:00:00
@@ -117,268 +117,3 @@ min           0.00          0.00        0.00         0.00
 50%           2.70          3.63        2.21         3.27
 75%           7.29          8.42        5.93         7.81
 max          55.07         66.74       48.94        47.51
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 18 s
-   2019-01 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   2019-01 media: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-01 media: 1 de 31 días, reintento
-2019 1 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 cola: 1 de 28 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 cola: 1 de 28 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 4 s
-   2019-02 cola: 1 de 28 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 cola: 1 de 28 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 media: 1 de 28 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 media: 1 de 28 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 media: 1 de 28 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-02 media: 1 de 28 días, reintento
-2019 2 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-03 media: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   2019-03 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 12 s
-   2019-03 media: 1 de 31 días, reintento
-2019 3 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 13 s
-   2019-04 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 media: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-04 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   2019-04 media: 1 de 30 días, reintento
-2019 4 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 cola: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 media: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-05 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 1 s
-   2019-05 media: 1 de 31 días, reintento
-2019 5 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 media: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-06 media: 1 de 30 días, reintento
-2019 6 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 cola: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 media: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-07 media: 1 de 31 días, reintento
-2019 7 INCOMPLETO
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 cola: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 cola: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 25 s
-   2019-08 media: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-08 media: 1 de 31 días, reintento
-2019 8 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 media: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-09 media: 1 de 30 días, reintento
-2019 9 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 cola: 1 de 31 días, reintento
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 cola: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 cola: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 media: 1 de 31 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 media: 1 de 31 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   reintento coastwatch.pfeg.noaa.gov HTTP Error 503: 
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-10 media: 1 de 31 días, reintento
-2019 10 INCOMPLETO
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 cola: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 cola: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 media: 1 de 30 días, reintento
-   reintento upwell.pfeg.noaa.gov HTTP Error 403: 
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 media: 1 de 30 días, reintento
-   coastwatch.pfeg.noaa.gov 0.0 MB 0 s
-   2019-11 media: 1 de 30 días, reintento
