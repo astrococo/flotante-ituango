@@ -1,0 +1,9 @@
+grilla (2298, 696) contorno 1505.26 ha
+zona 0 2020-01-07
+zona 10 2024-02-20
+zona 20 2021-01-31
+zona 30 2024-08-18
+zona 40 2021-05-26
+zona 50 2023-12-02
+zona nueva: z50 75123 z25 83340 km aguas arriba -23.47970962524414 aguas abajo 3.553675413131714
+terreno: elevación del agua (mediana) 378.5 m · laderas ≥35° junto al agua 7877 px de 83340 · GSW>50 % en zona 0.142
