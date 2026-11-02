@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=3522be5c8b" defer></script>
+<script src="app.js?v=0513f5b615" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -114,6 +114,40 @@ select,input[type=text],input[type=url]{background:var(--surface2);border:1px so
 .rest{margin:4px 0 12px}.rest summary{cursor:pointer;font-size:13px;color:var(--fg2);font-weight:600}.rest-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}.rest-row label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}.rest-row input{width:56px;padding:5px 6px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--fg);font:inherit}
 .row-btn{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted)}
 @media print{header.top{position:static!important}header .hact,nav.tabs,.toolbar select,.row-btn,#rest-box,.banner button{display:none!important}body{background:#fff!important;color:#000}.panel,.st{break-inside:avoid;box-shadow:none}}
+.exec{border-left:4px solid var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 60%),var(--surface)}
+.exh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.exk{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.exw{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.exlead{margin:0 0 8px;font-size:15px}
+.exl{margin:0;padding-left:20px;display:grid;gap:7px;max-width:110ch;font-size:14.5px;line-height:1.5}
+.exl b{color:var(--fg)}
+.exsub{margin:6px 0 0;padding-left:20px;display:grid;gap:3px;font-size:13.5px}
+.exc{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.exc>summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--fg2)}
+.exc h4{margin:14px 0 6px;font-size:13.5px;color:var(--fg2)}
+.exc .tbl{margin-top:8px}
+table.calc td{vertical-align:top;line-height:1.45}
+table.calc td:first-child{min-width:220px}
+table.calc tr.sum td{background:var(--accent-soft)}
+table.calc td.num{white-space:normal}
+.exf{margin:10px 0 0}
+.rngbar{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.rngp{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;flex-shrink:0}
+.rngp button{background:transparent;border:0;border-right:1px solid var(--line2);padding:3px 9px;min-height:28px;font-size:12px;cursor:pointer;color:var(--muted)}
+.rngp button:last-child{border-right:0}
+.rngp button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.rngs{position:relative;flex:1 1 220px;min-width:180px;height:28px}
+.rngtrack{position:absolute;left:8px;right:8px;top:12px;height:4px;border-radius:4px;background:var(--line2)}
+.rngtrack i{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:4px}
+.rngs input[type=range]{position:absolute;left:0;top:0;width:100%;height:28px;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.rngs input[type=range]::-webkit-slider-runnable-track{background:transparent;height:28px}
+.rngs input[type=range]::-moz-range-track{background:transparent}
+.rngs input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;margin-top:6px;border-radius:50%;background:var(--surface2);border:2px solid var(--accent);cursor:ew-resize}
+.rngs input[type=range]::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:var(--surface2);border:2px solid var(--accent);cursor:ew-resize}
+.rngs input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--accent);outline-offset:2px}
+.rngt{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+@media(max-width:640px){.rngbar{gap:8px}.rngt{width:100%}.rngp{display:flex;width:100%}.rngp button{flex:1 1 auto;padding:3px 4px;font-size:11.5px}table.calc td:first-child{min-width:160px}}
+@media print{.rngbar{display:none}.exc{display:block}}
 .chart{position:relative;height:340px}
 .chart.sm{height:260px}
 @media(max-width:640px){.chart{height:280px}}
@@ -196,6 +230,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
   <div id="stale-banner" class="banner" hidden></div>
   <div id="flood-banner" class="banner" hidden></div>
   <div id="alert-banner" class="banner" hidden></div>
+  <div class="panel exec" id="ex-pronostico" hidden></div>
   <div class="grid" id="fc-cards"></div>
   <div class="panel">
     <div class="toolbar">
@@ -228,6 +263,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-historico" hidden>
   <div><h2>Registro histórico de extracción</h2>
     <p class="lede">Volumen extraído por modalidad frente al caudal que entra al embalse. Material flotante = manual + mecanizado; macrófitas = manual + mecanizado; total = ambos. Un día sin reporte cuenta como 0 m³.</p></div>
+  <div class="panel exec" id="ex-historico" hidden></div>
   <div class="grid" id="hist-kpis"></div>
   <div class="panel">
     <div class="toolbar">
@@ -248,6 +284,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
   <div><h2>¿Cómo responde la extracción a los caudales?</h2>
     <p class="lede">El volumen extraído mide lo que se pudo retirar, no lo que llegó. Por eso la relación con el caudal se busca en anomalías respecto al ritmo operativo y en la respuesta después de crecientes.</p>
     <p class="note" id="rel-note" hidden></p></div>
+  <div class="panel exec" id="ex-relacion" hidden></div>
   <div class="panel find" id="findings"></div>
   <div class="grid">
     <div class="panel c6">
@@ -274,6 +311,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-calidad" hidden>
   <div><h2>Depuración y estado de los registros</h2>
     <p class="lede">Cómo se trataron los días sin reporte y los ceros, y qué periodos se excluyen al estimar el modelo.</p></div>
+  <div class="panel exec" id="ex-calidad" hidden></div>
   <div class="grid" id="q-kpis"></div>
   <div class="panel">
     <h3>Régimen operativo día a día</h3>
@@ -296,6 +334,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-modelo" hidden>
   <div><h2>Modelo de pronóstico y desempeño</h2>
     <p class="lede">Modelo v2.3: mezcla de persistencia (últimas 8 semanas), media exponencial de semanas recientes y nivel de largo plazo, con multiplicador hidrológico acotado alimentado por el pronóstico de caudal de HydroForecast. Es el único probado que supera a la mediana histórica todos los años 2022–2026 en ambos componentes.</p></div>
+  <div class="panel exec" id="ex-modelo" hidden></div>
   <div class="grid">
     <div class="panel c6 prose">
       <h3>Estructura</h3>
@@ -346,6 +385,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-operacion" hidden>
   <div><h2>Operación de la extracción</h2>
     <p class="lede">Viajes por volqueta, días operados y causas de cada día sin extracción, desde la hoja de viajes OT3_001 (fechas de cada fila, iguales a las de DatosExtracción corregida). El volumen registrado es viajes × capacidad nominal de cada volqueta (14,6–20 m³; flotante × 0,56) y, en lo manual, viajes × peso por viaje ÷ 160 kg/m³: mide sobre todo esfuerzo.</p></div>
+  <div class="panel exec" id="ex-operacion" hidden></div>
   <div class="grid" id="ops-kpis"></div>
   <div class="panel">
     <h3>Días de cada semana según lo ocurrido con la extracción mecanizada</h3>
@@ -366,6 +406,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-satelite" hidden>
   <div><h2>Vegetación flotante vista desde el satélite</h2>
     <p class="lede">Área cubierta por vegetación flotante (macrófitas y material vegetal verde) en la cola del embalse, 2,5 km alrededor de la barrera, medida con Sentinel-2 y Landsat 8/9 cuando el cielo está despejado y con el radar Sentinel-1, que ve a través de las nubes. Mide presencia de material vegetal verde, no el esfuerzo de extracción; madera y residuos no se distinguen.</p></div>
+  <div class="panel exec" id="ex-satelite" hidden></div>
   <div id="sat-msg" class="banner" hidden></div>
   <div id="sat-alert" class="banner" hidden></div>
   <div class="panel">
@@ -434,6 +475,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-auditoria" hidden>
   <div><h2>Auditoría de datos, modelo y plataforma</h2>
     <p class="lede" id="aud-lede"></p></div>
+  <div class="panel exec" id="ex-auditoria" hidden></div>
   <div class="grid" id="aud-score"></div>
   <div class="grid">
     <div class="panel c6"><h3>Integridad del archivo de extracción</h3><ul class="audit" id="aud-int"></ul></div>
@@ -459,6 +501,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-actualizar" hidden>
   <div><h2>Datos</h2>
     <p class="lede">La plataforma recalcula la depuración, los análisis y el pronóstico en el navegador. Los archivos que cargue no se envían a ningún servidor.</p></div>
+  <div class="panel exec" id="ex-actualizar" hidden></div>
   <div class="grid">
     <div class="panel c6">
       <h3>1. Archivo de extracción</h3>
@@ -489,9 +532,10 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <section class="view" id="v-requisitos" hidden>
   <div><h2>Información que mejoraría la precisión</h2>
     <p class="lede">El caudal explica una parte pequeña de la variación semanal porque el registro mide el esfuerzo de extracción tanto como la llegada de material. Esta información cerraría esa brecha, en orden de impacto esperado.</p></div>
+  <div class="panel exec" id="ex-requisitos" hidden></div>
   <div class="panel prose"><ol class="req" id="req-list"></ol></div>
 </section>
 </main>
-<footer><div class="wrap" id="footer">Material Flotante Ituango · modelo v2.1 (oct-2026) · Río Cauca · Proyecto Hidroeléctrico Ituango · integra HydroForecast Ituango</div></footer>
+<footer><div class="wrap" id="footer">Material Flotante Ituango · modelo v2.3 (nov-2026) · Río Cauca · Proyecto Hidroeléctrico Ituango · integra HydroForecast Ituango</div></footer>
 </body>
 </html>

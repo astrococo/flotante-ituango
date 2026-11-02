@@ -7,6 +7,9 @@ def seg(a,b):
 parts=[seg('"use strict";','/* ---------- pronóstico ---------- */'),seg('/* ---------- charts helpers ---------- */','/* ---------- vistas ---------- */'),
        seg('function aggSeries','function renderModel'),seg('function renderReq','/* ---------- navegación ---------- */')]
 JS='(function(){\n'+'\n'.join(parts)+open('v2/new.js').read().rsplit('</script>',1)[0]
+JS=JS.replace("function mk(id,cfg){if(charts[id])charts[id].destroy();charts[id]=new Chart(document.getElementById(id),cfg);return charts[id]}","function mk(id,cfg){return mkR(id,cfg)}")
+assert 'return mkR(id,cfg)' in JS
+JS=JS.replace("const VIEWS=[",open('v2/exec.js').read()+"\nconst VIEWS=[",1)
 JS=JS.replace("ticks:{callback:v=>nf(v)}}}}","ticks:{callback:v=>nf(v,(Math.abs(v)<5&&!Number.isInteger(v))?2:0)}}}}")
 assert "const ORIG=JSON.parse(document.getElementById('payload').textContent);" in JS
 JS=JS.replace("const ORIG=JSON.parse(document.getElementById('payload').textContent);","let ORIG=null;")
@@ -15,7 +18,7 @@ old="  (async()=>{await loadRepoExcel();await loadLive()})();"
 assert old in JS
 JS=JS.replace(old,"""  S.src._xlsxName='datos/DatosExtraccion.xlsx';S.src._repo=true;S.src._same=true;renderLive();
   loadLive();
-  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(['auditoria','operacion','pronostico','modelo','satelite'].includes(h))renderView(h)}).catch(()=>{});""")
+  fetch('datos/app/extra.json?v=__VX__',{cache:'no-cache'}).then(r=>r.json()).then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(VIEWS.includes(h))renderView(h)}).catch(()=>{});""")
 old="if(window.Chart) init(); else window.addEventListener('load',init);"
 assert old in JS
 JS=JS.replace(old,"""fetch('datos/app/base.json?v=__VB__',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{ORIG=j;init()})
