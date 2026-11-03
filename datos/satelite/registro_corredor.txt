@@ -1,7 +1,6 @@
 fechas en catálogo: 588
 zona existente 38737
-fechas nuevas: 1
-0 2026-11-01
+fechas nuevas: 0
 /home/runner/work/flotante-ituango/flotante-ituango/satelite/corredor.py:87: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
   json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), tramos=[f"{a}..{b}" for a, b in TRAMOS],
-listo: nuevas 1 total 588
+listo: nuevas 0 total 588
