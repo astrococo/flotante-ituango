@@ -1,7 +1,7 @@
 {
  "abajo": {
   "n": 70,
-  "rho_ml": 0.698,
+  "rho_ml": 0.699,
   "mae_ml": 10.37,
   "sesgo_ml": -2.54,
   "rho_umbral": 0.757,
@@ -9,7 +9,7 @@
  },
  "arriba": {
   "n": 70,
-  "rho_ml": 0.208,
+  "rho_ml": 0.206,
   "mae_ml": 5.79,
   "sesgo_ml": 2.55,
   "rho_umbral": 0.641,
@@ -17,9 +17,9 @@
  },
  "total": {
   "n": 70,
-  "rho_ml": 0.58,
-  "mae_ml": 14.13,
-  "sesgo_ml": -0.8,
+  "rho_ml": 0.583,
+  "mae_ml": 14.14,
+  "sesgo_ml": -0.79,
   "rho_umbral": 0.799,
   "mae_umbral": 10.0
  }

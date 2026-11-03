@@ -124,7 +124,7 @@ escenas Landsat: 279
 269 2026-08-13 landsat-9 32.2 ha
 274 2026-09-22 landsat-8 24.9 ha
 listo 103
-escenas S1: 625
+escenas S1: 627
 20 2019-04-10 SENTINEL-1B -20.04
 80 2020-01-28 SENTINEL-1B -20.6
 100 2020-04-21 SENTINEL-1B -19.56
@@ -144,8 +144,8 @@ escenas S1: 625
 580 2026-06-26 sentinel-1a -18.54
 600 2026-08-20 sentinel-1d -20.02
 620 2026-10-18 sentinel-1c -21.46
-listo 351
-S2: 674
+listo 352
+S2: 675
 0 2019-01-02
 75 2020-01-07
 125 2020-09-13
@@ -164,12 +164,21 @@ S2: 674
 625 2026-04-25
 650 2026-08-13
 S2 listo 265
-Landsat: 279
+Landsat: 280
 Landsat listo 103
-Traceback (most recent call last):
-  File "/home/runner/work/flotante-ituango/flotante-ituango/satelite/s1ml.py", line 16, in <module>
-    s2 = {pd.Timestamp(f): (un(v), un(g)) for f, v, g in zip(M["fechas"], M["val"], M["veg"])}
-          ^^^^^^^^^^^^^^^
-  File "timestamps.pyx", line 1865, in pandas._libs.tslibs.timestamps.Timestamp.__new__
-  File "conversion.pyx", line 364, in pandas._libs.tslibs.conversion.convert_to_tsobject
-TypeError: Expected unicode, got numpy.str_
+escenas S1: 627 máscaras S2: 256
+50 2019-09-30 8
+100 2020-04-21 17
+175 2021-03-30 25
+225 2021-11-01 30
+300 2023-03-26 39
+375 2024-09-04 43
+400 2025-02-19 43
+425 2025-05-14 46
+500 2025-12-04 53
+550 2026-04-15 60
+575 2026-06-14 64
+600 2026-08-20 66
+píxeles de entrenamiento 1169120 vegetación 0.104 pares 70
+validación: {'abajo': {'n': 70, 'rho_ml': np.float64(0.699), 'mae_ml': 10.37, 'sesgo_ml': -2.54, 'rho_umbral': np.float64(0.757), 'mae_umbral': 8.49}, 'arriba': {'n': 70, 'rho_ml': np.float64(0.206), 'mae_ml': 5.79, 'sesgo_ml': 2.55, 'rho_umbral': np.float64(0.641), 'mae_umbral': 4.76}, 'total': {'n': 70, 'rho_ml': np.float64(0.583), 'mae_ml': 14.14, 'sesgo_ml': -0.79, 'rho_umbral': np.float64(0.799), 'mae_umbral': 10.0}}
+listo 352

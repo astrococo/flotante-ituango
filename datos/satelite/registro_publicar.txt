@@ -1,1 +1,2 @@
 serie 106 mapas ['2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'] última 2026-10-22
+alertas activas: 0 | posibles pasos por la barrera en la historia: 11
