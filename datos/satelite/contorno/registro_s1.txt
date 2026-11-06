@@ -1,3 +1,6 @@
 grilla (2298, 696) contorno 1505.26 ha
-fechas S1: 518
-S1 listo: nuevas 0 total 518
+fechas S1: 519
+s1 0 2026-11-05 None
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:203: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  E = pd.concat([prev, pd.DataFrame(rows)], ignore_index=True).drop_duplicates("fecha", keep="last").sort_values("fecha")
+S1 listo: nuevas 1 total 519
