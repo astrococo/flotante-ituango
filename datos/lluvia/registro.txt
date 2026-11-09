@@ -2,109 +2,109 @@ cola primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta c
 CHIRPS falló cola no se reconocieron filas
 media primeras líneas: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n    <meta name="description" content="">\n    <title>dlauth</title>\n    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">\n    <link rel="stylesheet" href="https://use.fontawes'
 CHIRPS falló media no se reconocieron filas
-POWER barrera 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
-POWER olaya 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
-POWER sabanalarga 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
-POWER pintada 2858 2019-01-01 00:00:00 2026-10-28 00:00:00
+POWER barrera 2865 2019-01-01 00:00:00 2026-11-04 00:00:00
+POWER olaya 2865 2019-01-01 00:00:00 2026-11-04 00:00:00
+POWER sabanalarga 2865 2019-01-01 00:00:00 2026-11-04 00:00:00
+POWER pintada 2865 2019-01-01 00:00:00 2026-11-04 00:00:00
        power_barrera  power_olaya  power_sabanalarga  power_pintada
-count        2858.00      2858.00            2858.00        2858.00
-mean            5.66         5.74               5.66           5.69
-std             8.40         8.59               8.40           6.70
+count        2865.00      2865.00            2865.00        2865.00
+mean            5.70         5.79               5.70           5.71
+std             8.44         8.66               8.44           6.70
 min             0.00         0.00               0.00           0.00
-25%             0.80         0.98               0.80           1.24
-50%             3.20         3.25               3.20           3.67
-75%             7.51         7.56               7.51           8.00
+25%             0.81         0.99               0.81           1.25
+50%             3.21         3.26               3.21           3.69
+75%             7.55         7.62               7.55           8.05
 max           170.50       186.97             170.50         109.77
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2019: 365 días, media 4.44, 12 s
+   chirps cola 2019: 365 días, media 4.44, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2020: 366 días, media 4.64, 12 s
+   chirps cola 2020: 366 días, media 4.64, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2021: 365 días, media 4.95, 12 s
+   chirps cola 2021: 365 días, media 4.95, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2022: 365 días, media 5.48, 12 s
+   chirps cola 2022: 365 días, media 5.48, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2023: 365 días, media 5.26, 13 s
+   chirps cola 2023: 365 días, media 5.26, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2024: 366 días, media 4.71, 12 s
+   chirps cola 2024: 366 días, media 4.71, 11 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2025: 365 días, media 5.52, 12 s
+   chirps cola 2025: 365 días, media 5.52, 11 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps cola 2026: 273 días, media 3.51, 14 s
+   chirps cola 2026: 273 días, media 3.51, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2019: 365 días, media 5.17, 14 s
+   chirps media 2019: 365 días, media 5.17, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2020: 366 días, media 5.40, 14 s
+   chirps media 2020: 366 días, media 5.40, 7 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2021: 365 días, media 5.69, 14 s
+   chirps media 2021: 365 días, media 5.69, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2022: 365 días, media 6.46, 12 s
+   chirps media 2022: 365 días, media 6.46, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2023: 365 días, media 5.93, 14 s
+   chirps media 2023: 365 días, media 5.93, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2024: 366 días, media 5.47, 7 s
+   chirps media 2024: 366 días, media 5.47, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2025: 365 días, media 6.80, 7 s
+   chirps media 2025: 365 días, media 6.80, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   chirps media 2026: 273 días, media 4.32, 7 s
+   chirps media 2026: 273 días, media 4.32, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2019: 364 días, media 3.51, 54 s
+   imerg cola 2019: 364 días, media 3.51, 51 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2020: 366 días, media 3.66, 56 s
+   imerg cola 2020: 366 días, media 3.66, 51 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2021: 365 días, media 4.30, 50 s
+   imerg cola 2021: 365 días, media 4.30, 52 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2022: 365 días, media 6.23, 56 s
+   imerg cola 2022: 365 días, media 6.23, 52 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2023: 365 días, media 4.77, 52 s
+   imerg cola 2023: 365 días, media 4.77, 50 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg cola 2024: 153 días, media 3.41, 27 s
-   imerg cola 2025: 0 días, media nan, 7 s
-   imerg cola 2026: 0 días, media nan, 7 s
+   imerg cola 2024: 153 días, media 3.41, 26 s
+   imerg cola 2025: 0 días, media nan, 6 s
+   imerg cola 2026: 0 días, media nan, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:43: FutureWarning: The behavior of array concatenation with empty entries is deprecated. In a future version, this will no longer exclude empty items when determining the result dtype. To retain the old behavior, exclude the empty entries before the concat operation.
   s = pd.concat(partes).sort_index(); series[f"{fuente}_{area}"] = s[~s.index.duplicated()]
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2019: 364 días, media 4.64, 48 s
+   imerg media 2019: 364 días, media 4.64, 51 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2020: 366 días, media 4.80, 47 s
+   imerg media 2020: 366 días, media 4.80, 46 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
    imerg media 2021: 365 días, media 5.62, 47 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2022: 365 días, media 7.59, 47 s
+   imerg media 2022: 365 días, media 7.59, 46 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
-   imerg media 2023: 365 días, media 5.92, 48 s
+   imerg media 2023: 365 días, media 5.92, 50 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:37: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
   rows = [(dt.datetime.utcfromtimestamp(int(float(r["epochTime"]))).date(), list(r["value"].values())[0]) for r in d.get("data", [])]
    imerg media 2024: 153 días, media 4.15, 27 s
    imerg media 2025: 0 días, media nan, 6 s
-   imerg media 2026: 0 días, media nan, 7 s
+   imerg media 2026: 0 días, media nan, 6 s
 /home/runner/work/flotante-ituango/flotante-ituango/lluvia/climateserv.py:43: FutureWarning: The behavior of array concatenation with empty entries is deprecated. In a future version, this will no longer exclude empty items when determining the result dtype. To retain the old behavior, exclude the empty entries before the concat operation.
   s = pd.concat(partes).sort_index(); series[f"{fuente}_{area}"] = s[~s.index.duplicated()]
 total (2830, 4) 2019-01-01 00:00:00 2026-09-30 00:00:00
