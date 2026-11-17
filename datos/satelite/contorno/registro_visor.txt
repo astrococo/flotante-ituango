@@ -1,0 +1,76 @@
+grilla (2298, 696) contorno 1505.26 ha
+visor S2: fechas por generar 265
+visor s2 0 2019-01-02
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 25 2019-08-20
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 50 2020-05-06
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 75 2021-06-25
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 100 2022-04-06
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 125 2023-01-16
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 150 2023-10-23
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 175 2024-04-15
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 200 2025-02-24
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 225 2025-11-11
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s2 250 2026-07-24
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor S2 listo
+grilla (2298, 696) contorno 1505.26 ha
+visor S1: fechas por generar 522
+visor s1 0 2019-01-04
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 50 2019-12-23
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 100 2020-10-25
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 150 2021-10-08
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 200 2022-10-26
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 250 2023-09-03
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 300 2024-08-04
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 350 2025-05-08
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 400 2025-10-22
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 450 2026-04-09
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor s1 500 2026-09-06
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
+visor S1 listo
