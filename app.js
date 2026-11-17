@@ -802,16 +802,20 @@ function renderOps(){
 
 
 /* ---------- visor satelital interactivo (Leaflet, se carga solo al abrir Satélite) ---------- */
-let LF_P=null, VIS=null, MAP=null, VL={};
+let LF_P=null, VIS=null, MAP=null, VL={};let VC;
 function loadLeaflet(){if(window.L)return Promise.resolve();if(LF_P)return LF_P;LF_P=new Promise((ok,ko)=>{
   const c=document.createElement('link');c.rel='stylesheet';c.href='vendor/leaflet/leaflet.css';document.head.appendChild(c);
   const s=document.createElement('script');s.src='vendor/leaflet/leaflet.js';s.onload=ok;s.onerror=()=>{LF_P=null;ko(new Error('no se pudo cargar el mapa'))};document.head.appendChild(s)});return LF_P}
 async function renderVisor(J){
   const box=document.getElementById('visor');if(!box)return;
   try{await loadLeaflet();if(!VIS)VIS=await fetchJSON('datos/satelite/visor/visor.json',10000)}catch(e){box.innerHTML='<p class="note">El visor no está disponible: '+esc(e.message)+'</p>';return}
+  if(VC===undefined){try{VC=await fetchJSON('datos/satelite/contorno/visor/visor.json',10000);if(!VC||!(VC.s2||[]).length)VC=null}catch(e){VC=null}}
+  if(VC&&!RET){try{RET=await fetchJSON('datos/satelite/contorno/serie.json',15000)}catch(e){}}
+  const VD='datos/satelite/contorno/visor/';
   const sel=document.getElementById('vis-fecha'), sen=document.getElementById('vis-sensor');
-  const lista=()=>sen.value==='s1'?VIS.s1.slice().reverse().map(f=>({f})):VIS.s2.slice().reverse();
-  const area=f=>{const r=(sen.value==='s1'?(J.s1||[]):J.serie).find(x=>x.f===f);return r?` · ${nf(r.t,1)} ha`:''};
+  const lista=()=>VC?(sen.value==='s1'?VC.s1:VC.s2).slice().reverse().map(f=>({f})):(sen.value==='s1'?VIS.s1.slice().reverse().map(f=>({f})):VIS.s2.slice().reverse());
+  const area=f=>{if(VC){const o=RET&&(sen.value==='s1'?(RET.radar||{})[f]:((RET.optico||{})[f]||(RET.landsat||{})[f]));return o&&o.arriba!=null?` · ${nf(o.arriba,1)} ha aguas arriba${sen.value==='s1'?' (radar)':''}`:''}
+    const r=(sen.value==='s1'?(J.s1||[]):J.serie).find(x=>x.f===f);return r?` · ${nf(r.t,1)} ha`:''};
   const fill=()=>{const keep=sel.value;sel.innerHTML=lista().map(r=>`<option value="${r.f}">${fmtD(d0(r.f))}${area(r.f)}</option>`).join('');if([...sel.options].some(o=>o.value===keep))sel.value=keep};
   if(!MAP){
     MAP=L.map('visor',{zoomControl:true,attributionControl:true});const cen=L.latLng((VIS.linea[0][0]+VIS.linea[1][0])/2,(VIS.linea[0][1]+VIS.linea[1][1])/2);MAP.fitBounds(cen.toBounds(1800));setTimeout(()=>{MAP.invalidateSize();MAP.fitBounds(cen.toBounds(1800))},200);
@@ -832,6 +836,7 @@ async function renderVisor(J){
         L.geoJSON(G,{filter:f=>f.properties.tipo==='km',pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4,color:'#111827',weight:1,fillColor:'#facc15',fillOpacity:1}).bindTooltip(`${nf(Math.abs(f.properties.km),1)} km ${f.properties.km<0?'arriba':'abajo'}`,{permanent:true,direction:'right',className:'kmlab',offset:[6,0]})})]).addTo(MAP);
       VL.contB=L.geoJSON(G,{filter:f=>f.properties.tipo==='contorno'}).getBounds();
       const bt=document.getElementById('vis-todo'); if(bt)bt.onclick=()=>{document.getElementById('vc-cont').checked=true;show();MAP.fitBounds(VL.contB,{padding:[10,10]})};
+      if(VC){document.getElementById('vc-zona').checked=false;MAP.fitBounds(VL.contB,{padding:[10,10]});setTimeout(()=>{MAP.invalidateSize();MAP.fitBounds(VL.contB,{padding:[10,10]})},250)}
     }catch(e){VL.cont=null}
     L.control.layers({'Alta resolución (Esri)':esri,'Mapa (OpenStreetMap)':osm},{},{collapsed:true}).addTo(MAP);
     L.control.scale({imperial:false}).addTo(MAP);
@@ -845,10 +850,15 @@ async function renderVisor(J){
   function show(){
     const f=sel.value,isS1=sen.value==='s1',on=id=>document.getElementById(id).checked,op=+document.getElementById('vis-op').value/100;
     ['img','veg'].forEach(k=>{if(VL[k]){MAP.removeLayer(VL[k]);VL[k]=null}});
+    if(VC){
+      if(on('vc-img')&&(isS1||VC.ql.includes(f)))VL.img=L.imageOverlay(`${VD}${isS1?'s1':'ql'}_${f}.webp`,VC.bounds20,{opacity:op}).addTo(MAP);
+      if(on('vc-veg')&&!isS1)VL.veg=L.imageOverlay(`${VD}veg_${f}.webp`,VC.bounds,{opacity:1}).addTo(MAP);
+    }else{
     if(on('vc-img')){const u=isS1?`datos/satelite/visor/s1_${f}.jpg`:`datos/satelite/series/ql_${f}.jpg`;if(isS1||(VIS.s2.find(r=>r.f===f)||{}).ql)VL.img=L.imageOverlay(u,VIS.bounds,{opacity:op}).addTo(MAP)}
     if(on('vc-veg')&&!isS1)VL.veg=L.imageOverlay(`datos/satelite/visor/veg_${f}.png`,VIS.bounds,{opacity:1}).addTo(MAP);
+    }
     on('vc-zona')?VL.zona.addTo(MAP):MAP.removeLayer(VL.zona); if(VL.cont){on('vc-cont')?VL.cont.addTo(MAP):MAP.removeLayer(VL.cont)} on('vc-bar')?(VL.barrera.addTo(MAP),VL.punto.addTo(MAP)):(MAP.removeLayer(VL.barrera),MAP.removeLayer(VL.punto));
-    document.getElementById('vis-info').textContent=isS1?`Radar Sentinel-1 (VH, ${fmtD(d0(f))}): claro = más retrodispersión (vegetación, orillas); oscuro = agua lisa. Ve a través de las nubes. Línea amarilla discontinua: contorno de análisis.`:`Sentinel-2 ${fmtD(d0(f))}, color real 10 m. Verde: vegetación flotante detectada (NDVI ≥ 0,30); blanco: nube o sombra. Borde azul: zona de agua analizada cerca del puerto. Línea amarilla discontinua: contorno de análisis; puntos amarillos: distancia por el río cada 2,5 km.`;
+    document.getElementById('vis-info').textContent=isS1?`Radar Sentinel-1 (VH, ${fmtD(d0(f))}): claro = más retrodispersión (vegetación, orillas); oscuro = agua lisa. Ve a través de las nubes. Línea amarilla discontinua: contorno de análisis.`:(VC?`Sentinel-2 ${fmtD(d0(f))}, todo el contorno de análisis: color real (20 m) y vegetación flotante detectada a 10 m (NDVI ≥ 0,30; verde intenso dentro de la zona de agua analizada, tenue en las orillas). Blanco: nube o sombra. Línea amarilla discontinua: contorno; puntos amarillos: distancia por el río cada 2,5 km.`:`Sentinel-2 ${fmtD(d0(f))}, color real 10 m. Verde: vegetación flotante detectada (NDVI ≥ 0,30); blanco: nube o sombra. Borde azul: zona de agua analizada cerca del puerto. Línea amarilla discontinua: contorno de análisis; puntos amarillos: distancia por el río cada 2,5 km.`);
   }
   window.__visorGo=(f,s1)=>{sen.value=s1?'s1':'s2';fill();if([...sel.options].some(o=>o.value===f)){sel.value=f;show();box.scrollIntoView({behavior:'smooth',block:'center'})}};
 }
