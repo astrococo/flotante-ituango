@@ -14,7 +14,7 @@
 <script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="vendor/supabase-2.119.0.js" defer></script>
 <script src="vendor/chart.umd.min.js" defer></script>
-<script src="app.js?v=2026111602" defer></script>
+<script src="app.js?v=2026111603" defer></script>
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -262,17 +262,17 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
         <div class="msg" id="ing-msg" role="status"></div>
       </form>
       <div class="enlaces"><button type="button" class="enlace" id="ing-a-registrar">Crear cuenta</button><button type="button" class="enlace" id="ing-a-recuperar">Olvidé mi contraseña</button><button type="button" class="enlace" id="ing-a-ingresar" hidden>Volver a ingresar</button></div>
-      <p class="nota">Son las mismas cuentas de Turbinas Ituango y HydroForecast Ituango: si ya tiene una, úsela.</p>
+      <p class="nota">El acceso a esta app se aprueba por separado. Si ya tiene cuenta en otra app de Ituango, ingrese con ese correo y contraseña: se registrará su solicitud para esta.</p>
       <div class="tecnico" id="ing-tecnico" hidden>Este equipo tiene guardado un token técnico de GitHub. <button type="button" class="enlace" id="ing-tecnico-btn">Entrar con el token</button></div>
     </div>
     <div class="card" data-p="estado" hidden>
-      <h2 id="est-tit">Cuenta en revisión</h2><p id="est-sub"></p>
+      <h2 id="est-tit">Acceso en revisión</h2><p id="est-sub"></p>
       <p>Cuenta: <b id="est-correo"></b></p>
       <button class="go" id="est-revisar" type="button">Ya me aprobaron: revisar</button>
       <div class="enlaces"><button type="button" class="enlace" id="est-salir">Salir</button></div>
     </div>
     <div class="card" data-p="clave" hidden>
-      <h2>Contraseña nueva</h2><p>Mínimo 10 caracteres. Úsela la próxima vez que ingrese (también en Turbinas y HydroForecast).</p>
+      <h2>Contraseña nueva</h2><p>Mínimo 10 caracteres. Es la contraseña de su cuenta: cambia también para Turbinas y HydroForecast si tiene acceso a ellas.</p>
       <form id="clave-form" novalidate>
         <label class="campo">Contraseña nueva<input type="password" id="clave-1" autocomplete="new-password"></label>
         <label class="campo">Repita la contraseña<input type="password" id="clave-2" autocomplete="new-password"></label>
@@ -629,7 +629,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     </div>
   </div>
   <div class="panel c12" id="acc-panel"><h3>3. Acceso a los datos</h3>
-    <p class="note">La extracción y el archivo de HydroForecast son internos: se piden al servidor con su sesión y el servidor los lee del repositorio privado. Las cuentas son las mismas de Turbinas Ituango y HydroForecast Ituango (correos de la organización, aprobadas por el administrador en Turbinas → Usuarios y accesos). Las imágenes satelitales son públicas.</p>
+    <p class="note">La extracción y el archivo de HydroForecast son internos: se piden al servidor con su sesión y el servidor los lee del repositorio privado. El acceso a esta app es propio: el administrador lo aprueba o retira por separado (Turbinas → Usuarios y accesos); tener acceso a Turbinas o HydroForecast no da acceso aquí. Las imágenes satelitales son públicas.</p>
     <p class="note" id="acc-modo"></p>
     <div class="row-btn" style="margin-top:8px"><button class="btn" id="acc-salir-btn" type="button">Salir</button></div>
   </div>

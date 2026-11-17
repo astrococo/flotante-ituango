@@ -321,12 +321,13 @@ function forecast(scen){
 }
 
 /* ---------- acceso y datos protegidos (16-nov-2026) ----------
-   Ingreso con correo y contraseña con las MISMAS cuentas de Turbinas Ituango (Supabase Auth: solo
-   correos de la organización, aprobación del administrador). La extracción (EPM) y el archivo de
+   Ingreso con correo y contraseña (Supabase Auth del proyecto de Turbinas Ituango: solo correos de la
+   organización). El ACCESO A ESTA APP es propio: el administrador lo aprueba por separado (tabla
+   accesos_app, app = 'flotante'); tener acceso a Turbinas o HydroForecast no da acceso aquí, y la
+   sesión de esta app es independiente (clave de almacenamiento propia). La extracción (EPM) y el archivo de
    HydroForecast viven en el repositorio privado astrococo/flotante-ituango-codigo; la página los pide
    a la función «flotante» del servidor con el token de la sesión, y el servidor los lee de GitHub
-   con su propia clave. La sesión se comparte con Turbinas y HydroForecast (mismo sitio y misma clave
-   de almacenamiento): quien ingresó en una no vuelve a escribir la contraseña en las otras.
+   con su propia clave y solo si el acceso a esta app está aprobado.
    Acceso técnico (solo administrador, si el servidor falla): token de lectura de GitHub. */
 const SUPABASE_URL='https://kgmjjbxmofqcpkbgzoqg.supabase.co';
 const SUPABASE_CLAVE_PUBLICA='sb_publishable_UQMFkQXShJoV8BmKW4G2MQ_TDsFUL8H'; // pública por diseño
@@ -334,7 +335,7 @@ const DOMINIOS=['epm.com.co'];
 const REPO_DATOS='astrococo/flotante-ituango-codigo';
 const K_TOK='mfi-token',K_TEC='mfi-acceso-tecnico';
 const leerL=k=>{try{return localStorage.getItem(k)}catch(e){return null}},escribirL=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
-const ACC={sb:null,sesion:null,perfil:null,token:leerL(K_TEC)==='1'?(leerL(K_TOK)||''):'',recuperando:false};
+const ACC={sb:null,sesion:null,perfil:null,estadoApp:null,token:leerL(K_TEC)==='1'?(leerL(K_TOK)||''):'',recuperando:false};
 class ErrDatos extends Error{constructor(m,c){super(m);this.code=c}}
 function traducir(e){const m=String((e&&(e.message||e.error_description))||e||'');
   if(/invalid login credentials/i.test(m))return 'Correo o contraseña incorrectos.';
@@ -346,10 +347,12 @@ function traducir(e){const m=String((e&&(e.message||e.error_description))||e||''
   if(/email address not authorized|error sending/i.test(m))return 'El servidor no pudo enviar el correo. Pida ayuda al administrador.';
   if(/failed to fetch|network/i.test(m))return 'No hay conexión con el servidor.';
   return m||'Ocurrió un error.'}
-function sb(){if(!ACC.sb&&window.supabase)ACC.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_CLAVE_PUBLICA,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'ituango-sesion'}});return ACC.sb}
-async function cargarPerfil(){const s=ACC.sesion;if(!s){ACC.perfil=null;return}
+function sb(){if(!ACC.sb&&window.supabase)ACC.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_CLAVE_PUBLICA,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'flotante-sesion'}});return ACC.sb}
+async function cargarPerfil(){const s=ACC.sesion;if(!s){ACC.perfil=null;ACC.estadoApp=null;return}
   const {data}=await sb().from('perfiles').select('id,email,nombre,rol,estado').eq('id',s.user.id).maybeSingle();
-  ACC.perfil=data||{id:s.user.id,email:s.user.email,rol:'usuario',estado:'pendiente'}}
+  ACC.perfil=data||{id:s.user.id,email:s.user.email,rol:'usuario',estado:'pendiente'};
+  // pide (o consulta) el acceso a ESTA app; nunca lo aprueba
+  const r=await sb().rpc('solicitar_acceso',{p_app:'flotante'});ACC.estadoApp=r.error?'pendiente':r.data}
 async function conTiempo(u,op,ms){const c=new AbortController(),to=setTimeout(()=>c.abort(),ms||20000);
   try{return await fetch(u,{...op,signal:c.signal,cache:'no-store'})}catch(e){throw new ErrDatos(e.name==='AbortError'?'El servidor no respondió.':'No hay conexión con el servidor.','red')}finally{clearTimeout(to)}}
 async function protegido(ruta,tipo){
@@ -1382,8 +1385,8 @@ function verPantalla(cual,msg,tipo){
   const g=$('acceso');g.hidden=false;document.body.classList.add('sin-datos');
   g.querySelectorAll('[data-p]').forEach(x=>x.hidden=x.dataset.p!==cual);
   if(cual==='ingreso')ponerModo(MODO);
-  if(cual==='estado'){const rev=ACC.perfil&&ACC.perfil.estado==='revocado';$('est-tit').textContent=rev?'Acceso retirado':'Cuenta en revisión';
-    $('est-sub').textContent=rev?'El administrador retiró el acceso de esta cuenta. Si cree que es un error, comuníquese con él.':(msg&&!/aprobaci/i.test(msg)?msg:'Su cuenta está creada. El administrador debe aprobarla antes de que pueda ver los datos; vuelva a intentar más tarde.');
+  if(cual==='estado'){const rev=ACC.estadoApp==='revocado'||/retirado/i.test(msg||'');$('est-tit').textContent=rev?'Acceso retirado':'Acceso en revisión';
+    $('est-sub').textContent=rev?'El administrador retiró su acceso a Material Flotante Ituango. Si cree que es un error, comuníquese con él.':'Su solicitud de acceso a Material Flotante Ituango está registrada. El administrador debe aprobarla (es independiente del acceso a Turbinas o HydroForecast); vuelva a intentar más tarde.';
     $('est-correo').textContent=ACC.sesion?ACC.sesion.user.email:'';$('est-revisar').hidden=rev}
   const m=g.querySelector(`[data-p="${cual}"] .msg`);if(m){m.className='msg'+(tipo?' '+tipo:'');m.textContent=cual==='estado'?'':(msg||'')}
 }
@@ -1412,7 +1415,7 @@ async function cargarDatos(){
 async function decidir(){
   if(ACC.recuperando){verPantalla('clave');return}
   if(ACC.sesion){if(!ACC.perfil)await cargarPerfil();
-    if(ACC.perfil.estado!=='aprobado'){verPantalla('estado');return}}
+    if(ACC.estadoApp!=='aprobado'){verPantalla('estado');return}}
   await cargarDatos();
 }
 async function arrancar(){
@@ -1434,10 +1437,10 @@ $('ing-form').addEventListener('submit',async ev=>{ev.preventDefault();const b=$
       if(!DOMINIOS.includes(correo.split('@')[1]||''))throw new Error('Solo se permiten correos de '+DOMINIOS.map(d=>'@'+d).join(', ')+'.');
       if(clave.length<10)throw new Error('La contraseña debe tener al menos 10 caracteres.');
       if(clave!==$('ing-clave2').value)throw new Error('Las contraseñas no coinciden.');
-      const {data,error}=await sb().auth.signUp({email:correo,password:clave,options:{data:{nombre:$('ing-nombre').value.trim()},emailRedirectTo:location.origin+location.pathname}});
+      const {data,error}=await sb().auth.signUp({email:correo,password:clave,options:{data:{nombre:$('ing-nombre').value.trim(),app:'flotante'},emailRedirectTo:location.origin+location.pathname}});
       if(error)throw new Error(traducir(error));
       if(data.session){ACC.sesion=data.session;ACC.perfil=null;await decidir()}
-      else{ponerModo('ingresar');m.className='msg ok';m.textContent='Cuenta creada. Le enviamos un correo para confirmar la dirección; después, el administrador aprueba el acceso.'}}
+      else{ponerModo('ingresar');m.className='msg ok';m.textContent='Cuenta creada. Le enviamos un correo para confirmar la dirección; después, el administrador aprueba su acceso a esta app.'}}
     else{const {error}=await sb().auth.resetPasswordForEmail(correo,{redirectTo:location.origin+location.pathname});if(error)throw new Error(traducir(error));m.className='msg ok';m.textContent='Si el correo tiene cuenta, le llegará un enlace para crear una contraseña nueva.'}
   }catch(x){m.className='msg err';m.textContent=x.message}
   finally{b.disabled=false;if(b.textContent==='Un momento…')b.textContent=txt}});
