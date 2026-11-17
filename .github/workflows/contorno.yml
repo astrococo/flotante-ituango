@@ -109,10 +109,45 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install -r satelite/requirements.txt
       - run: |
-          mkdir -p satelite/datos/satelite/contorno && cp datos/satelite/contorno/* satelite/datos/satelite/contorno/
+          mkdir -p satelite/datos/satelite/contorno && cp -r datos/satelite/contorno/. satelite/datos/satelite/contorno/
           cd satelite && python -u contorno.py serie 2>&1 | tee datos/satelite/contorno/registro_serie.txt
           cd .. && cp satelite/datos/satelite/contorno/serie.json satelite/datos/satelite/contorno/registro_serie.txt satelite/datos/satelite/contorno/mapa.geojson datos/satelite/contorno/
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A datos/satelite/contorno; git diff --cached --quiet && exit 0
           git commit -m "Contorno: serie $(date -u '+%F %H:%M')"
           for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
+  visor:
+    needs: sensor
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - name: Traer el código (repositorio privado, solo lectura; no se guarda aquí)
+        uses: actions/checkout@v4
+        with:
+          repository: astrococo/flotante-ituango-codigo
+          token: ${{ secrets.CODIGO_TOKEN }}
+          path: _codigo
+          sparse-checkout: satelite
+          persist-credentials: false
+      - run: cp -r _codigo/satelite . && rm -rf _codigo
+      - run: git pull --rebase origin main || true
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r satelite/requirements.txt
+      - name: Imágenes del visor (todo el contorno)
+        run: |
+          mkdir -p satelite/datos/satelite/contorno
+          cd satelite && (timeout 300m sh -c 'python -u contorno.py visor_s2 && python -u contorno.py visor_s1' 2>&1 | tee datos/satelite/contorno/registro_visor.txt || true)
+      - name: Guardar
+        if: always()
+        run: |
+          mkdir -p datos/satelite/contorno/visor
+          cp -r satelite/datos/satelite/contorno/visor/. datos/satelite/contorno/visor/ 2>/dev/null || true
+          cp satelite/datos/satelite/contorno/registro_visor.txt datos/satelite/contorno/ 2>/dev/null || true
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A datos/satelite/contorno/visor datos/satelite/contorno/registro_visor.txt; git diff --cached --quiet && exit 0
+          git commit -m "Contorno: imágenes del visor $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5 6; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*9)); done
