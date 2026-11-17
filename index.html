@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Material Flotante Ituango</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b1220">
+<link rel="apple-touch-icon" href="icono-192.png">
+<meta property="og:title" content="Material Flotante Ituango">
+<meta property="og:description" content="Pronóstico de extracción de material flotante y macrófitas en la cola del embalse Hidroituango.">
+<meta name="description" content="Pronóstico de extracción de material flotante y macrófitas en la cola del embalse Ituango, integrado con HydroForecast.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230ea5e9'/%3E%3Cpath d='M5 19c3-3 5-3 8 0s5 3 8 0 5-3 6-1' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='12' r='2.2' fill='white'/%3E%3Ccircle cx='19' cy='10' r='1.6' fill='white'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem('mfi-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script src="vendor/chart.umd.min.js" defer></script>
+<script src="app.js?v=2026111601" defer></script>
+<style>
+/* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
+:root{
+  /* 16-nov-2026: paleta de Turbinas Ituango (pizarra con acento azul cielo, paneles sólidos) */
+  --bg-from:#0b1220;--bg-via:#0b1220;--bg-to:#0b1220;
+  --fg:#f1f5f9;--fg2:#cbd5e1;--muted:#94a3b8;
+  --surface:#111a2e;--surface2:#18233a;--line:#1f2b44;--line2:#2a3852;
+  --accent:#38bdf8;--accent-strong:#0ea5e9;--accent-soft:rgba(56,189,248,.14);--on-accent:#0b1220;
+  --mf:#f59e0b;--mf2:#fcd34d;--ma:#10b981;--ma2:#6ee7b7;--flow:#38bdf8;--flow2:#7dd3fc;
+  --ok:#34d399;--warn:#fb923c;--bad:#f87171;--info:#38bdf8;
+  --ok-bg:rgba(16,185,129,.12);--warn-bg:rgba(249,115,22,.10);--bad-bg:rgba(239,68,68,.12);--info-bg:rgba(14,165,233,.10);
+  --ok-bd:rgba(16,185,129,.45);--warn-bd:rgba(249,115,22,.55);--bad-bd:rgba(239,68,68,.5);--info-bd:rgba(14,165,233,.45);
+  --band:rgba(56,189,248,.16);
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6);
+  --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-display:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  --r:14px;color-scheme:dark}
+:root[data-theme="light"]{
+  --bg-from:#eef2f7;--bg-via:#eef2f7;--bg-to:#eef2f7;
+  --fg:#0f172a;--fg2:#334155;--muted:#5b6b80;
+  --surface:#ffffff;--surface2:#f1f5f9;--line:#e2e8f0;--line2:#cbd5e1;
+  --accent:#0369a1;--accent-strong:#0369a1;--accent-soft:rgba(3,105,161,.10);--on-accent:#ffffff;
+  --mf:#b45309;--mf2:#f59e0b;--ma:#047857;--ma2:#34d399;--flow:#0284c7;--flow2:#38bdf8;
+  --ok:#047857;--warn:#c2410c;--bad:#b91c1c;--info:#0369a1;
+  --ok-bg:rgba(16,185,129,.10);--warn-bg:rgba(249,115,22,.09);--bad-bg:rgba(239,68,68,.08);--info-bg:rgba(14,165,233,.08);
+  --band:rgba(2,132,199,.13);--shadow:0 6px 20px -8px rgba(15,23,42,.15);color-scheme:light}
+/* alto contraste (sala de control o poca luz), como Turbinas */
+:root[data-contraste="alto"]{--bg-from:#000;--bg-via:#000;--bg-to:#000;--surface:#0a0a0a;--surface2:#141414;--line:#333;--line2:#555;--fg:#fff;--fg2:#ddd;--muted:#aaa;--accent:#5cd0ff;--accent-strong:#5cd0ff;--accent-soft:rgba(92,208,255,.2);--on-accent:#000}
+:root[data-theme="light"][data-contraste="alto"]{--bg-from:#fff;--bg-via:#fff;--bg-to:#fff;--surface:#fff;--surface2:#f0f0f0;--line:#999;--line2:#555;--fg:#000;--fg2:#1a1a1a;--muted:#444;--accent:#00507a;--accent-strong:#00507a;--accent-soft:rgba(0,80,122,.12);--on-accent:#fff}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg-from);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;min-height:100vh}
+[hidden]{display:none!important}
+.wrap{max-width:80rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media(min-width:640px){.wrap{padding-left:24px;padding-right:24px}}
+/* encabezado */
+header.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg-via) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand h1{font-size:20px;font-weight:700;margin:0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:640px){.logo{width:32px;height:32px;border-radius:10px}.brand h1{font-size:15px}.brand p{display:none}}
+.hact{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pill{border-radius:9999px;padding:4px 12px;font-size:12px;line-height:16px;font-weight:500;border:1px solid var(--line2);background:color-mix(in srgb,var(--muted) 10%,transparent);color:var(--fg2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none;cursor:pointer}
+.pill:hover{background:color-mix(in srgb,var(--muted) 20%,transparent)}
+.pill b{font-weight:600;color:var(--fg)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot.ok{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.2)}.dot.warn{background:#f59e0b}.dot.bad{background:#ef4444}
+@media(max-width:640px){.pill .lbl{display:none}}
+nav.tabs{padding-top:16px;position:relative}
+@media(max-width:900px){.tabrow{-webkit-mask-image:linear-gradient(to right,#000 85%,transparent);mask-image:linear-gradient(to right,#000 85%,transparent);padding-right:32px}}
+.tabrow{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none;padding-bottom:0}
+.tabrow::-webkit-scrollbar{display:none}
+.tabrow a{white-space:nowrap;padding:8px 12px;font-size:14px;border-radius:6px 6px 0 0;border-bottom:2px solid transparent;color:var(--muted);text-decoration:none;transition:color .15s,background .15s}
+.tabrow a:hover{color:var(--fg2)}
+.tabrow a[aria-current="page"]{border-bottom-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--surface2) 60%,transparent);font-weight:500}
+a:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding-block:20px 48px}
+.metaline{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;font-size:12px;color:var(--muted);margin-bottom:16px}
+.metaline .src{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+section.view{display:grid;gap:20px}
+h2{font-size:22px;font-weight:700;margin:0;line-height:1.25;text-wrap:balance}
+h3{font-size:13px;font-weight:600;margin:0 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg2)}
+.lede{color:var(--muted);max-width:80ch;margin:4px 0 0}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}
+@media(max-width:1024px){.c8,.c6,.c4{grid-column:span 12}.c3{grid-column:span 6}}
+@media(max-width:560px){.c3{grid-column:span 12}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;min-width:0}
+/* tarjetas de estado (como las de estación en HydroForecast) */
+.st{border-radius:12px;border:1px solid var(--line2);padding:20px;min-width:0;background:var(--surface)}
+.st.ok{border-color:var(--ok-bd);background:var(--ok-bg)}.st.warn{border-color:var(--warn-bd);background:var(--warn-bg)}.st.bad{border-color:var(--bad-bd);background:var(--bad-bg)}.st.info{border-color:var(--info-bd);background:var(--info-bg)}
+.st h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--fg2)}
+.st .big{font-size:30px;font-weight:700;line-height:1.15;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.st .big small{font-size:15px;font-weight:600;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:9999px;border:1px solid currentColor}
+.badge.ok{color:var(--ok)}.badge.warn{color:var(--warn)}.badge.bad{color:var(--bad)}.badge.info{color:var(--info)}
+.st .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.st p{margin:8px 0 0;color:var(--fg2);font-size:13px}
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi .lab{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kpi .val{font-size:26px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:14px;font-weight:600;color:var(--muted)}
+.kpi .rng{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.kpi .split{display:flex;gap:12px;font-size:12.5px;margin-top:4px;flex-wrap:wrap}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:12px}
+.toolbar h3{margin:0;margin-right:auto}
+.toolbar label{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+select,button,textarea,input{font:inherit;color:var(--fg)}
+select,input[type=text],input[type=url]{background:var(--surface2);border:1px solid var(--line2);border-radius:8px;padding:5px 9px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:5px 11px;min-height:32px;font-size:12.5px;cursor:pointer;border-right:1px solid var(--line2);color:var(--muted)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);color:var(--fg2);border:1px solid var(--line2);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn:disabled{opacity:.5;cursor:wait}
+.rest{margin:4px 0 12px}.rest summary{cursor:pointer;font-size:13px;color:var(--fg2);font-weight:600}.rest-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}.rest-row label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}.rest-row input{width:56px;padding:5px 6px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--fg);font:inherit}
+.row-btn{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted)}
+@media print{header.top{position:static!important}header .hact,nav.tabs,.toolbar select,.row-btn,#rest-box,.banner button{display:none!important}body{background:#fff!important;color:#000}.panel,.st{break-inside:avoid;box-shadow:none}}
+.exec{border-left:4px solid var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 60%),var(--surface)}
+.exh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.exk{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.exw{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.exlead{margin:0 0 8px;font-size:15px}
+.exl{margin:0;padding-left:20px;display:grid;gap:7px;max-width:110ch;font-size:14.5px;line-height:1.5}
+.exl b{color:var(--fg)}
+.exsub{margin:6px 0 0;padding-left:20px;display:grid;gap:3px;font-size:13.5px}
+.exc{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.exc>summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--fg2)}
+.exc h4{margin:14px 0 6px;font-size:13.5px;color:var(--fg2)}
+.exc .tbl{margin-top:8px}
+table.calc td{vertical-align:top;line-height:1.45}
+table.calc td:first-child{min-width:220px}
+table.calc tr.sum td{background:var(--accent-soft)}
+table.calc td.num{white-space:normal}
+.exf{margin:10px 0 0}
+.rngbar{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.rngp{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;flex-shrink:0}
+.rngp button{background:transparent;border:0;border-right:1px solid var(--line2);padding:3px 9px;min-height:28px;font-size:12px;cursor:pointer;color:var(--muted)}
+.rngp button:last-child{border-right:0}
+.rngp button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.rngs{position:relative;flex:1 1 220px;min-width:180px;height:28px}
+.rngtrack{position:absolute;left:8px;right:8px;top:12px;height:4px;border-radius:4px;background:var(--line2)}
+.rngtrack i{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:4px}
+.rngs input[type=range]{position:absolute;left:0;top:0;width:100%;height:28px;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.rngs input[type=range]::-webkit-slider-runnable-track{background:transparent;height:28px}
+.rngs input[type=range]::-moz-range-track{background:transparent}
+.rngs input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;margin-top:6px;border-radius:50%;background:var(--surface2);border:2px solid var(--accent);cursor:ew-resize}
+.rngs input[type=range]::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:var(--surface2);border:2px solid var(--accent);cursor:ew-resize}
+.rngs input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--accent);outline-offset:2px}
+.rngt{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+@media(max-width:640px){.rngbar{gap:8px}.rngt{width:100%}.rngp{display:flex;width:100%}.rngp button{flex:1 1 auto;padding:3px 4px;font-size:11.5px}table.calc td:first-child{min-width:160px}}
+@media print{.rngbar{display:none}.exc{display:block}}
+.leaflet-tooltip.kmlab{background:rgba(17,24,39,.8);color:#facc15;border:0;box-shadow:none;font:600 11px var(--f-mono);padding:1px 5px}.leaflet-tooltip.kmlab:before{display:none}
+.chart{position:relative;height:340px}
+.chart.sm{height:260px}
+@media(max-width:640px){.chart{height:280px}}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+td.num{font-family:var(--f-mono);font-size:12.5px}
+.note{font-size:12.5px;color:var(--muted)}
+.prose{max-width:82ch}
+.prose p{margin:0 0 10px}.prose ul{margin:0 0 10px;padding-left:20px}.prose li{margin-bottom:5px}
+.find{display:grid;gap:10px}
+.find div{border-left:3px solid var(--line2);padding:2px 0 2px 12px}
+.find div.mf{border-left-color:var(--mf)}.find div.ma{border-left-color:var(--ma)}.find div.fl{border-left-color:var(--flow)}.find div.wn{border-left-color:var(--warn)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:1px 7px;border-radius:9999px;border:1px solid var(--line2);color:var(--muted)}
+.tag.ok{color:var(--ok);border-color:var(--ok-bd);background:var(--ok-bg)}.tag.warn{color:var(--warn);border-color:var(--warn-bd);background:var(--warn-bg)}.tag.bad{color:var(--bad);border-color:var(--bad-bd);background:var(--bad-bg)}
+canvas#regime{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+textarea{width:100%;min-height:110px;background:var(--surface2);border:1px solid var(--line2);border-radius:8px;padding:8px;font-family:var(--f-mono);font-size:12px}
+.msg{font-size:12.5px;margin-top:6px}.msg.ok{color:var(--ok)}.msg.err{color:var(--bad)}
+code{font-family:var(--f-mono);font-size:12px;background:var(--surface2);padding:1px 5px;border-radius:4px;word-break:break-all}
+.formula{font-family:var(--f-mono);font-size:13px;background:var(--surface2);border:1px solid var(--line2);border-radius:8px;padding:12px;overflow-x:auto;white-space:pre;line-height:1.7}
+.req{display:grid;gap:12px;padding:0;margin:0}.req li{list-style:none}
+.prio{margin-right:6px}
+.banner{display:flex;gap:10px;align-items:flex-start;border-radius:12px;padding:12px 16px;border:1px solid var(--warn-bd);background:var(--warn-bg);color:var(--fg2);font-size:13px}
+.banner b{color:var(--fg)}
+.audit{display:grid;gap:8px;margin:0;padding:0}
+.audit li{list-style:none;display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}
+.audit li:last-child{border-bottom:0}
+.audit .t{font-weight:600;color:var(--fg)}
+.audit .d{color:var(--fg2);font-size:13px}
+@media(max-width:560px){.audit li{grid-template-columns:1fr}}
+.score{display:flex;gap:10px;flex-wrap:wrap}
+/* navegación por grupos y guía de cada módulo (como Turbinas Ituango) */
+.grupos{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:10px}
+.grupos::-webkit-scrollbar{display:none}
+.grupos button{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--surface);color:var(--fg2);border-radius:9999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer}
+.grupos button:hover{border-color:var(--accent)}
+.grupos button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.grupos svg{width:15px;height:15px}
+.guia{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:10px 16px}
+.guia summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--fg2);list-style:none;display:flex;align-items:center;gap:8px}
+.guia summary::-webkit-details-marker{display:none}
+.guia summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s}
+.guia[open] summary::before{transform:rotate(45deg)}
+.guia dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 20px;margin:10px 0 2px}
+.guia dt{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);font-weight:700}
+.guia dd{margin:3px 0 0;color:var(--fg2);font-size:13px}
+@media(max-width:760px){.guia dl{grid-template-columns:1fr}}
+.sala .guia,.sala .lede{display:none}
+.sala{font-size:15px}.sala .kpi .val{font-size:32px}.sala .st .big{font-size:36px}
+.pill[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+/* pantalla de acceso a los datos (token de lectura, como Turbinas Ituango) */
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg-from);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
+.gate .caja{width:100%;max-width:440px}
+.gate .marca{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.gate .marca b{display:block;font-size:18px}.gate .marca span{font-size:12px;color:var(--muted)}
+.gate .card{background:var(--surface);border:1px solid var(--line2);border-radius:var(--r);padding:20px 20px 18px;box-shadow:var(--shadow)}
+.gate h2{font-size:17px;margin:0 0 4px}.gate p{margin:0 0 14px;font-size:12.5px;color:var(--fg2);line-height:1.5}
+.gate label.campo{display:block;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.gate .in{position:relative;margin-top:4px}
+.gate input[type=password],.gate input[type=text]{width:100%;padding:9px 60px 9px 11px;font-size:14px;background:var(--surface2);border:1px solid var(--line2);border-radius:8px;font-family:var(--f-mono)}
+.gate .ver{position:absolute;right:6px;top:6px;background:none;border:0;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 6px}
+.gate .chk{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--fg2);margin:2px 0 12px}
+.gate .go{width:100%;padding:10px 14px;background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer}
+.gate .go:disabled{opacity:.6;cursor:wait}
+.gate details{margin-top:14px;font-size:12.5px;color:var(--fg2)}.gate details summary{cursor:pointer;color:var(--accent)}
+.gate ol{padding-left:18px;margin:8px 0 0}.gate li{margin-bottom:4px}
+body.sin-datos header.top,body.sin-datos main,body.sin-datos footer{visibility:hidden}
+dialog.salir{border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--fg);padding:20px;max-width:380px}
+dialog.salir::backdrop{background:rgba(0,0,0,.5)}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;padding-block:18px 28px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="gate" id="acceso" hidden>
+  <div class="caja">
+    <div class="marca"><div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/><path d="M2 20c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1" opacity=".55"/><circle cx="8" cy="8" r="2.2" fill="currentColor" stroke="none"/></svg></div>
+      <div><b>Material Flotante Ituango</b><span>Acceso para personal autorizado</span></div></div>
+    <div class="card">
+      <h2>Conectar los datos</h2>
+      <p>Los registros de extracción son internos y no se publican con la página. Pegue el token de lectura de GitHub que le dio el administrador, o abra el enlace de acceso que le compartieron.</p>
+      <form id="acc-form" autocomplete="off" novalidate>
+        <label class="campo">Token de lectura<div class="in"><input type="password" id="acc-token" spellcheck="false" placeholder="github_pat_…" aria-describedby="acc-msg"><button type="button" class="ver" id="acc-ver">Ver</button></div></label>
+        <label class="chk"><input type="checkbox" id="acc-recordar" checked> Recordar en este navegador</label>
+        <button class="go" id="acc-btn" type="submit">Conectar</button>
+        <div class="msg" id="acc-msg" role="status"></div>
+      </form>
+      <details><summary>¿Cómo se crea el token? (administrador)</summary>
+        <ol><li>En GitHub: <b>Settings → Developer settings → Fine-grained tokens → Generate new token</b>.</li>
+          <li>Repository access: <b>Only select repositories</b> → <code>astrococo/flotante-ituango-codigo</code>.</li>
+          <li>Permissions → Repository → <b>Contents: Read-only</b>. Nada más.</li>
+          <li>Copie el token y péguelo aquí; en «Datos y acceso» puede copiar un enlace para otros usuarios.</li></ol></details>
+    </div>
+  </div>
+</div>
+<dialog class="salir" id="acc-salir"><h3 style="margin-top:0">Desconectar este navegador</h3><p class="note">Se borra el token guardado y la página vuelve a pedirlo.</p><div class="row-btn" style="justify-content:flex-end;margin-top:12px"><button class="btn" id="acc-salir-no" type="button">Cancelar</button><button class="btn primary" id="acc-salir-si" type="button">Desconectar</button></div></dialog>
+<header class="top">
+  <div class="wrap hrow">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/><path d="M2 20c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1" opacity=".55"/><circle cx="8" cy="8" r="2.2" fill="currentColor" stroke="none"/><path d="M14 9.5l3-4 2.5 3" /></svg></div>
+      <div style="min-width:0">
+        <h1>Material Flotante Ituango</h1>
+        <p>Extracción en la cola del embalse y pronóstico con caudales del río Cauca · Proyecto Hidroeléctrico Ituango</p>
+      </div>
+    </div>
+    <div class="hact">
+      <span class="pill" id="live-pill" title="Estado del caudal de HydroForecast"><i class="dot" id="live-dot"></i><span class="lbl" id="live-txt">Conectando…</span></span>
+      <a class="pill" href="https://astrococo.github.io/hydroforecast-ituango/" target="_blank" rel="noopener" title="Abrir HydroForecast Ituango"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg><span class="lbl">HydroForecast</span></a>
+      <button class="pill" id="acc-pill" type="button" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="lbl">Datos conectados</span></button>
+      <button class="pill" id="sala-btn" type="button" aria-pressed="false" title="Modo sala: oculta las guías y agranda las cifras"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span class="lbl">Sala</span></button>
+      <button class="pill" id="contraste-btn" type="button" aria-pressed="false" title="Alto contraste"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><span class="lbl">Contraste</span></button>
+      <button class="pill" id="theme-btn" type="button" title="Cambiar tema"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span class="lbl" id="theme-txt">Claro</span></button>
+    </div>
+  </div>
+  <nav class="tabs wrap" aria-label="Secciones">
+    <div class="grupos" id="grupos" role="group" aria-label="Grupos de módulos"></div>
+    <div class="tabrow" id="tabs">
+      <a href="#pronostico">Pronóstico</a>
+      <a href="#historico">Histórico</a>
+      <a href="#relacion">Caudal y material</a>
+      <a href="#operacion">Operación</a>
+      <a href="#calidad">Calidad del dato</a>
+      <a href="#modelo">Modelo y desempeño</a>
+      <a href="#satelite">Satélite</a>
+      <a href="#auditoria">Auditoría</a>
+      <a href="#actualizar">Datos y acceso</a>
+      <a href="#requisitos">Información requerida</a>
+    </div>
+  </nav>
+</header>
+
+<div id="load-msg" class="banner" hidden></div>
+<main class="wrap">
+<div class="metaline">
+  <div class="src" id="metaline"></div>
+  <button class="btn" id="btn-live" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Actualizar caudal</button>
+</div>
+
+<!-- PRONÓSTICO -->
+<section class="view" id="v-pronostico">
+  <div id="stale-banner" class="banner" hidden></div>
+  <div id="flood-banner" class="banner" hidden></div>
+  <div id="alert-banner" class="banner" hidden></div>
+  <div class="panel exec" id="ex-pronostico" hidden></div>
+  <div class="grid" id="fc-cards"></div>
+  <div class="panel">
+    <div class="toolbar">
+      <h3>Pronóstico semanal · bloques de 7 días desde el último reporte</h3>
+      <label>Escenario de caudal
+        <select id="fc-scen"><option value="mean">Medio</option><option value="low">Bajo (mínimo)</option><option value="high">Alto (máximo)</option></select>
+      </label>
+      <label>Componente
+        <select id="fc-comp"><option value="tot">Total</option><option value="mf">Material flotante</option><option value="ma">Macrófitas</option></select>
+      </label>
+    </div>
+    <details class="rest" id="rest-box"><summary>Descanso programado de EPM (opcional)</summary>
+      <p class="note">Días de la semana sin extracción mecanizada ya programados (descansos, festivos, vacaciones, capacitaciones). Vacío = lo típico de las últimas 26 semanas. Con el plan real, el error del total baja 15–16 % (backtest 2022–2026).</p>
+      <div class="rest-row" id="rest-plan"><label>S1 <input type="number" min="0" max="7" step="1" inputmode="numeric" aria-label="Días de descanso programado semana 1"></label><label>S2 <input type="number" min="0" max="7" step="1" inputmode="numeric" aria-label="Días de descanso programado semana 2"></label><label>S3 <input type="number" min="0" max="7" step="1" inputmode="numeric" aria-label="Días de descanso programado semana 3"></label><label>S4 <input type="number" min="0" max="7" step="1" inputmode="numeric" aria-label="Días de descanso programado semana 4"></label><label>S5 en adelante <input type="number" min="0" max="7" step="1" inputmode="numeric" aria-label="Días de descanso programado por semana desde la semana 5"></label><button type="button" class="pill" id="rest-clear">Limpiar</button></div>
+    </details>
+    <div class="chart"><canvas id="ch-fc"></canvas></div>
+    <p class="note" id="fc-note">Barras: mediana calibrada (P50). Franja: intervalo P10–P90. Línea: caudal Sitio Presa (eje derecho), observado y pronosticado por HydroForecast. Las 8 semanas previas muestran lo extraído realmente.</p>
+  </div>
+  <div class="grid">
+    <div class="panel c12"><div class="toolbar"><h3>Tabla por semana</h3><div class="row-btn"><button type="button" class="pill" id="btn-csv">Descargar CSV</button><button type="button" class="pill" id="btn-print">Imprimir o PDF</button></div></div><div class="tbl"><table id="fc-table"></table></div></div>
+    <div class="panel c12">
+      <h3>Índice de aporte por crecientes</h3>
+      <p class="note">Multiplicador hidrológico. Mayor que 1: más material flotante esperado tras crecientes. Menor que 1 en macrófitas: lavado por caudales altos.</p>
+      <div class="chart sm"><canvas id="ch-mult"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTÓRICO -->
+<section class="view" id="v-historico" hidden>
+  <div><h2>Registro histórico de extracción</h2>
+    <p class="lede">Volumen extraído por modalidad frente al caudal que entra al embalse. Material flotante = manual + mecanizado; macrófitas = manual + mecanizado; total = ambos. Un día sin reporte cuenta como 0 m³.</p></div>
+  <div class="panel exec" id="ex-historico" hidden></div>
+  <div class="grid" id="hist-kpis"></div>
+  <div class="panel">
+    <div class="toolbar">
+      <h3>Serie de extracción y caudal</h3>
+      <div class="seg" id="hist-agg"><button data-v="D">Diario</button><button data-v="W">Semanal</button><button data-v="M" aria-pressed="true">Mensual</button></div>
+      <label>Desde <select id="hist-from"></select></label>
+    </div>
+    <div class="chart"><canvas id="ch-hist"></canvas></div>
+  </div>
+  <div class="grid">
+    <div class="panel c6"><h3>Totales por año (m³)</h3><div class="tbl"><table id="tbl-year"></table></div></div>
+    <div class="panel c6"><h3>Volumen acumulado</h3><div class="chart sm"><canvas id="ch-cum"></canvas></div></div>
+  </div>
+</section>
+
+<!-- RELACIÓN -->
+<section class="view" id="v-relacion" hidden>
+  <div><h2>¿Cómo responde la extracción a los caudales?</h2>
+    <p class="lede">El volumen extraído mide lo que se pudo retirar, no lo que llegó. Por eso la relación con el caudal se busca en anomalías respecto al ritmo operativo y en la respuesta después de crecientes.</p>
+    <p class="note" id="rel-note" hidden></p></div>
+  <div class="panel exec" id="ex-relacion" hidden></div>
+  <div class="panel find" id="findings"></div>
+  <div class="grid">
+    <div class="panel c6">
+      <div class="toolbar"><h3>Respuesta después de crecientes</h3>
+        <div class="seg" id="cmp-thr"><button data-v="1800">Q &gt; 1 800 m³/s</button><button data-v="2100" aria-pressed="true">Q &gt; 2 100 m³/s</button></div></div>
+      <div class="chart sm"><canvas id="ch-comp"></canvas></div>
+      <p class="note" id="comp-note"></p>
+    </div>
+    <div class="panel c6">
+      <div class="toolbar"><h3>Correlación semanal con rezago</h3>
+        <div class="seg" id="lag-x"><button data-v="q" aria-pressed="true">Caudal medio</button><button data-v="exc">Exceso</button><button data-v="nivel">Nivel</button></div></div>
+      <div class="chart sm"><canvas id="ch-lag"></canvas></div>
+      <p class="note" id="lag-note"></p>
+    </div>
+    <div class="panel c12">
+      <h3>Estacionalidad: extracción diaria media y caudal por mes</h3>
+      <div class="chart sm"><canvas id="ch-season"></canvas></div>
+      <p class="note">Promedios de días con operación activa desde 2021. La extracción de material flotante sube en junio–julio, después de la temporada de lluvias de abril–mayo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CALIDAD -->
+<section class="view" id="v-calidad" hidden>
+  <div><h2>Depuración y estado de los registros</h2>
+    <p class="lede">Cómo se trataron los días sin reporte y los ceros, y qué periodos se excluyen al estimar el modelo.</p></div>
+  <div class="panel exec" id="ex-calidad" hidden></div>
+  <div class="grid" id="q-kpis"></div>
+  <div class="panel">
+    <h3>Régimen operativo día a día</h3>
+    <div class="legend" id="reg-legend"></div>
+    <div style="overflow-x:auto;margin-top:10px"><canvas id="regime"></canvas></div>
+  </div>
+  <div class="grid">
+    <div class="panel c6 prose" id="q-steps"></div>
+    <div class="panel c6">
+      <h3>Efecto del día de la semana</h3>
+      <div class="chart sm"><canvas id="ch-dow"></canvas></div>
+      <p class="note">Factor relativo al promedio diario con operación activa. Los fines de semana se extrae entre 20 y 25 % menos; un cero en domingo no significa ausencia de material.</p>
+    </div>
+    <div class="panel c12"><h3>Validación de acumulados</h3><p class="note">Suma de los avances diarios frente a la columna de acumulado de cada serie, fila por fila. Un quiebre es una fecha donde el acumulado no avanza lo mismo que el avance diario.</p><div class="tbl"><table id="tbl-acum"></table></div></div>
+    <div class="panel c12"><h3>Periodos excluidos del ajuste</h3><div class="tbl"><table id="tbl-periods"></table></div></div>
+  </div>
+</section>
+
+<!-- MODELO -->
+<section class="view" id="v-modelo" hidden>
+  <div><h2>Modelo de pronóstico y desempeño</h2>
+    <p class="lede">Modelo v2.3: mezcla de persistencia (últimas 8 semanas), media exponencial de semanas recientes y nivel de largo plazo, con multiplicador hidrológico acotado alimentado por el pronóstico de caudal de HydroForecast. Es el único probado que supera a la mediana histórica todos los años 2022–2026 en ambos componentes.</p></div>
+  <div class="panel exec" id="ex-modelo" hidden></div>
+  <div class="grid">
+    <div class="panel c6 prose">
+      <h3>Estructura</h3>
+      <div class="formula" id="formula"></div>
+      <p class="note" style="margin-top:10px">L₈: mediana de las últimas 8 semanas con operación activa. LT: mediana de semanas activas desde julio de 2019. EW: media exponencial de semanas activas. k: peso de la persistencia, elegido con el error de las últimas 52 semanas. x: exceso semanal de caudal Sitio Presa sobre el umbral, en miles de m³/s·día.</p>
+    </div>
+    <div class="panel c6"><h3>Parámetros</h3><div class="tbl"><table id="tbl-params"></table></div></div>
+  </div>
+  <div class="panel">
+    <div class="toolbar"><h3>Error por horizonte · backtest con origen móvil 2022–2026</h3>
+      <div class="seg" id="sk-comp"><button data-v="mf_tot" aria-pressed="true">Material flotante</button><button data-v="ma_tot">Macrófitas</button></div></div>
+    <div class="grid">
+      <div class="c8"><div class="chart sm"><canvas id="ch-skill"></canvas></div></div>
+      <div class="c4"><div class="tbl"><table id="tbl-skill"></table></div></div>
+    </div>
+  </div>
+  <div class="panel prose" id="model-read"></div>
+  <div class="panel">
+    <div class="toolbar"><h3>Pronóstico real de HydroForecast vs caudal observado · Sitio Presa</h3>
+      <label>Ver <select id="hf-sel"><option value="all">Todas las emisiones</option></select></label></div>
+    <div class="chart"><canvas id="ch-hf"></canvas></div>
+    <p class="note" id="hf-note">Consultando el historial de pronósticos de HydroForecast…</p>
+    <div class="grid" style="margin-top:8px">
+      <div class="c6"><div class="tbl"><table id="tbl-hf"></table></div></div>
+      <div class="c6 prose" id="hf-read"></div>
+    </div>
+  </div>
+  <div class="panel" id="rez-panel">
+    <div class="toolbar"><h3>Caudal y material flotante: rezagos</h3>
+      <div class="seg" id="rez-per"><button data-v="2019-2026" aria-pressed="true">2019–2026</button><button data-v="oct2021-2026">oct-2021–2026</button></div></div>
+    <div class="grid">
+      <div class="c6"><div class="chart sm"><canvas id="ch-rez-mes"></canvas></div><p class="note">Correlación entre la anomalía mensual del caudal de Sitio Presa y la del material flotante extraído por día con extracción, según los meses de rezago. «Preblanqueada» quita la memoria propia del caudal (un mes húmedo suele seguir a otro), que infla la correlación cruda; la línea punteada es el límite del 95 %.</p></div>
+      <div class="c6"><div class="chart sm"><canvas id="ch-rez-ev"></canvas></div><p class="note">18 crecientes de Sitio Presa ≥ 1.866 m³/s (oct-2021–ago-2026). Material flotante por día con extracción en cada semana respecto a su nivel normal (mediana de 1–4 meses antes y después, fuera de la creciente), frente a fechas sin creciente.</p></div>
+    </div>
+    <div class="tbl" style="margin-top:8px"><table id="rez-tabla"></table></div>
+    <div class="prose" id="rez-read" style="margin-top:8px"></div>
+  </div>
+  <div class="panel" id="bat-panel">
+    <h3>Batería de 100 pruebas: caudal, extracción y satélite</h3>
+    <div class="tbl"><table id="bat-resumen"></table></div>
+    <div class="prose" id="bat-read" style="margin-top:8px"></div>
+    <details style="margin-top:8px"><summary class="note" style="cursor:pointer">Las 100 pruebas</summary><div class="tbl"><table id="bat-todas"></table></div></details>
+  </div>
+</section>
+
+
+<!-- OPERACIÓN -->
+<section class="view" id="v-operacion" hidden>
+  <div><h2>Operación de la extracción</h2>
+    <p class="lede">Viajes por volqueta, días operados y causas de cada día sin extracción, desde la hoja de viajes OT3_001 (fechas de cada fila, iguales a las de DatosExtracción corregida). El volumen registrado es viajes × capacidad nominal de cada volqueta (14,6–20 m³; flotante × 0,56) y, en lo manual, viajes × peso por viaje ÷ 160 kg/m³: mide sobre todo esfuerzo.</p></div>
+  <div class="panel exec" id="ex-operacion" hidden></div>
+  <div class="grid" id="ops-kpis"></div>
+  <div class="panel">
+    <h3>Días de cada semana según lo ocurrido con la extracción mecanizada</h3>
+    <div class="chart"><canvas id="ch-ops"></canvas></div>
+    <p class="note">Clasificación de las observaciones diarias de las hojas de mecanizado. «Labores operativas»: días dedicados a barreras, confinamiento y lastre, abastecimiento de piscinas, equipos varados, combustible o vías. «Sin material en el puerto»: la mancha está lejos o el caudal no deja llevar el material a la piscina de extracción.</p>
+  </div>
+  <div class="grid">
+    <div class="panel c12"><h3>Por año</h3><div class="tbl"><table id="ops-anual"></table></div>
+      <p class="note">La parte asignada a material flotante en el mecanizado no se mide: las mismas volquetas cargan material mezclado y el registro reparte los viajes según la composición estimada (en algunas volquetas 60 % flotante y 40 % macrófitas). La caída de 2024–2025 se debe a menos días operados (más descansos programados y labores operativas en el cambio a Membrillal), no a menos material por día.</p></div>
+    <div class="panel c6"><h3>Caudal y operación (jul-2020 a oct-2026)</h3><div class="tbl"><table id="ops-caudal"></table></div>
+      <p class="note">El caudal no cambia cuánto se extrae en un día operado; cambia cuántos días se puede operar. Con caudal alto el material no llega a la piscina de extracción o la mancha se desplaza («altos niveles de caudal en el río Cauca impiden el desplazamiento del material hacia el puerto», feb-2026).</p></div>
+    <div class="panel c6"><h3>¿Qué mejora el pronóstico? (backtest 2022–2026, error medio m³/semana)</h3><div class="tbl"><table id="ops-bt"></table></div>
+      <p class="note">Solo el descanso programado real mejora el pronóstico de forma significativa (IC95 del total: −335 a −151 m³/sem en semanas 1–4). Deducirlo del calendario no sirve: hay fines de semana con turno y otros sin él. Por eso el pronóstico permite ingresar el plan de descansos de EPM.</p></div>
+  </div>
+</section>
+
+<!-- SATÉLITE -->
+<section class="view" id="v-satelite" hidden>
+  <div><h2>Vegetación flotante vista desde el satélite</h2>
+    <p class="lede">Área cubierta por vegetación flotante (macrófitas y material vegetal verde) en la cola del embalse, 2,5 km alrededor de la barrera, medida con Sentinel-2 y Landsat 8/9 cuando el cielo está despejado y con el radar Sentinel-1, que ve a través de las nubes. Mide presencia de material vegetal verde, no el esfuerzo de extracción; madera y residuos no se distinguen.</p></div>
+  <div class="panel exec" id="ex-satelite" hidden></div>
+  <div id="sat-msg" class="banner" hidden></div>
+  <div id="sat-alert" class="banner" hidden></div>
+  <div class="panel">
+    <h3>Alertas y material frente al puerto</h3>
+    <ul class="req" id="alr-lista"></ul>
+    <div class="grid" id="alr-puerto" style="margin-top:12px"></div>
+    <details style="margin-top:10px"><summary class="note" style="cursor:pointer">Posibles pasos de material por la barrera en la historia</summary>
+      <div class="tbl"><table id="alr-barrera"></table></div>
+      <p class="note">Señal: entre dos imágenes a ≤ 12 días, aguas arriba cae a la mitad o menos (≥ 5 ha) y aguas abajo sube igual. Dos coinciden con las observaciones de la hoja de viajes: marzo–abril de 2022 («la mancha continúa bajando en el embalse») y noviembre de 2022 (daños en una barrera). Cuando los sensores son distintos puede ser diferencia entre sensores; confirme en el visor (clic en la fecha).</p></details>
+    <p class="note">Reglas, revisadas a diario con las imágenes de los últimos 10 días: llegada de material (un tramo de 2,5–30 km aguas arriba sobre su percentil 90), acumulación entre el puerto y la barrera (sobre su percentil 90), poco material a 500 m del puerto (bajo su percentil 10 en dos imágenes seguidas) y posible paso por la barrera. En 2019–2026 el área frente al puerto y entre el puerto y la barrera no se relacionó con lo extraído (ρ ≈ 0); es un dato de contexto para la operación, no entra al pronóstico. Cada alerta nueva también abre un aviso en GitHub (le llega por correo si sigue el repositorio).</p>
+  </div>
+  <div class="panel" id="ret-panel">
+    <div class="toolbar"><h3>Vegetación flotante en el contorno de análisis: barrera y río aguas arriba</h3>
+      <div class="seg" id="ret-var"><button data-v="ret" aria-pressed="true">Mancha retenida (ha)</button><button data-v="bar">Ocupación de la barrera (%)</button><button data-v="arriba">Todo aguas arriba (ha)</button></div></div>
+    <div class="grid" id="ret-cards"></div>
+    <div class="chart"><canvas id="ch-ret"></canvas></div>
+    <div class="tbl" style="margin-top:8px"><table id="ret-tabla"></table></div>
+    <div class="prose" id="ret-read" style="margin-top:8px"></div>
+    <p class="note" id="ret-nota"></p>
+  </div>
+  <div class="panel" id="vol-panel">
+    <h3>Volumen estimado de material en el agua</h3>
+    <div class="grid" id="vol-cards"></div>
+    <div class="chart"><canvas id="ch-vol"></canvas></div>
+    <details style="margin-top:8px"><summary class="note" style="cursor:pointer">Material generado por mes: extracción + cambio del inventario en la zona del puerto</summary><div class="tbl"><table id="vol-tabla"></table></div></details>
+    <p class="note" id="vol-nota"></p>
+  </div>
+  <div class="grid" id="sat-kpis"></div>
+  <div class="panel">
+    <div class="toolbar"><h3>Área por escena despejada</h3>
+      <div class="seg" id="sat-lado"><button data-v="t" aria-pressed="true">Total</button><button data-v="ab">Aguas arriba y abajo</button><button data-v="mg">Por margen</button></div></div>
+    <div class="chart"><canvas id="ch-sat"></canvas></div>
+    <p class="note" id="sat-note"></p>
+  </div>
+  <div class="panel">
+    <div class="toolbar"><h3>Visor: imágenes y detección por fecha</h3>
+      <div class="row-btn"><label>Sensor <select id="vis-sensor"><option value="s2">Sentinel-2 (óptico)</option><option value="s1">Sentinel-1 (radar)</option></select></label>
+      <button type="button" class="pill" id="vis-prev" aria-label="Fecha anterior">◀</button><select id="vis-fecha" aria-label="Fecha de la imagen"></select><button type="button" class="pill" id="vis-next" aria-label="Fecha siguiente">▶</button></div></div>
+    <div class="rest-row" id="vis-capas"><label><input type="checkbox" id="vc-img" checked> Imagen</label><label><input type="checkbox" id="vc-veg" checked> Vegetación detectada</label><label><input type="checkbox" id="vc-zona" checked> Zona cerca del puerto</label><label><input type="checkbox" id="vc-cont" checked> Contorno de análisis y km por el río</label><button type="button" class="pill" id="vis-todo">Ver contorno completo</button><label><input type="checkbox" id="vc-bar" checked> Barrera</label><label>Opacidad <input type="range" id="vis-op" min="0" max="100" value="85" style="width:110px"></label></div>
+    <div id="visor" role="region" aria-label="Mapa interactivo de la cola del embalse" style="height:520px;border-radius:8px;margin-top:8px;background:var(--surface2)"></div>
+    <p class="note" id="vis-info"></p>
+    <p class="note">Haga clic en un punto del gráfico de área para ver esa escena. Imagen base de alta resolución: Esri World Imagery (fecha de captura distinta a la de Sentinel). Línea roja: barrera identificada como el borde persistente de la vegetación flotante a la salida del estrecho (2022–2023, ±20 m); el punto informado queda unos 180 m al suroeste, en la orilla.</p>
+  </div>
+  <div class="panel">
+    <h3>Corredor del río: 30 km aguas arriba y 15 km aguas abajo</h3>
+    <div class="chart"><canvas id="ch-cor"></canvas></div>
+    <div class="tbl"><table id="cor-tabla"></table></div>
+    <p class="note" id="cor-nota"></p>
+    <p class="note">Vegetación flotante (NDVI ≥ 0,30) dentro del agua de cada tramo, medida desde la barrera en dirección norte-sur. Sirve para ver qué viene río abajo; en las pruebas sobre 2022–2026 no mejoró el pronóstico semanal de extracción, por eso no entra al modelo.</p>
+  </div>
+  <div class="grid">
+    <div class="panel c6"><h3>Estacionalidad</h3><div class="chart sm"><canvas id="ch-sat-mes"></canvas></div>
+      <p class="note">Mediana del área por mes calendario, escenas de Sentinel-2, Landsat y radar Sentinel-1 desde 2019. El número sobre cada barra es la cantidad de escenas.</p></div>
+    <div class="panel c6">
+      <div class="toolbar"><h3>Dónde se acumula</h3><label>Año <select id="sat-anio"></select></label></div>
+      <img loading="lazy" decoding="async" id="sat-mapa" alt="Mapa de frecuencia de vegetación flotante alrededor de la barrera" style="width:100%;border-radius:8px;display:block">
+      <p class="note">Verde: fracción de las escenas del año con vegetación flotante en cada píxel de 10 m (intenso = 50 % o más). Línea roja: barrera. El flujo va de sur (abajo) a norte (arriba).</p></div>
+  </div>
+  <div class="grid">
+    <div class="panel c6"><h3>Última escena despejada</h3><img loading="lazy" decoding="async" id="sat-ql" alt="Imagen Sentinel-2 en color real de la última escena despejada" style="width:100%;border-radius:8px;display:block"><p class="note" id="sat-ql-note"></p></div>
+    <div class="panel c6 prose" id="sat-metodo"></div>
+  </div>
+</section>
+
+<!-- AUDITORÍA -->
+<section class="view" id="v-auditoria" hidden>
+  <div><h2>Auditoría de datos, modelo y plataforma</h2>
+    <p class="lede" id="aud-lede"></p></div>
+  <div class="panel exec" id="ex-auditoria" hidden></div>
+  <div class="grid" id="aud-score"></div>
+  <div class="grid">
+    <div class="panel c6"><h3>Integridad del archivo de extracción</h3><ul class="audit" id="aud-int"></ul></div>
+    <div class="panel c6"><h3>Caudales e integración con HydroForecast</h3><ul class="audit" id="aud-q"></ul>
+      <h3 style="margin-top:16px">Plataforma</h3><ul class="audit" id="aud-plat"></ul></div>
+  </div>
+  <div class="panel"><h3>Modelo</h3><ul class="audit" id="aud-mod"></ul></div>
+  <div class="panel">
+    <div class="toolbar"><h3>Mejora frente a la mediana histórica por año · v1 vs v2</h3>
+      <div class="seg" id="aud-comp"><button data-v="mf_tot" aria-pressed="true">Material flotante</button><button data-v="ma_tot">Macrófitas</button></div></div>
+    <div class="chart sm"><canvas id="ch-aud"></canvas></div>
+    <p class="note">Porcentaje en que el error (RMSE semanal) es menor que el de usar la mediana histórica. Negativo: la mediana histórica habría sido mejor.</p>
+  </div>
+  <div class="panel"><h3>¿Solo extracción o caudal como variable exógena?</h3>
+    <div class="tbl"><table id="aud-exp"></table></div><p class="note" id="aud-exp-note"></p></div>
+  <div class="grid">
+    <div class="panel c6"><h3>Vigencia</h3><ul class="audit" id="aud-vig"></ul></div>
+    <div class="panel c6 prose"><h3>Recomendaciones</h3><ol id="aud-rec" style="padding-left:20px;margin:0"></ol></div>
+  </div>
+</section>
+
+<!-- DATOS -->
+<section class="view" id="v-actualizar" hidden>
+  <div><h2>Datos</h2>
+    <p class="lede">La plataforma recalcula la depuración, los análisis y el pronóstico en el navegador. Los archivos que cargue no se envían a ningún servidor.</p></div>
+  <div class="panel exec" id="ex-actualizar" hidden></div>
+  <div class="grid">
+    <div class="panel c6">
+      <h3>1. Archivo de extracción</h3>
+      <p class="note">Mismo formato de <code>DatosExtracción.xlsx</code>: hojas «Material Flotante» y «Macrófitas», fecha en la primera columna, avances diarios y acumulados en m³. Para que todos vean los datos nuevos, reemplace <code>datos/DatosExtraccion.xlsx</code> en el repositorio privado <code>flotante-ituango-codigo</code>; la página lo lee al abrir.</p>
+      <input type="file" id="up-xlsx" accept=".xlsx,.xls" aria-label="Archivo de extracción en Excel">
+      <div class="msg" id="up-msg"></div>
+    </div>
+    <div class="panel c6">
+      <h3>2. Caudal de HydroForecast</h3>
+      <p class="note">Al abrir la página se consulta el pronóstico de 90 días y el caudal observado de la API de HydroForecast. Si no responde, se usa el último pronóstico archivado a diario en el repositorio privado y, en último caso, el respaldo incluido.</p>
+      <div class="toolbar" style="margin-top:8px">
+        <label style="flex:1;min-width:240px">Servidor <input type="url" id="api-url" style="flex:1" spellcheck="false"></label>
+        <button class="btn primary" id="btn-api" type="button">Consultar</button>
+      </div>
+      <p class="note">Opciones: <code>https://jdguarnizor-hydroforecast-ituango.hf.space</code> (nube) · <code>http://localhost:8001</code> (solo en el equipo donde corre el backend).</p>
+      <details style="margin-top:8px"><summary class="note" style="cursor:pointer">Pegar JSON manualmente</summary>
+        <textarea id="paste-json" placeholder='{"generated_at": "...", "data": [{"timestamp": "2026-10-30", "QSitioPresa_pred_mean": 639.4, ...}]}'></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" id="btn-json" type="button">Cargar JSON</button></div>
+      </details>
+      <div style="margin-top:10px"><button class="btn" id="btn-reset" type="button">Restaurar datos incluidos</button></div>
+      <div class="msg" id="json-msg"></div>
+    </div>
+  </div>
+  <div class="panel c12" id="acc-panel"><h3>3. Acceso a los datos</h3>
+    <p class="note">La extracción y el archivo de HydroForecast se leen del repositorio privado <code>astrococo/flotante-ituango-codigo</code> con el token de lectura que pegó al entrar. El token queda en este navegador (si marcó «Recordar») y solo se envía a <code>api.github.com</code>. Las imágenes satelitales son públicas.</p>
+    <div class="row-btn" style="margin-top:8px"><button class="btn" id="acc-enlace" type="button">Copiar enlace de acceso</button><button class="btn" id="acc-salir-btn" type="button">Desconectar este navegador</button></div>
+    <p class="note">El enlace de acceso lleva el token: compártalo solo con quien deba ver los datos, por un canal privado.</p>
+  </div>
+  <div class="panel prose"><h3>Fuente de los datos cargados</h3><div id="src-info"></div></div>
+</section>
+
+<!-- REQUISITOS -->
+<section class="view" id="v-requisitos" hidden>
+  <div><h2>Información que mejoraría la precisión</h2>
+    <p class="lede">El caudal explica una parte pequeña de la variación semanal porque el registro mide el esfuerzo de extracción tanto como la llegada de material. Esta información cerraría esa brecha, en orden de impacto esperado.</p></div>
+  <div class="panel exec" id="ex-requisitos" hidden></div>
+  <div class="panel prose"><ol class="req" id="req-list"></ol></div>
+</section>
+</main>
+<footer><div class="wrap" id="footer">Material Flotante Ituango · modelo v2.3 (nov-2026) · Río Cauca · Proyecto Hidroeléctrico Ituango · integra HydroForecast Ituango</div></footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+name: Corredor del río (imágenes nuevas)
+
+on:
+  schedule:
+    - cron: "37 14 * * *"   # todos los días, 09:37 hora de Colombia: procesa solo las escenas nuevas
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: corredor
+  cancel-in-progress: false
+
+jobs:
+  corredor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Traer el código (repositorio privado, solo lectura; no se guarda aquí)
+        uses: actions/checkout@v4
+        with:
+          repository: astrococo/flotante-ituango-codigo
+          token: ${{ secrets.CODIGO_TOKEN }}
+          path: _codigo
+          sparse-checkout: satelite
+          persist-credentials: false
+      - run: cp -r _codigo/satelite . && rm -rf _codigo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r satelite/requirements.txt
+      - name: Procesar escenas nuevas
+        env:
+          GDAL_HTTP_MAX_RETRY: "5"
+          GDAL_HTTP_RETRY_DELAY: "3"
+          GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+          CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.tiff,.TIF"
+        run: |
+          set -o pipefail
+          mkdir -p satelite/datos/satelite
+          cd satelite && python -u corredor.py 2>&1 | tee datos/satelite/registro_corredor.txt; cd ..
+          mkdir -p datos && cp -r satelite/datos/* datos/
+          python satelite/alertas.py | tee datos/satelite/registro_alertas.txt
+      - name: Avisar alertas nuevas (issue en GitHub)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          A = json.load(open("datos/satelite/alertas.json"))["activas"]
+          f = "datos/satelite/alertas_notificadas.json"
+          ya = set(json.load(open(f))) if os.path.exists(f) else set()
+          for a in A:
+              if a["id"] in ya: continue
+              subprocess.run(["gh", "issue", "create", "--title", f"Alerta satelital ({a['tipo']}, {a['fecha']})", "--body", a["texto"] + "\n\nVer: https://astrococo.github.io/flotante-ituango/#satelite"], check=False)
+              ya.add(a["id"])
+          json.dump(sorted(ya), open(f, "w"))
+          PY
+      - name: Guardar
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -d satelite/datos ] && cp -r satelite/datos/* datos/ || true
+          git add -A datos/satelite
+          git diff --cached --quiet && exit 0
+          git commit -m "Corredor: escenas nuevas $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done

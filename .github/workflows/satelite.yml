@@ -1,0 +1,65 @@
+name: Análisis satelital de la cola
+
+on:
+  schedule:
+    - cron: "23 13 3 * *"   # día 3 de cada mes, 08:23 hora de Colombia
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "explorar | series | margenes | corredor | s1ml"
+        required: true
+        default: "explorar"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: satelite-${{ github.event.inputs.modo || 'series' }}
+  cancel-in-progress: false
+
+jobs:
+  satelite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - name: Traer el código (repositorio privado, solo lectura; no se guarda aquí)
+        uses: actions/checkout@v4
+        with:
+          repository: astrococo/flotante-ituango-codigo
+          token: ${{ secrets.CODIGO_TOKEN }}
+          path: _codigo
+          sparse-checkout: satelite
+          persist-credentials: false
+      - run: cp -r _codigo/satelite . && rm -rf _codigo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        run: pip install -r satelite/requirements.txt
+      - name: Ejecutar
+        env:
+          GDAL_HTTP_MAX_RETRY: "5"
+          GDAL_HTTP_RETRY_DELAY: "3"
+          GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+          CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.tiff,.TIF"
+        run: |
+          set -o pipefail
+          mkdir -p satelite/datos/satelite
+          cd satelite
+          python -u ${{ github.event.inputs.modo || 'series' }}.py 2>&1 | tee datos/satelite/registro_${{ github.event.inputs.modo || 'series' }}.txt
+          cd ..
+          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
+          if [ "${{ github.event.inputs.modo || 'series' }}" = "series" ]; then (cd satelite && python -u landsat.py >> datos/satelite/registro_series.txt 2>&1; python -u s1.py >> datos/satelite/registro_series.txt 2>&1; python -u margenes.py >> datos/satelite/registro_series.txt 2>&1; python -u s1ml.py >> datos/satelite/registro_series.txt 2>&1; cd .. ; cp -r satelite/datos/* datos/ || true); python satelite/publicar.py > datos/satelite/registro_publicar.txt 2>&1; python satelite/alertas.py >> datos/satelite/registro_publicar.txt 2>&1; fi
+          if [ "${{ github.event.inputs.modo }}" = "s1ml" ]; then python satelite/publicar.py > datos/satelite/registro_publicar.txt 2>&1; fi
+          true
+      - name: Guardar resultados
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -d satelite/datos ] && mkdir -p datos && cp -r satelite/datos/* datos/ || true
+          git add datos/satelite
+          git diff --cached --quiet && exit 0
+          git commit -m "Satélite: ${{ github.event.inputs.modo || 'series' }} $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done

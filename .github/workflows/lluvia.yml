@@ -1,0 +1,42 @@
+name: Lluvia histórica (CHIRPS, IMERG y NASA POWER)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "41 12 * * 1"   # lunes 07:41 hora de Colombia
+
+permissions:
+  contents: write
+
+jobs:
+  lluvia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - name: Traer el código (repositorio privado, solo lectura; no se guarda aquí)
+        uses: actions/checkout@v4
+        with:
+          repository: astrococo/flotante-ituango-codigo
+          token: ${{ secrets.CODIGO_TOKEN }}
+          path: _codigo
+          sparse-checkout: lluvia
+          persist-credentials: false
+      - run: cp -r _codigo/lluvia . && rm -rf _codigo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas==2.2.3 rasterio==1.4.3 numpy==2.1.3
+      - name: Descargar
+        run: |
+          mkdir -p datos/lluvia
+          cd lluvia && (python -u descargar.py; timeout 100m python -u climateserv.py) 2>&1 | tee ../datos/lluvia/registro.txt
+      - name: Guardar
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/lluvia
+          git diff --cached --quiet && exit 0
+          git commit -m "Lluvia histórica $(date -u +%F)"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done

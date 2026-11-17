@@ -1,0 +1,11 @@
+grilla (2320, 718) contorno 4149.63 ha
+fechas Landsat: 280
+ls 0 2019-01-06
+ls 25 2020-02-10
+ls 75 2022-02-15
+ls 100 2022-09-03
+ls 150 2023-12-03
+ls 200 2025-01-14
+ls 250 2026-02-26
+ls 275 2026-09-22
+Landsat listo: nuevas 151 total 151

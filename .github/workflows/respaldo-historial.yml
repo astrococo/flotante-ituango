@@ -1,0 +1,55 @@
+name: Respaldo del historial (manual)
+
+# Guarda TODO el historial git de este repositorio (todas las ramas y etiquetas) como un
+# paquete git en el dataset PRIVADO de Hugging Face, lo vuelve a bajar y comprueba que esté
+# íntegro (git bundle verify + mismo último commit y mismo número de commits).
+# Se corre antes de cualquier reescritura del historial.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  respaldo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      DATASET: jdguarnizor/flotante-ituango-datos
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: pip install -q huggingface_hub==0.36.0
+      - name: Paquete, subida y verificación
+        run: |
+          set -euo pipefail
+          git fetch -q origin '+refs/heads/*:refs/remotes/origin/*' '+refs/tags/*:refs/tags/*'
+          cabeza=$(git rev-parse HEAD); n=$(git rev-list --all --count)
+          nombre="respaldos/github-flotante-ituango-publico_$(date -u +%Y%m%dT%H%MZ)_${cabeza:0:7}.bundle"
+          git bundle create /tmp/r.bundle --all
+          git bundle verify /tmp/r.bundle
+          sha=$(sha256sum /tmp/r.bundle | cut -d' ' -f1)
+          python - "$nombre" "$sha" "$cabeza" "$n" <<'PY'
+          import os, sys, json, hashlib
+          from huggingface_hub import HfApi, hf_hub_download
+          nombre, sha, cabeza, n = sys.argv[1:]
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          info = api.repo_info(os.environ["DATASET"], repo_type="dataset")
+          assert info.private, "El dataset de respaldo debe ser privado"
+          meta = {"repositorio": "astrococo/flotante-ituango", "ultimo_commit": cabeza, "commits": int(n), "sha256": sha}
+          api.upload_file(path_or_fileobj="/tmp/r.bundle", path_in_repo=nombre, repo_id=os.environ["DATASET"], repo_type="dataset",
+                          commit_message=f"Respaldo del historial de flotante-ituango ({n} commits, {cabeza[:7]})")
+          api.upload_file(path_or_fileobj=json.dumps(meta, indent=1).encode(), path_in_repo=nombre + ".json",
+                          repo_id=os.environ["DATASET"], repo_type="dataset", commit_message="Datos del respaldo")
+          p = hf_hub_download(os.environ["DATASET"], nombre, repo_type="dataset", token=os.environ["HF_TOKEN"], local_dir="/tmp/bajado")
+          h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+          assert h == sha, f"sha256 distinto: {h} != {sha}"
+          print("Subido y verificado:", nombre, sha)
+          PY
+          git clone -q --mirror "/tmp/bajado/$nombre" /tmp/espejo
+          [ "$(git -C /tmp/espejo rev-parse HEAD)" = "$cabeza" ] || { echo "::error::Último commit distinto"; exit 1; }
+          [ "$(git -C /tmp/espejo rev-list --all --count)" = "$n" ] || { echo "::error::Número de commits distinto"; exit 1; }
+          git -C /tmp/espejo fsck --full --no-dangling
+          echo "### Respaldo verificado" >> $GITHUB_STEP_SUMMARY
+          echo "- \`$nombre\` · $n commits · último \`$cabeza\` · sha256 \`$sha\`" >> $GITHUB_STEP_SUMMARY

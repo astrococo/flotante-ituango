@@ -1,0 +1,3 @@
+granulos de nodos SWOT: 353
+nodos SWORD dentro del contorno: 141
+SWOT: filas 65 nodos con datos 13

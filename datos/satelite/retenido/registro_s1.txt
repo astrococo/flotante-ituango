@@ -1,0 +1,26 @@
+fechas S1: 519
+s1 0 2019-01-04 -20.48
+s1 25 2019-07-27 -23.71
+s1 50 2019-12-23 -20.14
+s1 75 2020-05-22 -20.56
+s1 100 2020-10-25 -20.53
+s1 125 2021-04-28 -19.95
+s1 150 2021-10-08 -20.32
+s1 175 2022-05-11 -16.28
+s1 200 2022-10-26 -18.1
+s1 225 2023-03-31 -18.57
+s1 250 2023-09-03 -18.77
+s1 275 2024-02-18 -18.53
+s1 300 2024-08-04 -17.93
+s1 325 2025-01-19 -18.17
+s1 350 2025-05-08 -22.01
+s1 375 2025-07-24 -21.16
+s1 400 2025-10-22 -17.2
+s1 425 2026-01-21 -19.78
+s1 450 2026-04-08 -17.28
+s1 475 2026-06-14 -20.03
+s1 500 2026-09-01 -21.13
+S1 listo: nuevas 519 total 519
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/retenido.py:167: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), tramos=[f"{a}..{b}" for a, b in TRAMOS], claves=keys, agua_ha=agua,
+serie: ópticas 330 radar 518 calibración {'vh16': {'n': 128, 'rho': 0.657, 'sesgo_ha': 5.03, 'mae_ha': 6.29}, 'vh15': {'n': 128, 'rho': 0.698, 'sesgo_ha': 2.59, 'mae_ha': 4.56}, 'vh14': {'n': 128, 'rho': 0.723, 'sesgo_ha': 1.16, 'mae_ha': 3.92}, 'vh13': {'n': 128, 'rho': 0.732, 'sesgo_ha': 0.25, 'mae_ha': 3.84}, 'vh12': {'n': 128, 'rho': 0.743, 'sesgo_ha': -0.62, 'mae_ha': 4.01}, 'elegido': 'vh12'}

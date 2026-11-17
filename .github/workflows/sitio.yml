@@ -1,0 +1,49 @@
+name: Actualizar la página desde el código privado
+
+# La página (index.html, app.js, sw.js, vendor/, íconos) se mantiene en el repositorio privado
+# astrococo/flotante-ituango-codigo. Esta tarea la copia aquí cada hora si cambió. Corre en el
+# repositorio público (minutos gratis) y solo necesita el secreto CODIGO_TOKEN (lectura).
+# No copia datos: los internos se leen en el navegador con el token de cada usuario.
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sitio
+  cancel-in-progress: false
+
+jobs:
+  sitio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Traer la página (repositorio privado, solo lectura)
+        uses: actions/checkout@v4
+        with:
+          repository: astrococo/flotante-ituango-codigo
+          token: ${{ secrets.CODIGO_TOKEN }}
+          path: _codigo
+          sparse-checkout: |
+            vendor
+          persist-credentials: false
+      - name: Copiar solo los archivos de la página
+        run: |
+          set -euo pipefail
+          for f in index.html app.js sw.js manifest.webmanifest icono-192.png icono-512.png; do cp "_codigo/$f" "$f"; done
+          rm -rf vendor && cp -r _codigo/vendor vendor
+          rm -rf _codigo
+          # salvaguarda: la página publicada no debe traer datos internos
+          if git status --porcelain | grep -E 'datos/(app|hf|consultas)|DatosExtraccion|extraccion_caudal'; then echo "::error::Datos internos en la copia"; exit 1; fi
+      - name: Guardar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html app.js sw.js manifest.webmanifest icono-192.png icono-512.png vendor
+          git diff --cached --quiet && echo "Sin cambios" && exit 0
+          git commit -m "Página desde el código privado $(date -u '+%F %H:%M')"
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
