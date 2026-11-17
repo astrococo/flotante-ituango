@@ -320,36 +320,55 @@ function forecast(scen){
   return out;
 }
 
-/* ---------- datos protegidos (16-nov-2026) ----------
-   La extracción (EPM) y el archivo de HydroForecast viven en el repositorio PRIVADO
-   astrococo/flotante-ituango-codigo. La página pública no los trae: se leen con un token de
-   lectura de GitHub que cada usuario pega una vez (como Turbinas Ituango). Sin token, solo se
-   intenta la misma carpeta (sirve al abrir la copia privada en el propio equipo). */
+/* ---------- acceso y datos protegidos (16-nov-2026) ----------
+   Ingreso con correo y contraseña con las MISMAS cuentas de Turbinas Ituango (Supabase Auth: solo
+   correos de la organización, aprobación del administrador). La extracción (EPM) y el archivo de
+   HydroForecast viven en el repositorio privado astrococo/flotante-ituango-codigo; la página los pide
+   a la función «flotante» del servidor con el token de la sesión, y el servidor los lee de GitHub
+   con su propia clave. La sesión se comparte con Turbinas y HydroForecast (mismo sitio y misma clave
+   de almacenamiento): quien ingresó en una no vuelve a escribir la contraseña en las otras.
+   Acceso técnico (solo administrador, si el servidor falla): token de lectura de GitHub. */
+const SUPABASE_URL='https://kgmjjbxmofqcpkbgzoqg.supabase.co';
+const SUPABASE_CLAVE_PUBLICA='sb_publishable_UQMFkQXShJoV8BmKW4G2MQ_TDsFUL8H'; // pública por diseño
+const DOMINIOS=['epm.com.co'];
 const REPO_DATOS='astrococo/flotante-ituango-codigo';
-const K_TOK='mfi-token',K_REC='mfi-recordar';
-const ACC={token:'',recordar:true};
-(function(){try{const m=/[#&]conectar=([^&]+)/.exec(location.hash);
-  if(m){ACC.token=decodeURIComponent(m[1]).trim();history.replaceState(null,'',location.pathname+location.search+'#pronostico')}
-  ACC.recordar=localStorage.getItem(K_REC)!=='0';if(!ACC.token)ACC.token=localStorage.getItem(K_TOK)||''}catch(e){}})();
-function guardarToken(){try{if(ACC.recordar&&ACC.token)localStorage.setItem(K_TOK,ACC.token);else localStorage.removeItem(K_TOK);
-  if(ACC.recordar)localStorage.removeItem(K_REC);else localStorage.setItem(K_REC,'0')}catch(e){}}
+const K_TOK='mfi-token',K_TEC='mfi-acceso-tecnico';
+const leerL=k=>{try{return localStorage.getItem(k)}catch(e){return null}},escribirL=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+const ACC={sb:null,sesion:null,perfil:null,token:leerL(K_TEC)==='1'?(leerL(K_TOK)||''):'',recuperando:false};
 class ErrDatos extends Error{constructor(m,c){super(m);this.code=c}}
+function traducir(e){const m=String((e&&(e.message||e.error_description))||e||'');
+  if(/invalid login credentials/i.test(m))return 'Correo o contraseña incorrectos.';
+  if(/email not confirmed/i.test(m))return 'Falta confirmar el correo: revise su bandeja de entrada.';
+  if(/already registered|already been registered|user already exists/i.test(m))return 'Ese correo ya tiene una cuenta. Ingrese o use «Olvidé mi contraseña».';
+  if(/database error saving new user|organizaci/i.test(m))return 'Solo se permiten correos de '+DOMINIOS.map(d=>'@'+d).join(', ')+'.';
+  if(/password should be at least|weak password|at least \d+ characters/i.test(m))return 'La contraseña debe tener al menos 10 caracteres.';
+  if(/rate limit|too many/i.test(m))return 'Demasiados intentos. Espere unos minutos.';
+  if(/email address not authorized|error sending/i.test(m))return 'El servidor no pudo enviar el correo. Pida ayuda al administrador.';
+  if(/failed to fetch|network/i.test(m))return 'No hay conexión con el servidor.';
+  return m||'Ocurrió un error.'}
+function sb(){if(!ACC.sb&&window.supabase)ACC.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_CLAVE_PUBLICA,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'ituango-sesion'}});return ACC.sb}
+async function cargarPerfil(){const s=ACC.sesion;if(!s){ACC.perfil=null;return}
+  const {data}=await sb().from('perfiles').select('id,email,nombre,rol,estado').eq('id',s.user.id).maybeSingle();
+  ACC.perfil=data||{id:s.user.id,email:s.user.email,rol:'usuario',estado:'pendiente'}}
+async function conTiempo(u,op,ms){const c=new AbortController(),to=setTimeout(()=>c.abort(),ms||20000);
+  try{return await fetch(u,{...op,signal:c.signal,cache:'no-store'})}catch(e){throw new ErrDatos(e.name==='AbortError'?'El servidor no respondió.':'No hay conexión con el servidor.','red')}finally{clearTimeout(to)}}
 async function protegido(ruta,tipo){
-  const limpia=ruta.split('?')[0];
-  if(ACC.token){
-    const c=new AbortController(),to=setTimeout(()=>c.abort(),20000);
-    let r;try{r=await fetch(`https://api.github.com/repos/${REPO_DATOS}/contents/${limpia.split('/').map(encodeURIComponent).join('/')}?ref=main`,
-      {headers:{Authorization:'Bearer '+ACC.token,Accept:'application/vnd.github.raw','X-GitHub-Api-Version':'2022-11-28'},cache:'no-store',signal:c.signal})}
-    catch(e){throw new ErrDatos(e.name==='AbortError'?'GitHub no respondió':'sin conexión con GitHub','red')}finally{clearTimeout(to)}
-    if(r.status===401)throw new ErrDatos('El token no es válido o venció.',401);
-    if(r.status===403||r.status===404)throw new ErrDatos(`El token no tiene acceso a ${REPO_DATOS} (o falta ${limpia}).`,r.status);
-    if(!r.ok)throw new ErrDatos('GitHub respondió '+r.status,r.status);
-    return tipo==='buf'?new Uint8Array(await r.arrayBuffer()):r.json();
+  const limpia=ruta.split('?')[0];let r;
+  if(ACC.sesion){
+    r=await conTiempo(`${SUPABASE_URL}/functions/v1/flotante?ruta=${encodeURIComponent(limpia)}`,{headers:{Authorization:'Bearer '+ACC.sesion.access_token,apikey:SUPABASE_CLAVE_PUBLICA}});
+    if(r.status===401)throw new ErrDatos('La sesión venció; ingrese de nuevo.','sesion');
+    if(r.status===403){let m='Sin acceso.';try{m=(await r.json()).error||m}catch(_){}throw new ErrDatos(m,'estado')}
+    if(!r.ok){let m='El servidor respondió '+r.status+'.';try{m=(await r.json()).error||m}catch(_){}throw new ErrDatos(m,r.status)}
+  }else if(ACC.token){
+    r=await conTiempo(`https://api.github.com/repos/${REPO_DATOS}/contents/${limpia.split('/').map(encodeURIComponent).join('/')}?ref=main`,
+      {headers:{Authorization:'Bearer '+ACC.token,Accept:'application/vnd.github.raw','X-GitHub-Api-Version':'2022-11-28'}});
+    if(r.status===401)throw new ErrDatos('El token técnico no es válido o venció.','tecnico');
+    if(!r.ok)throw new ErrDatos(`El token técnico no tiene acceso a ${REPO_DATOS} (${r.status}).`,'tecnico');
+  }else{
+    r=await fetch(ruta,{cache:'no-cache'}); // copia local del repositorio privado
+    const ct=r.headers.get('content-type')||'';
+    if(!r.ok||(tipo!=='buf'&&!/json/.test(ct)))throw new ErrDatos('Ingrese para ver los datos.','sesion');
   }
-  const r=await fetch(ruta,{cache:'no-cache'});
-  if(!r.ok)throw new ErrDatos('Faltan los datos: conecte con un token de lectura.','token');
-  const ct=r.headers.get('content-type')||'';
-  if(tipo!=='buf'&&!/json/.test(ct)&&!/\.json$/.test(limpia))throw new ErrDatos('Faltan los datos: conecte con un token de lectura.','token');
   return tipo==='buf'?new Uint8Array(await r.arrayBuffer()):r.json();
 }
 
@@ -1356,43 +1375,87 @@ function init(){
   loadLive();
   protegido('datos/app/extra.json?v=6e03bcc52c').then(x=>{Object.assign(ORIG,x);Object.assign(S.src,x);const h=(location.hash||'#pronostico').slice(1);if(VIEWS.includes(h))renderView(h)}).catch(()=>{});
 }
-/* ---------- arranque: datos protegidos o pantalla de acceso ---------- */
-let INICIADA=false;
-function pantallaAcceso(msg,tipo){
-  const g=document.getElementById('acceso');if(!g)return;g.hidden=false;document.body.classList.add('sin-datos');
-  const t=document.getElementById('acc-token');t.value=ACC.token||'';document.getElementById('acc-recordar').checked=ACC.recordar;
-  const m=document.getElementById('acc-msg');m.className='msg'+(tipo?' '+tipo:'');m.textContent=msg||'';
-  setTimeout(()=>t.focus(),0);
+/* ---------- arranque: pantallas de acceso (como Turbinas Ituango) ---------- */
+let INICIADA=false,MODO='ingresar';
+const $=id=>document.getElementById(id);
+function verPantalla(cual,msg,tipo){
+  const g=$('acceso');g.hidden=false;document.body.classList.add('sin-datos');
+  g.querySelectorAll('[data-p]').forEach(x=>x.hidden=x.dataset.p!==cual);
+  if(cual==='ingreso')ponerModo(MODO);
+  if(cual==='estado'){const rev=ACC.perfil&&ACC.perfil.estado==='revocado';$('est-tit').textContent=rev?'Acceso retirado':'Cuenta en revisión';
+    $('est-sub').textContent=rev?'El administrador retiró el acceso de esta cuenta. Si cree que es un error, comuníquese con él.':(msg&&!/aprobaci/i.test(msg)?msg:'Su cuenta está creada. El administrador debe aprobarla antes de que pueda ver los datos; vuelva a intentar más tarde.');
+    $('est-correo').textContent=ACC.sesion?ACC.sesion.user.email:'';$('est-revisar').hidden=rev}
+  const m=g.querySelector(`[data-p="${cual}"] .msg`);if(m){m.className='msg'+(tipo?' '+tipo:'');m.textContent=cual==='estado'?'':(msg||'')}
 }
-function cerrarAcceso(){const g=document.getElementById('acceso');if(g)g.hidden=true;document.body.classList.remove('sin-datos');pintarAcceso()}
-function pintarAcceso(){const b=document.getElementById('acc-pill');if(!b)return;b.hidden=!ACC.token;
-  b.title=ACC.token?`Datos leídos de ${REPO_DATOS} con su token${ACC.recordar?' (guardado en este navegador)':' (solo esta sesión)'}. Clic para desconectar.`:''}
-async function arrancar(){
-  const lm=document.getElementById('load-msg');
-  try{const j=await protegido('datos/app/base.json?v=aa4039a8b3');ORIG=j;if(lm)lm.hidden=true;cerrarAcceso();
-    if(!INICIADA){INICIADA=true;init()}}
+function cerrarAcceso(){$('acceso').hidden=true;document.body.classList.remove('sin-datos');pintarCuenta()}
+function ponerModo(m){MODO=m;const T={ingresar:['Ingresar',''],registrar:['Crear cuenta',`Solo correos ${DOMINIOS.map(d=>'@'+d).join(', ')}. El administrador aprueba cada cuenta antes de dar acceso a los datos.`],recuperar:['Recuperar contraseña','Escriba su correo y le enviaremos un enlace para crear una contraseña nueva.']}[m];
+  $('ing-tit').textContent=T[0];$('ing-sub').textContent=T[1];$('ing-sub').hidden=!T[1];$('ing-btn').textContent=T[0];
+  $('ing-nombre-c').hidden=m!=='registrar';$('ing-clave-c').hidden=m==='recuperar';$('ing-clave2-c').hidden=m!=='registrar';
+  $('ing-clave').autocomplete=m==='registrar'?'new-password':'current-password';$('ing-clave-lbl').textContent=m==='registrar'?'Contraseña (mínimo 10 caracteres)':'Contraseña';
+  $('ing-a-registrar').hidden=m!=='ingresar';$('ing-a-recuperar').hidden=m!=='ingresar';$('ing-a-ingresar').hidden=m==='ingresar';
+  $('ing-tecnico').hidden=!(m==='ingresar'&&leerL(K_TOK));const x=$('ing-msg');x.className='msg';x.textContent=''}
+function pintarCuenta(){const b=$('acc-pill');if(!b)return;
+  if(ACC.sesion){b.hidden=false;const n=(ACC.perfil&&ACC.perfil.nombre)||ACC.sesion.user.email||'?';$('acc-ini').textContent=n.trim().charAt(0).toUpperCase();
+    $('acc-lbl').textContent=ACC.perfil&&ACC.perfil.rol==='admin'?'Admin':'Cuenta';$('menu-correo').innerHTML=(ACC.perfil&&ACC.perfil.nombre?`<b>${esc(ACC.perfil.nombre)}</b>`:'')+esc(ACC.sesion.user.email);
+    $('menu-usuarios').hidden=!(ACC.perfil&&ACC.perfil.rol==='admin'&&ACC.perfil.estado==='aprobado');$('menu-clave').hidden=false;$('acc-modo').textContent='Cuenta: '+ACC.sesion.user.email}
+  else if(ACC.token){b.hidden=false;$('acc-ini').textContent='T';$('acc-lbl').textContent='Acceso técnico';$('menu-correo').textContent='Token de lectura de GitHub (acceso técnico)';$('menu-usuarios').hidden=true;$('menu-clave').hidden=true;$('acc-modo').textContent='Acceso técnico con token de GitHub.'}
+  else{b.hidden=true;$('acc-modo').textContent='Copia local (sin servidor).'}}
+async function cargarDatos(){
+  try{const j=await protegido('datos/app/base.json?v=aa4039a8b3');ORIG=j;$('load-msg').hidden=true;cerrarAcceso();if(!INICIADA){INICIADA=true;init()}}
   catch(e){
-    if(e.code==='red'){if(lm){lm.hidden=false;lm.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.'}return}
-    pantallaAcceso(e.code==='token'?'':e.message,e.code==='token'?'':'err');
+    if(e.code==='red'){const lm=$('load-msg');lm.hidden=false;lm.textContent='No se pudieron cargar los datos ('+e.message+'). Recargue la página.';cerrarAcceso();return}
+    if(e.code==='estado'){verPantalla('estado',e.message);return}
+    if(e.code==='tecnico'){escribirL(K_TEC,null);ACC.token=''}
+    verPantalla('ingreso',e.code==='sesion'||e.code==='tecnico'?(ACC.sesion||e.code==='tecnico'?e.message:''):e.message,'err');
   }
 }
-document.getElementById('acc-form').addEventListener('submit',async ev=>{ev.preventDefault();
-  const tok=document.getElementById('acc-token').value.trim(),m=document.getElementById('acc-msg'),b=document.getElementById('acc-btn');
-  if(!tok){m.className='msg err';m.textContent='Pegue el token.';return}
-  ACC.token=tok;ACC.recordar=document.getElementById('acc-recordar').checked;
-  m.className='msg';m.textContent='Comprobando…';b.disabled=true;
-  try{const j=await protegido('datos/app/base.json');guardarToken();ORIG=j;cerrarAcceso();if(!INICIADA){INICIADA=true;init()}}
-  catch(e){ACC.token='';m.className='msg err';m.textContent=e.message}
-  finally{b.disabled=false}});
-document.getElementById('acc-ver').addEventListener('click',e=>{const t=document.getElementById('acc-token');const v=t.type==='password';t.type=v?'text':'password';e.currentTarget.textContent=v?'Ocultar':'Ver'});
-document.getElementById('acc-pill').addEventListener('click',()=>{if(!confirmarSalida())return;ACC.token='';guardarToken();location.reload()});
-function confirmarSalida(){const d=document.getElementById('acc-salir');if(!d||typeof d.showModal!=='function')return true;d.showModal();return false}
-document.getElementById('acc-salir-si')?.addEventListener('click',()=>{ACC.token='';guardarToken();location.reload()});
-document.getElementById('acc-salir-btn')?.addEventListener('click',()=>{if(confirmarSalida()){ACC.token='';guardarToken();location.reload()}});
-document.getElementById('acc-salir-no')?.addEventListener('click',()=>document.getElementById('acc-salir').close());
-document.getElementById('acc-enlace')?.addEventListener('click',async e=>{if(!ACC.token)return;const u=`${location.origin}${location.pathname}#conectar=${encodeURIComponent(ACC.token)}`;
-  try{await navigator.clipboard.writeText(u);e.currentTarget.textContent='Enlace copiado'}catch(_){prompt('Copie el enlace:',u)}});
-pintarAcceso();
+async function decidir(){
+  if(ACC.recuperando){verPantalla('clave');return}
+  if(ACC.sesion){if(!ACC.perfil)await cargarPerfil();
+    if(ACC.perfil.estado!=='aprobado'){verPantalla('estado');return}}
+  await cargarDatos();
+}
+async function arrancar(){
+  if(ACC.token){pintarCuenta();await cargarDatos();return}
+  if(!sb()){await cargarDatos();return} // sin la librería (copia local sin red)
+  verPantalla('cargando');
+  const {data}=await sb().auth.getSession();ACC.sesion=data.session;
+  sb().auth.onAuthStateChange((ev,s)=>{const antes=ACC.sesion&&ACC.sesion.user.id;ACC.sesion=s;
+    if(ev==='PASSWORD_RECOVERY'){ACC.recuperando=true;verPantalla('clave')}
+    else if(ev==='SIGNED_OUT'){location.reload()}
+    else if(ev==='SIGNED_IN'&&s&&s.user.id!==antes){ACC.perfil=null;decidir()}});
+  await decidir();
+}
+$('ing-form').addEventListener('submit',async ev=>{ev.preventDefault();const b=$('ing-btn'),m=$('ing-msg');if(b.disabled)return;
+  const correo=$('ing-correo').value.trim().toLowerCase(),clave=$('ing-clave').value;m.className='msg';m.textContent='';b.disabled=true;const txt=b.textContent;b.textContent='Un momento…';
+  try{
+    if(MODO==='ingresar'){const {data,error}=await sb().auth.signInWithPassword({email:correo,password:clave});if(error)throw new Error(traducir(error));ACC.sesion=data.session;ACC.perfil=null;await decidir()}
+    else if(MODO==='registrar'){
+      if(!DOMINIOS.includes(correo.split('@')[1]||''))throw new Error('Solo se permiten correos de '+DOMINIOS.map(d=>'@'+d).join(', ')+'.');
+      if(clave.length<10)throw new Error('La contraseña debe tener al menos 10 caracteres.');
+      if(clave!==$('ing-clave2').value)throw new Error('Las contraseñas no coinciden.');
+      const {data,error}=await sb().auth.signUp({email:correo,password:clave,options:{data:{nombre:$('ing-nombre').value.trim()},emailRedirectTo:location.origin+location.pathname}});
+      if(error)throw new Error(traducir(error));
+      if(data.session){ACC.sesion=data.session;ACC.perfil=null;await decidir()}
+      else{ponerModo('ingresar');m.className='msg ok';m.textContent='Cuenta creada. Le enviamos un correo para confirmar la dirección; después, el administrador aprueba el acceso.'}}
+    else{const {error}=await sb().auth.resetPasswordForEmail(correo,{redirectTo:location.origin+location.pathname});if(error)throw new Error(traducir(error));m.className='msg ok';m.textContent='Si el correo tiene cuenta, le llegará un enlace para crear una contraseña nueva.'}
+  }catch(x){m.className='msg err';m.textContent=x.message}
+  finally{b.disabled=false;if(b.textContent==='Un momento…')b.textContent=txt}});
+$('ing-a-registrar').onclick=()=>ponerModo('registrar');$('ing-a-recuperar').onclick=()=>ponerModo('recuperar');$('ing-a-ingresar').onclick=()=>ponerModo('ingresar');
+$('ing-ver').onclick=e=>{const t=$('ing-clave');const v=t.type==='password';t.type=v?'text':'password';$('ing-clave2').type=t.type;e.currentTarget.textContent=v?'Ocultar':'Ver'};
+$('ing-tecnico-btn').onclick=()=>{escribirL(K_TEC,'1');location.reload()};
+$('clave-form').addEventListener('submit',async ev=>{ev.preventDefault();const m=$('clave-msg'),a=$('clave-1').value,b2=$('clave-2').value;
+  if(a!==b2){m.className='msg err';m.textContent='Las contraseñas no coinciden.';return}
+  if(a.length<10){m.className='msg err';m.textContent='La contraseña debe tener al menos 10 caracteres.';return}
+  const {error}=await sb().auth.updateUser({password:a});if(error){m.className='msg err';m.textContent=traducir(error);return}
+  m.className='msg ok';m.textContent='Contraseña actualizada.';ACC.recuperando=false;setTimeout(()=>{if(INICIADA)cerrarAcceso();else decidir()},900)});
+$('clave-cancelar').onclick=()=>{ACC.recuperando=false;if(INICIADA)cerrarAcceso();else decidir()};
+$('est-revisar').onclick=async e=>{e.currentTarget.disabled=true;e.currentTarget.textContent='Revisando…';ACC.perfil=null;await decidir();e.currentTarget.disabled=false;e.currentTarget.textContent='Ya me aprobaron: revisar'};
+const salir=async()=>{if(ACC.token&&!ACC.sesion){escribirL(K_TEC,null);location.reload();return}try{await sb().auth.signOut()}catch(_){}location.reload()};
+$('est-salir').onclick=salir;$('menu-salir').onclick=salir;$('acc-salir-btn').onclick=salir;
+$('acc-pill').onclick=e=>{e.stopPropagation();const m=$('menu-cuenta');m.hidden=!m.hidden;$('acc-pill').setAttribute('aria-expanded',String(!m.hidden))};
+document.addEventListener('click',e=>{const m=$('menu-cuenta');if(!m.hidden&&!m.contains(e.target)){m.hidden=true;$('acc-pill').setAttribute('aria-expanded','false')}});
+$('menu-clave').onclick=()=>{$('menu-cuenta').hidden=true;$('clave-cancelar').hidden=false;verPantalla('clave')};
 arrancar();
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
