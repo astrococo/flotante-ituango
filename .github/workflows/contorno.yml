@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: contorno
@@ -112,9 +113,21 @@ jobs:
           mkdir -p satelite/datos/satelite/contorno && cp -r datos/satelite/contorno/. satelite/datos/satelite/contorno/
           cd satelite && python -u contorno.py serie 2>&1 | tee datos/satelite/contorno/registro_serie.txt
           cd .. && cp satelite/datos/satelite/contorno/serie.json satelite/datos/satelite/contorno/registro_serie.txt satelite/datos/satelite/contorno/mapa.geojson datos/satelite/contorno/
+          python satelite/alertas.py | tee datos/satelite/registro_alertas.txt
+          GH_TOKEN=${{ github.token }} python - <<'PY'
+          import json, os, subprocess
+          A = json.load(open("datos/satelite/alertas.json"))["activas"]
+          f = "datos/satelite/alertas_notificadas.json"
+          ya = set(json.load(open(f))) if os.path.exists(f) else set()
+          for a in A:
+              if a["id"] in ya: continue
+              subprocess.run(["gh", "issue", "create", "--title", f"Alerta satelital ({a['tipo']}, {a['fecha']})", "--body", a["texto"] + "\n\nVer: https://astrococo.github.io/flotante-ituango/#satelite"], check=False)
+              ya.add(a["id"])
+          json.dump(sorted(ya), open(f, "w"))
+          PY
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A datos/satelite/contorno; git diff --cached --quiet && exit 0
-          git commit -m "Contorno: serie $(date -u '+%F %H:%M')"
+          git add -A datos/satelite/contorno datos/satelite/alertas.json datos/satelite/alertas_notificadas.json datos/satelite/registro_alertas.txt; git diff --cached --quiet && exit 0
+          git commit -m "Contorno: serie y alertas $(date -u '+%F %H:%M')"
           for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push && break; sleep $((i*7)); done
   visor:
     needs: sensor
