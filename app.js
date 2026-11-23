@@ -976,8 +976,8 @@ async function renderAlertas(){
   const box=document.getElementById('alr-lista');if(!box)return;const A=await loadAlertas();
   box.innerHTML=(A.activas||[]).length?A.activas.map(a=>`<li><span class="tag ${a.nivel==='alta'?'bad':'warn'}">${a.nivel}</span> ${esc(a.texto)}</li>`).join(''):`<li><span class="tag ok">sin alertas</span> Ninguna regla se activó con las imágenes de los últimos 10 días (revisión ${esc(A.generado||'—')} UTC).</li>`;
   const P=A.posibles_pasos_barrera||[];
-  document.getElementById('alr-barrera').innerHTML='<thead><tr><th>Entre</th><th>Aguas arriba (ha)</th><th>Aguas abajo (ha)</th><th>Sensores</th></tr></thead><tbody>'+
-    P.map(e=>`<tr><td><a href="#satelite" onclick="window.__visorGo&&window.__visorGo('${e.hasta}',${/radar/.test(e.sensores.split('→')[1])});return false">${fmtD(d0(e.desde))} – ${fmtD(d0(e.hasta))}</a></td><td class="num">${nf(e.arriba[0],1)} → ${nf(e.arriba[1],1)}</td><td class="num">${nf(e.abajo[0],1)} → ${nf(e.abajo[1],1)}</td><td>${esc(e.sensores)}</td></tr>`).join('')+'</tbody>';
+  document.getElementById('alr-barrera').innerHTML='<thead><tr><th>Entre</th><th>Zona</th><th>Aguas arriba (ha)</th><th>Aguas abajo (ha)</th><th>Sensores</th></tr></thead><tbody>'+
+    P.map(e=>`<tr><td><a href="#satelite" onclick="window.__visorGo&&window.__visorGo('${e.hasta}',${/radar/.test(e.sensores.split('→')[1])});return false">${fmtD(d0(e.desde))} – ${fmtD(d0(e.hasta))}</a></td><td>${e.zona==='contorno'?'Contorno (2,5 km de río a cada lado)':'Zona del puerto'}</td><td class="num">${nf(e.arriba[0],1)} → ${nf(e.arriba[1],1)}</td><td class="num">${nf(e.abajo[0],1)} → ${nf(e.abajo[1],1)}</td><td>${esc(e.sensores)}</td></tr>`).join('')+'</tbody>';
   // material frente al puerto (corredor diario)
   try{if(!COR)COR=await fetchJSON('datos/satelite/corredor/serie.json',10000)}catch(e){}
   const k=document.getElementById('alr-puerto');if(!k)return;
