@@ -1,7 +1,22 @@
 {
- "generado": "2026-11-22 20:50",
+ "generado": "2026-11-23 19:09",
+ "fuente": "contorno de análisis (Sentinel-2 y Landsat) y puntos del puerto",
  "activas": [],
  "posibles_pasos_barrera": [
+  {
+   "desde": "2019-07-16",
+   "hasta": "2019-07-17",
+   "arriba": [
+    34.0,
+    2.1
+   ],
+   "abajo": [
+    5.9,
+    12.2
+   ],
+   "sensores": "Sentinel-2 → Landsat",
+   "zona": "contorno"
+  },
   {
    "desde": "2019-07-16",
    "hasta": "2019-07-17",
@@ -13,7 +28,8 @@
     7.4,
     15.3
    ],
-   "sensores": "S2 → Landsat"
+   "sensores": "Sentinel-2 → Landsat",
+   "zona": "puerto"
   },
   {
    "desde": "2021-08-07",
@@ -26,7 +42,8 @@
     4.3,
     12.7
    ],
-   "sensores": "Landsat → radar"
+   "sensores": "Landsat → radar",
+   "zona": "puerto"
   },
   {
    "desde": "2022-03-11",
@@ -39,7 +56,8 @@
     10.7,
     23.4
    ],
-   "sensores": "Landsat → radar"
+   "sensores": "Landsat → radar",
+   "zona": "puerto"
   },
   {
    "desde": "2022-03-31",
@@ -52,7 +70,22 @@
     38.6,
     60.8
    ],
-   "sensores": "radar → Landsat"
+   "sensores": "radar → Landsat",
+   "zona": "puerto"
+  },
+  {
+   "desde": "2022-07-09",
+   "hasta": "2022-07-10",
+   "arriba": [
+    26.1,
+    12.0
+   ],
+   "abajo": [
+    5.0,
+    8.3
+   ],
+   "sensores": "Landsat → Sentinel-2",
+   "zona": "contorno"
   },
   {
    "desde": "2022-11-14",
@@ -65,7 +98,8 @@
     15.4,
     34.5
    ],
-   "sensores": "radar → radar"
+   "sensores": "radar → radar",
+   "zona": "puerto"
   },
   {
    "desde": "2023-03-22",
@@ -78,7 +112,8 @@
     10.7,
     16.2
    ],
-   "sensores": "Landsat → radar"
+   "sensores": "Landsat → radar",
+   "zona": "puerto"
   },
   {
    "desde": "2023-08-05",
@@ -91,7 +126,8 @@
     2.3,
     17.6
    ],
-   "sensores": "Landsat → radar"
+   "sensores": "Landsat → radar",
+   "zona": "puerto"
   },
   {
    "desde": "2025-07-07",
@@ -104,7 +140,8 @@
     28.8,
     44.7
    ],
-   "sensores": "radar → Landsat"
+   "sensores": "radar → Landsat",
+   "zona": "puerto"
   },
   {
    "desde": "2025-08-06",
@@ -117,7 +154,8 @@
     25.2,
     49.0
    ],
-   "sensores": "radar → Landsat"
+   "sensores": "radar → Landsat",
+   "zona": "puerto"
   },
   {
    "desde": "2025-08-12",
@@ -130,7 +168,8 @@
     28.4,
     45.4
    ],
-   "sensores": "radar → S2"
+   "sensores": "radar → Sentinel-2",
+   "zona": "puerto"
   },
   {
    "desde": "2026-08-13",
@@ -143,7 +182,8 @@
     2.0,
     7.6
    ],
-   "sensores": "S2 → radar"
+   "sensores": "Sentinel-2 → radar",
+   "zona": "puerto"
   }
  ]
 }
