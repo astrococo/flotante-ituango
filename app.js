@@ -108,7 +108,7 @@ function renderRel(){
   mk('ch-comp',{type:'bar',data:{labels:C.ventanas.map(v=>'día '+v),datasets:[
     {label:'Material flotante',data:c.mf,backgroundColor:css('--mf')},{label:'Macrófitas',data:c.ma,backgroundColor:css('--ma')},
     {type:'line',label:'Sin cambio',data:C.ventanas.map(()=>1),borderColor:css('--muted'),borderDash:[4,4],pointRadius:0,borderWidth:1}]},options:o});
-  document.getElementById('comp-note').textContent=`${c.n} crecientes con operación normal en las 4 semanas previas: ${c.eventos.join(', ')}. Media geométrica de la razón entre la extracción después del pico y antes de él.`;
+  document.getElementById('comp-note').textContent=`${c.n} crecientes con operación normal en las 4 semanas previas: ${c.eventos.join(', ')}. Media geométrica de la razón entre la extracción después del pico y antes de él. Esta razón exagera la recuperación porque las semanas previas suelen estar deprimidas por el caudal alto; la comparación contra el nivel normal está en Modelo → «Caudal y material flotante: rezagos».`;
   const x=[...document.querySelectorAll('#lag-x button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
   const L=E.lagcorr; const ol=baseOpts();ol.scales.y.beginAtZero=false;ol.scales.y.suggestedMin=-.3;ol.scales.y.suggestedMax=.3;ol.scales.y.title={display:true,text:'ρ de Spearman'};
   ol.plugins.tooltip.callbacks.label=v=>v.dataset.label+': '+nf(v.parsed.y,2);
@@ -128,8 +128,8 @@ function renderRel(){
   const c21=C['2100'];
   document.getElementById('findings').innerHTML=`
    <div class="fl"><b>El caudal explica poco de la variación semanal.</b> La correlación entre caudal y volumen extraído no supera |ρ| = 0,2. El volumen registrado depende sobre todo de cuántos equipos y cuadrillas trabajaron, y los paros mecanizados coinciden con temporadas de caudal alto (mar–abr 2022, feb–jun 2025).</div>
-   <div class="mf"><b>Después de crecientes grandes se extrae más material flotante.</b> Tras picos de Sitio Presa sobre 2 100 m³/s, la extracción de flotante se mantiene entre ${nf(Math.min(...c21.mf),2)} y ${nf(Math.max(...c21.mf),2)} veces el ritmo previo durante unas 8 semanas. La señal es consistente pero se basa en ${c21.n} eventos, por lo que su incertidumbre es alta.</div>
-   <div class="ma"><b>Las crecientes reducen la extracción de macrófitas.</b> Las macrófitas caen a ${nf(Math.min(...c21.ma),2)}–${nf(Math.max(...c21.ma),2)} veces su ritmo previo después de crecientes, y su correlación con el exceso de caudal es negativa durante 2 a 5 semanas (ρ ≈ −0,18). Es coherente con el lavado de las masas flotantes aguas abajo.</div>
+   <div class="mf"><b>Después de crecientes no se extrae volumen extra.</b> Frente al ritmo de las 4 semanas previas (gráfico de abajo), el flotante parece subir ${nf(Math.min(...c21.mf),2)}–${nf(Math.max(...c21.mf),2)} veces tras picos sobre 2 100 m³/s (${c21.n} eventos), pero esas semanas previas ya venían deprimidas por el caudal alto. Frente al nivel normal, las 8 semanas siguientes suman ${(()=>{const e=S.src.rezagos&&S.src.rezagos.evento;return e?`${e.extra_8sem_mediana>=0?'+':'−'}${nf(Math.abs(e.extra_8sem_mediana))} m³ (mediana de ${e.n} crecientes)`:'lo normal'})()}: el material que no se sacó no reaparece en la extracción.</div>
+   <div class="ma"><b>Las crecientes reducen la extracción de macrófitas.</b> Caen a ${nf(Math.min(...c21.ma),2)}–${nf(Math.max(...c21.ma),2)} veces su ritmo previo; frente a su nivel normal, a 0,73–0,83 veces en las semanas 0 a 2 (resultado que se sostiene en la batería de 100 pruebas). Coincide con la parada por seguridad y con el paso de material por la barrera que muestra el satélite.</div>
    <div class="wn"><b>La persistencia es la mejor información disponible.</b> El ritmo de las últimas semanas, combinado con el promedio de largo plazo, predice mejor que el caudal solo. El caudal se usa como ajuste fino, sobre todo para macrófitas.</div>`;
 }
 
@@ -475,7 +475,7 @@ function renderForecast(){
     return `<div class="st ${st[0]} c4"><div class="row"><h2><i class="sw" style="background:${color}"></i>${title}</h2><span class="badge ${st[0]}">${st[1]}</span></div>
       <div class="big">${nf(v)} <small>m³</small></div>
       <div class="note">Próximas ${n4} semanas${from} · mediana · rango probable ${nf(lo)} – ${nf(hi)} m³</div>
-      <p><b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')+(B.slice(i0,i0+n4).some(b=>b.d_alto)?' y la parada por caudal alto pronosticado':'')}${ref?` · ${ratio>=1?'+':''}${nf((ratio-1)*100)} % frente al nivel típico (${nf(ref)} m³)`:''}.${key!=='tot'?' <span class="muted">La división flotante/macrófitas del mecanizado es estimada en el registro; el total es la cifra más firme.</span>':''}</p></div>`};
+      <p><b>${nf(sp(key))} m³</b> ${plan?'con el descanso programado ingresado':'con la frecuencia histórica de paros'+(f!=null?` (×${nf(f,2)})`:'')+(B.slice(i0,i0+n4).some(b=>b.d_alto)?' y la parada por caudal alto pronosticado':'')}${ref?` · ${ratio>=1?'+':'−'}${nf(Math.abs(ratio-1)*100)} % frente al nivel típico (${nf(ref)} m³)`:''}.${key!=='tot'?' <span class="muted">La división flotante/macrófitas del mecanizado es estimada en el registro; el total es la cifra más firme.</span>':''}</p></div>`};
   document.getElementById('fc-cards').innerHTML=
     card('Total','tot',(R.mf_tot.LT||0)+(R.ma_tot.LT||0),'var(--accent)')+card('Material flotante','mf',R.mf_tot.LT,'var(--mf)')+card('Macrófitas','ma',R.ma_tot.LT,'var(--ma)')+
     [[Math.min(8,nAv),`Próximas ${Math.min(8,nAv)} semanas${from}`],[nAv,`Resto del horizonte · ${nAv} semanas${from}`]].map(([k,lab])=>`<div class="panel c6 kpi"><span class="lab">${lab}</span>
@@ -534,10 +534,10 @@ function renderModel(){
 Total = Flotante + Macrófitas`;
   const r=(k,f)=>`<td class="num">${f(P.mf_tot[k])}</td><td class="num">${f(P.ma_tot[k])}</td>`;
   document.getElementById('tbl-params').innerHTML='<thead><tr><th>Parámetro</th><th>Flotante</th><th>Macrófitas</th></tr></thead><tbody>'+
-   `<tr><td>k (peso de persistencia, actual)</td>${r('k',v=>nf(v??1,1))}</tr><tr><td>Umbral de caudal q<sub>c</sub> (m³/s)</td>${r('qc',v=>nf(v))}</tr><tr><td>a₁</td>${r('a1',v=>nf(v,2))}</tr><tr><td>τ (semanas)</td>${r('tau',v=>nf(v,1))}</tr><tr><td>b₀</td>${r('b0',v=>nf(v,3))}</tr>`+
+   `<tr><td>w (peso de la persistencia)</td>${r('mezcla',v=>nf((v&&v.w1)||0,2))}</tr><tr><td>s (encogimiento hacia LT)</td>${r('shrink',v=>nf(v??0,2))}</tr><tr><td>a(1) · a(13) (peso de EW)</td>${r('a_h',v=>v?nf(v[0],2)+' · '+nf(v[12],2):'—')}</tr><tr><td>a₈(1) · a₈(13) (peso de L₈)</td>${r('a8_h',v=>v?nf(v[0],2)+' · '+nf(v[12],2):'—')}</tr><tr><td>Umbral de caudal q<sub>c</sub> (m³/s)</td>${r('qc',v=>nf(v))}</tr><tr><td>b₀</td>${r('b0',v=>nf(v,3))}</tr>`+
    [0,1,2,3,4,5,6].map(l=>`<tr><td>β rezago ${l} sem</td>${r('beta',v=>nf(v[l],3))}</tr>`).join('')+
    `<tr><td>q₅₀(1) · r̄(1)</td><td class="num">${nf(P.mf_tot.q['0.5'][0],2)} · ${nf((P.mf_tot.rmean||[1])[0],2)}</td><td class="num">${nf(P.ma_tot.q['0.5'][0],2)} · ${nf((P.ma_tot.rmean||[1])[0],2)}</td></tr>`+
-   `<tr><td>L₈ actual (m³/sem)</td><td class="num">${nf(FC.res.mf_tot.L8)}</td><td class="num">${nf(FC.res.ma_tot.L8)}</td></tr><tr><td>LT actual (m³/sem)</td><td class="num">${nf(FC.res.mf_tot.LT)}</td><td class="num">${nf(FC.res.ma_tot.LT)}</td></tr></tbody>`;
+   `<tr><td>L₈ actual (m³/sem)</td><td class="num">${nf(FC.res.mf_tot.L8)}</td><td class="num">${nf(FC.res.ma_tot.L8)}</td></tr><tr><td>EW actual (m³/sem)</td><td class="num">${nf(FC.res.mf_tot.EW)}</td><td class="num">${nf(FC.res.ma_tot.EW)}</td></tr><tr><td>LT actual (m³/sem)</td><td class="num">${nf(FC.res.mf_tot.LT)}</td><td class="num">${nf(FC.res.ma_tot.LT)}</td></tr></tbody>`;
   const y=[...document.querySelectorAll('#sk-comp button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
   const M=P[y].metricas;
   const o=baseOpts();o.scales.y.beginAtZero=false;o.scales.y.title={display:true,text:'RMSE semanal (m³)'};
@@ -545,7 +545,7 @@ Total = Flotante + Macrófitas`;
     {label:'Mediana histórica',data:M.map(m=>m.clim),borderColor:css('--muted'),backgroundColor:css('--muted'),borderDash:[5,4],pointRadius:2},
     {label:'Persistencia (8 semanas)',data:M.map(m=>m.pers),borderColor:css('--warn'),backgroundColor:css('--warn'),pointRadius:2},
     {label:'Modelo '+(S.P.version||'v2').split(' ')[0],data:M.map(m=>m.modelo),borderColor:css('--accent'),backgroundColor:css('--accent'),borderWidth:3,pointRadius:3}]},options:o});
-  document.getElementById('tbl-skill').innerHTML='<thead><tr><th>h</th><th>MAE</th><th>vs mediana</th><th>vs pers.</th><th>Cob. 80%</th></tr></thead><tbody>'+
+  document.getElementById('tbl-skill').innerHTML='<thead><tr><th>h</th><th>MAE</th><th>vs mediana</th><th>vs pers.</th><th>Cob. P10–P90 (2022–2026)</th></tr></thead><tbody>'+
    M.filter(m=>[1,2,4,8,13].includes(m.h)).map(m=>`<tr><td>${m.h} sem</td><td class="num">${nf(m.mae)}</td><td class="num">${nf(m.skill_clim*100,1)} %</td><td class="num">${nf(m.skill_pers*100,1)} %</td><td class="num">${nf(m.cobertura80*100)} %</td></tr>`).join('')+'</tbody>';
   const m1=P.mf_tot.metricas[0],a1=P.ma_tot.metricas[0], rmf=P.mf_tot.rmse_total||{}, rma=P.ma_tot.rmse_total||{};
   document.getElementById('model-read').innerHTML=`<h3>Cómo leer el desempeño</h3>
@@ -585,7 +585,7 @@ function renderRezagos(){
    <p class="note">El caudal medio solo es inestable (0,21 frente a 0,73) porque en 2025–2026 lo domina la parada larga de abr–may 2025, con signo negativo: más caudal, menos extracción. Días altos + caudal previo se sostiene en ambos periodos (≈ 0,5).</p>
    <p>La llegada de material sí se ve en la <b>composición</b> de lo que cargan las volquetas: frente a su nivel de las 26 semanas previas, la fracción de flotante sube con el caudal de las 6–8 semanas anteriores (r = ${nf(R.composicion.r_ent,2)} en 2021–2024 y ${nf(R.composicion.r_val,2)} en 2025–mar 2026) y en la semana siguiente a una creciente pasa de ${nf(R.composicion.tras_creciente.base*100)} % a ~${nf((R.composicion.tras_creciente.base+R.composicion.tras_creciente.dif[3])*100)} %, y sigue alta unas 6 semanas: material acumulado mientras no se pudo extraer. Abr–sep 2026 queda fuera porque la división flotante/macrófitas del registro es fija (45,7 %).</p>
    <p><b>Incorporado al pronóstico:</b> el valor «con paros» ahora usa los días de caudal alto pronosticados (> 2.300 m³/s). Validado dejando fuera un año, en las ${R.parada.mf_tot.semanas} semanas con caudal alto el error baja de ${nf(R.parada.mf_tot.en_semanas_altas.constante)} a ${nf(R.parada.mf_tot.en_semanas_altas.por_caudal)} m³ en flotante y de ${nf(R.parada.ma_tot.en_semanas_altas.constante)} a ${nf(R.parada.ma_tot.en_semanas_altas.por_caudal)} m³ en macrófitas, sin empeorar ningún año. Depende de que HydroForecast anticipe bien la creciente.</p>
-   <p class="note">Tras ~30 pruebas, los valores p son orientativos. Una revisión anterior reportó «2× en la segunda semana»: medido contra las 4 semanas previas, que ya venían deprimidas por el caudal alto; contra el nivel normal la segunda semana es 1,1×.</p>`;
+   <p class="note">Estos análisis se repitieron en la batería de 100 pruebas (abajo), que corrige por comparaciones múltiples. Una revisión anterior reportó «2× en la segunda semana»: medido contra las 4 semanas previas, que ya venían deprimidas por el caudal alto; contra el nivel normal la segunda semana es 1,1×.</p>`;
 }
 
 
@@ -668,11 +668,12 @@ function integrityChecks(){
 }
 function renderAudit(){
   const A=S.src.audit; if(!A) return;
-  const li=arr=>arr.map(([s,t,d])=>`<li><span><span class="tag ${s}">${s==='ok'?'Correcto':s==='warn'?'Atención':'Crítico'}</span></span><div><div class="t">${t}</div><div class="d">${d}</div></div></li>`).join('');
+  const li=arr=>arr.map(([s,t,d])=>`<li><span><span class="tag ${s}">${s==='ok'?'Correcto':s==='warn'?'Atención':s==='info'?'Informativo':'Crítico'}</span></span><div><div class="t">${t}</div><div class="d">${d}</div></div></li>`).join('');
   const plat=[...(A.plataforma||[])];
-  plat.push(['ok','Fuentes externas','La página no depende de CDN ni de fuentes externas: librerías y datos van incluidos. Solo consulta la API de HydroForecast para el caudal, con respaldo si falla.']);
+  plat.push(['ok','Fuentes externas','Las librerías van incluidas en la página (sin CDN). Consulta: la API de HydroForecast para el caudal (con respaldo archivado), el servidor de acceso para la extracción y el archivo de HydroForecast (con sesión), las imágenes satelitales públicas del repositorio y los mapas base de Esri y OpenStreetMap en el visor.']);
   plat.push([LIVE.state==='live'?'ok':'warn','Caudal en esta sesión',LIVE.state==='live'?`Pronóstico en vivo de ${LIVE.src.replace(/^https?:\/\//,'')}, generado ${LIVE.when.replace('T',' ').slice(0,16)}.`:`No se pudo consultar HydroForecast${LIVE.err?' ('+LIVE.err+')':''}; se usa el respaldo del ${S.fc.generated_at.slice(0,10)}.`]);
-  const INT=integrityChecks();
+  const DIN=['Estructura del archivo','Acumulados vs avances diarios','Valores negativos','Conversión kg → m³ (macrófitas manual)','Avances diarios vacíos','Días sin reporte','Valores extremos'];
+  const INT=[...integrityChecks(),...(A.integridad||[]).filter(x=>!DIN.includes(x[1]))];  // dinámicos + revisiones del archivo que no se recalculan
   document.getElementById('aud-int').innerHTML=li(INT);
   document.getElementById('aud-q').innerHTML=li(A.caudal);
   document.getElementById('aud-plat').innerHTML=li(plat);
@@ -683,11 +684,13 @@ function renderAudit(){
   document.getElementById('aud-rec').innerHTML=A.recomendaciones.map(r=>`<li>${r}</li>`).join('');
   const all=[...INT,...A.caudal,...plat,...A.modelo];
   if(A.experimento){const E=A.experimento;document.getElementById('aud-exp').innerHTML='<thead><tr><th>Modelo</th>'+E.cols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>'+E.rows.map(r=>`<tr${r[2]?' style="font-weight:600"':''}><td>${r[0]}</td>${r[1].map(v=>`<td class="num">${nf(v)}</td>`).join('')}</tr>`).join('')+'</tbody>';document.getElementById('aud-exp-note').textContent=E.nota}
-  const cnt=k=>all.filter(x=>x[0]===k).length;
+  const vig=[...document.querySelectorAll('#aud-vig li')].map(li=>[li.querySelector('.tag').classList[1],li.querySelector('.t').textContent]);
+  const cnt=k=>all.filter(x=>x[0]===k).length+vig.filter(x=>x[0]===k).length;
+  window.__AUD={n:all.length+vig.length,cnt,warn:[['Archivo de extracción',INT],['Caudales',A.caudal],['Plataforma',plat],['Modelo',A.modelo],['Vigencia',vig]].flatMap(([l,a])=>a.filter(x=>x[0]==='warn'||x[0]==='bad').map(x=>[x[0],`${l}: ${x[1]}`]))};
   document.getElementById('aud-lede').textContent=`Revisión independiente del ${fmtD(d0(A.fecha))}: integridad del Excel, calidad de los caudales, validez estadística del modelo y funcionamiento de la plataforma. Cada punto indica si está correcto, requiere atención o es crítico.`;
   const v=A.v1v2;
   document.getElementById('aud-score').innerHTML=[
-    ['ok','Correctos',cnt('ok'),'puntos verificados sin observaciones'],['warn','Atención',cnt('warn'),'limitaciones conocidas y documentadas'],['bad','Críticos',cnt('bad')+(age>14?1:0),'requieren acción'],
+    ['ok','Correctos',cnt('ok'),'puntos verificados sin observaciones'],['warn','Atención',cnt('warn'),'limitaciones conocidas y documentadas'],['bad','Críticos',cnt('bad'),'requieren acción'],
     ['info','Error v1 → actual (flotante)',`${nf(v.mf_tot.rmse.v1)} → ${nf(v.mf_tot.rmse.v2)}`,'RMSE semanal 2022–2026, m³']
   ].map(([s,l,n,d])=>`<div class="st ${s} c3"><h2>${l}</h2><div class="big">${n}</div><div class="note">${d}</div></div>`).join('');
   const y=[...document.querySelectorAll('#aud-comp button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.v;
@@ -744,21 +747,21 @@ async function renderSat(){
   document.getElementById('sat-ql').src='datos/satelite/app/ultima_escena.jpg';
   document.getElementById('sat-ql-note').textContent=`Sentinel-2, ${fmtD(d0(J.ultima_vista))}, color real, 10 m. Actualizado ${J.generado} UTC.`;
   renderVisor(J);
-  renderCorredor(); renderVolumen(J,ALL); renderRetenido();
+  renderVolumen(J,ALL); renderRetenido();
   renderAlertas();renderAlertBanner('sat-alert');
-  document.getElementById('sat-metodo').innerHTML=`<h3>Método</h3><ul>
+  document.getElementById('sat-metodo').innerHTML=`<h3>Método de la zona del puerto</h3><ul>
    <li><b>Imágenes:</b> ${J.metodo.sensor}, desde 2019; nubes y sombras excluidas con la clasificación de escena (SCL).</li>
-   <li><b>Zona de agua:</b> píxeles con agua (MNDWI &gt; 0) en al menos la mitad de las escenas despejadas, a 2,5 km de la barrera: ${nf(A.total)} ha. El índice de agua del SCL no sirve aquí porque confunde el agua turbia del Cauca con suelo.</li>
+   <li><b>Zona de agua (zona del puerto):</b> píxeles con agua (MNDWI &gt; 0) en al menos la mitad de las escenas despejadas, a 2,5 km de la barrera: ${nf(A.total)} ha. El índice de agua del SCL no sirve aquí porque confunde el agua turbia del Cauca con suelo.</li>
    <li><b>Vegetación flotante:</b> NDVI ≥ 0,30 dentro de la zona de agua. Se verificó visualmente en escenas con mucha y poca cobertura.</li>
    <li><b>Otros sensores:</b> Landsat 8/9 (30 m, NDVI ≥ 0,40) y radar Sentinel-1 corregido por terreno (${J.s1_validacion?.umbral||'VH ≥ −14 dB'}) se calibraron contra Sentinel-2 en fechas cercanas (ρ = 0,82 y ${nf(J.s1_validacion?.rho??0.75,2)}${J.s1_validacion?.clasificador?`; un clasificador de VV, VH y textura entrenado píxel a píxel con Sentinel-2 se probó dejando un año fuera y fue peor (ρ = ${nf(J.s1_validacion.clasificador.rho,2)}), así que se mantiene el umbral`:''}). Con los tres, todos los meses desde 2019 tienen al menos una medición.</li>
    <li><b>Lo que no se puede medir:</b> madera y residuos no verdes. El índice de residuos flotantes (FDI) del agua turbia (mediana 0,048) se confunde con el del material, así que con 10 m de resolución no se separan.</li></ul>
-   <h3>Qué muestra y cómo se validó</h3><ul>
+   <h3>Qué muestra y cómo se validó (zona del puerto, 2,5 km alrededor de la barrera)</h3><ul>
    <li><b>Dos procesos distintos.</b> Al sur de la barrera (aguas arriba, agua turbia de río) se ve lo que la barrera retiene; al norte (aguas abajo, agua quieta del embalse) crecen las macrófitas. La revisión visual de 15 escenas en color real confirma las masas verdes en el lado que reporta cada serie.</li>
    <li><b>Margen derecha (oriental), hacia donde se extrae:</b> se dividió la zona por el eje del cauce. Desde 2024 la margen derecha concentra la mayor parte del material (69–79 % aguas abajo y 57–78 % aguas arriba en escenas con más de 3 ha), lo que concuerda con la operación. Ninguna subzona (margen, franja de 100 m junto a la orilla, 600 m alrededor de la barrera) anticipa la extracción mejor que la propia extracción reciente (correlación parcial ≤ 0,08, no significativa).</li>
    <li><b>Aguas arriba concuerda con la extracción de macrófitas:</b> ρ = +0,24 con lo extraído las 2 semanas previas y +0,24 con las 2 siguientes, quitando la estacionalidad (190 escenas ópticas, p &lt; 0,01; zonas separadas por la línea de la barrera).</li>
    <li><b>Aguas abajo va en sentido contrario:</b> ρ = −0,21 con lo extraído las 2 semanas previas y −0,31 a escala mensual. Por eso el <b>total mezcla ambos efectos</b> y casi no se relaciona con la extracción (ρ mensual −0,20, no significativo): use la vista «Aguas arriba y abajo».</li>
    <li>Más área con caudal alto (ρ mensual = +0,39, n = 87) y con nivel alto del embalse (+0,17 a +0,39 según sensor). La estacionalidad es clara: poca área de enero a febrero y más de marzo a julio.</li>
-   <li><b>Corredor de 30 km:</b> se midió la vegetación en 6 tramos, 15 km aguas arriba y abajo (283 fechas). Lo que se ve aguas arriba no anticipa la extracción: al usarlo en el pronóstico el error sube en todos los tramos.</li>
+   <li><b>Contorno de análisis (desde el 2-nov-2026):</b> reemplaza al corredor en línea recta. Tramos de 2,5 km medidos por el cauce a 10 m; su precisión y sus resultados están en el resumen de arriba y en el panel del contorno. Usar la vegetación aguas arriba en el pronóstico no lo mejora.</li>
    <li>La madera y los residuos (material flotante) no se ven: su relación con el área es débil (ρ ≈ +0,2). El satélite no mejora el pronóstico semanal (diferencias de −2 a +4 m³/semana, no significativas); se usa como indicador de estado.</li>
    <li>Los valores más altos (22 may y 11 jun 2019: 116 y 153 ha) coinciden con la crisis del buchón de 2019: en abril la Fiscalía pidió su retiro urgente y el 1 de junio se rompió una barrera de contención (Blu Radio, 3 jun 2019).</li></ul>`;
 }
@@ -929,16 +932,14 @@ async function renderRetenido(){
 const VOLK={bajo:3.8*1e4/160,central:11.8*1e4/160,alto:40.8*1e4/160};
 async function renderVolumen(J,ALL){
   const box=document.getElementById('vol-cards');if(!box)return;
-  try{if(!COR)COR=await fetchJSON('datos/satelite/corredor/serie.json',10000)}catch(e){}
   const rng=ha=>`${nf(ha*VOLK.central)} <small>m³</small>`, rtxt=ha=>`${nf(ha*VOLK.bajo)}–${nf(ha*VOLK.alto)} m³`;
   // ritmo de extracción de las últimas 8 semanas
   let e8=0;for(let i=S.last-55;i<=S.last;i++)e8+=(S.mf[i]||0)+(S.ma[i]||0);const eDia=e8/56;
   const last=ALL[ALL.length-1], cards=[];
   cards.push(['info','Zona del puerto (núcleo de '+nf(J.area_ha.total)+' ha)',last.t,`${fmtD(last.T)} · ${last.src} · ${nf(last.t,1)} ha · rango ${rtxt(last.t)} · ≈ ${nf(last.t*VOLK.central/Math.max(eDia,1))} días de extracción al ritmo de las últimas 8 semanas (${nf(eDia)} m³/día)`]);
-  if(COR&&COR.serie){const up=COR.tramos.filter(t=>t.split('..').map(Number)[1]<=0);let ha=0,fs=[];
-    up.forEach(t=>{for(let i=COR.serie.length-1;i>=0;i--){const r=COR.serie[i];if(r[t]!=null){ha+=r[t];fs.push(r.f);break}}});
-    const f0=fs.sort()[0],f1=fs[fs.length-1];
-    cards.push(['info','Corredor 0–30 km aguas arriba',ha,`${nf(ha,1)} ha · última escena despejada de cada tramo (${fmtD(d0(f0))} a ${fmtD(d0(f1))}) · rango ${rtxt(ha)} · material en camino al puerto`]);}
+  try{if(!RET)RET=await fetchJSON('datos/satelite/contorno/serie.json',15000)}catch(e){}
+  if(RET){let b=null;for(const sr of ['optico','landsat'])for(const [f,o] of Object.entries(RET[sr]||{}))if(o.arriba!=null&&(!b||f>b.f))b={f,v:o.arriba,sr};
+    if(b)cards.push(['info',`Río aguas arriba (contorno, ${nf(RET.km_aguas_arriba,1)} km)`,b.v,`${fmtD(d0(b.f))} · ${b.sr==='landsat'?'Landsat':'Sentinel-2'} · ${nf(b.v,1)} ha · rango ${rtxt(b.v)} · ≈ ${nf(b.v*VOLK.central/Math.max(eDia,1))} días de extracción · material en camino al puerto`]);}
   box.innerHTML=cards.map(([s,t,ha,d])=>`<div class="st ${s} c6"><h2>${t}</h2><div class="big">${rng(ha)}</div><div class="note">${d}</div></div>`).join('');
   // serie mensual: inventario de la zona del puerto frente a la extracción del mes
   const mk_=t=>{const d=new Date(t);return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),1)};
@@ -1095,7 +1096,7 @@ function exPronostico(){
       qs.length?`Caudal pronosticado en Sitio Presa: entre <b>${nf(Math.min(...qs))} y ${nf(Math.max(...qs))} m³/s</b> (promedio semanal). Días por encima de ${nf(U)} m³/s, el límite de seguridad para las lanchas: <b>${dA}</b>.`:'Sin pronóstico de caudal para estas semanas.',
       `Material flotante: ${nf(s('mf'))} m³ · macrófitas: ${nf(s('ma'))} m³. La división entre ambos del mecanizado es estimada en el registro; el total es la cifra más firme.`,
       (()=>{const PP=S.src.rezagos&&S.src.rezagos.precision_pronostico;if(!PP)return '';const a=PP['1'],b=PP['4'],c=PP['8'];
-        return `<b>Qué tan preciso es.</b> Pronosticando 2022–2026 solo con lo que se sabía en cada momento (semanas con operación normal), el total de <b>4 semanas</b> se equivocó un <b>${nf(b.err_abs_mediano_pct)} %</b> en la mediana y 8 de cada 10 veces menos de ${nf(b.err_p80_pct)} %. A 1 semana: ${nf(a.err_abs_mediano_pct)} %; a 8 semanas: ${nf(c.err_abs_mediano_pct)} %. Sin sesgo apreciable (${nf(b.sesgo_pct,1)} %).`})()].filter(Boolean),
+        return `<b>Qué tan preciso es.</b> Pronosticando 2022–2026 solo con lo que se sabía en cada momento (semanas con operación normal), el total de <b>4 semanas</b> se equivocó un <b>${nf(b.err_abs_mediano_pct)} %</b> en la mediana y 8 de cada 10 veces menos de ${nf(b.err_p80_pct)} %. A 1 semana: ${nf(a.err_abs_mediano_pct)} %; a 8 semanas: ${nf(c.err_abs_mediano_pct)} %. Sin sesgo apreciable (${b.sesgo_pct<0?'−':'+'}${nf(Math.abs(b.sesgo_pct),1)} %).`})()].filter(Boolean),
     calcTitle:`Cómo sale la semana S${b.h} (${fmtDs(b.t0)} – ${fmtDs(b.t1)}), en m³`,
     open:false,calc:calcT(['Paso','Flotante','Macrófitas','Total'],rows)+`<p class="note">El paso 3 difiere unas decenas de m³ de multiplicar 1 × 2 porque el ajuste por caudal cambia día a día y cada día de la semana pesa distinto (los fines de semana se extrae menos). El rango probable (P25–P75) y la franja del gráfico (P10–P90) salen de los errores reales del modelo en 2022–2026 para cada horizonte. El caudal pronosticado viene de HydroForecast (${LIVE.state==='live'?'en vivo':LIVE.state==='archive'?'archivo diario':'respaldo'}, emitido ${S.fc.generated_at.replace('T',' ').slice(0,16)}).</p>`});
 }
@@ -1197,12 +1198,13 @@ function exModelo(){
 }
 
 function exAuditoria(){
-  const A=S.src.audit; if(!A)return; const secs=[['integridad','Archivo de extracción'],['caudal','Caudales'],['modelo','Modelo'],['plataforma','Plataforma'],['vigencia','Vigencia']];
-  const all=secs.flatMap(([k])=>A[k]||[]), c=s=>all.filter(x=>x[0]===s).length, warn=secs.flatMap(([k,l])=>(A[k]||[]).filter(x=>x[0]==='warn'||x[0]==='bad').map(x=>`${l}: ${x[1]}`));
-  exBox('ex-auditoria',{when:`Revisión del ${A.fecha}`,
-    items:[`Se revisaron <b>${all.length} puntos</b>: <b>${c('ok')} en orden</b>, ${c('warn')+c('bad')} con advertencia y ${c('info')} informativos.`,
-      `Lo que queda por resolver:<ul class="exsub">${warn.map(w=>`<li>${esc(w)}</li>`).join('')}</ul>`,
-      `${(A.recomendaciones||[]).length} recomendaciones al final de la página, en orden de prioridad.`]});
+  const A=S.src.audit, U=window.__AUD; if(!A||!U)return;
+  const bad=U.warn.filter(x=>x[0]==='bad'), warn=U.warn.filter(x=>x[0]==='warn');
+  exBox('ex-auditoria',{when:`Revisión del ${fmtD(d0(A.fecha))}`,
+    items:[`Se revisaron <b>${U.n} puntos</b>: <b>${U.cnt('ok')} en orden</b>, ${U.cnt('warn')} con atención, ${U.cnt('bad')} críticos y ${U.cnt('info')} informativos.`,
+      bad.length?`Crítico:<ul class="exsub">${bad.map(w=>`<li>${esc(w[1])}</li>`).join('')}</ul>`:'',
+      `Requieren atención:<ul class="exsub">${warn.map(w=>`<li>${esc(w[1])}</li>`).join('')}</ul>`,
+      `${(A.recomendaciones||[]).length} recomendaciones al final de la página, en orden de prioridad.`].filter(Boolean)});
 }
 
 function exDatos(){
@@ -1210,7 +1212,7 @@ function exDatos(){
   exBox('ex-actualizar',{items:[
     `Extracción: registro hasta el <b>${fmtD(S.T[S.last])}</b> (hace ${age} días)${S.src._repo?', leído del Excel del repositorio':S.src._xlsxName?', del Excel cargado en esta sesión':''}. Para actualizar, reemplace <code>datos/DatosExtraccion.xlsx</code> en GitHub.`,
     `Caudal: pronóstico de HydroForecast <b>${LIVE.state==='live'?'en vivo':LIVE.state==='archive'?'del archivo diario':'de respaldo'}</b>, emitido ${S.fc.generated_at.replace('T',' ').slice(0,16)}. Se consulta al abrir la página; si no responde, se usa la copia que GitHub guarda 4 veces al día.`,
-    'Satélite: se procesa a diario en GitHub con las imágenes nuevas de Sentinel-2 y Sentinel-1 (una medición cada 3–5 días, según nubes y pasadas).',
+    'Satélite: se procesa a diario en GitHub con las imágenes nuevas de Sentinel-2, Landsat 8/9 y Sentinel-1. Por las nubes queda una medición óptica útil cada 1–2 semanas en promedio; el radar pasa cada 6–12 días y solo se usa como referencia.',
     'Todo se calcula en su navegador; los archivos que cargue aquí no se envían a ningún servidor.']});
 }
 

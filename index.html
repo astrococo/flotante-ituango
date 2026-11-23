@@ -355,8 +355,8 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
   <div class="grid">
     <div class="panel c12"><div class="toolbar"><h3>Tabla por semana</h3><div class="row-btn"><button type="button" class="pill" id="btn-csv">Descargar CSV</button><button type="button" class="pill" id="btn-print">Imprimir o PDF</button></div></div><div class="tbl"><table id="fc-table"></table></div></div>
     <div class="panel c12">
-      <h3>Índice de aporte por crecientes</h3>
-      <p class="note">Multiplicador hidrológico. Mayor que 1: más material flotante esperado tras crecientes. Menor que 1 en macrófitas: lavado por caudales altos.</p>
+      <h3>Ajuste por caudal</h3>
+      <p class="note">Multiplicador que el modelo aplica al nivel típico según el caudal reciente y pronosticado (acotado entre 0,7 y 1,5). Mayor que 1: espera más que lo típico; menor que 1: menos. Las paradas por caudal alto se descuentan aparte, en el valor «con paros».</p>
       <div class="chart sm"><canvas id="ch-mult"></canvas></div>
     </div>
   </div>
@@ -436,13 +436,13 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <!-- MODELO -->
 <section class="view" id="v-modelo" hidden>
   <div><h2>Modelo de pronóstico y desempeño</h2>
-    <p class="lede">Modelo v2.3: mezcla de persistencia (últimas 8 semanas), media exponencial de semanas recientes y nivel de largo plazo, con multiplicador hidrológico acotado alimentado por el pronóstico de caudal de HydroForecast. Es el único probado que supera a la mediana histórica todos los años 2022–2026 en ambos componentes.</p></div>
+    <p class="lede">Modelo v2.3: mezcla de persistencia (últimas 8 semanas), media exponencial de semanas recientes y nivel de largo plazo, con multiplicador hidrológico acotado alimentado por el pronóstico de caudal de HydroForecast. Es el único probado que supera o iguala a la mediana histórica todos los años 2022–2026 en ambos componentes (en flotante 2024 queda igual).</p></div>
   <div class="panel exec" id="ex-modelo" hidden></div>
   <div class="grid">
     <div class="panel c6 prose">
       <h3>Estructura</h3>
       <div class="formula" id="formula"></div>
-      <p class="note" style="margin-top:10px">L₈: mediana de las últimas 8 semanas con operación activa. LT: mediana de semanas activas desde julio de 2019. EW: media exponencial de semanas activas. k: peso de la persistencia, elegido con el error de las últimas 52 semanas. x: exceso semanal de caudal Sitio Presa sobre el umbral, en miles de m³/s·día.</p>
+      <p class="note" style="margin-top:10px">L₈: mediana de las últimas 8 semanas con operación activa. LT: mediana de semanas activas desde julio de 2019. EW: media exponencial de semanas activas. w y s: proporciones fijas de la mezcla; a(h) y a₈(h): pesos por horizonte, ajustados con 2022–2023. x: exceso semanal de caudal Sitio Presa sobre el umbral, en miles de m³/s·día.</p>
     </div>
     <div class="panel c6"><h3>Parámetros</h3><div class="tbl"><table id="tbl-params"></table></div></div>
   </div>
@@ -508,7 +508,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <!-- SATÉLITE -->
 <section class="view" id="v-satelite" hidden>
   <div><h2>Vegetación flotante vista desde el satélite</h2>
-    <p class="lede">Área cubierta por vegetación flotante (macrófitas y material vegetal verde) en la cola del embalse, 2,5 km alrededor de la barrera, medida con Sentinel-2 y Landsat 8/9 cuando el cielo está despejado y con el radar Sentinel-1, que ve a través de las nubes. Mide presencia de material vegetal verde, no el esfuerzo de extracción; madera y residuos no se distinguen.</p></div>
+    <p class="lede">Vegetación flotante (macrófitas y material vegetal verde) medida con Sentinel-2 y Landsat 8/9 cuando el cielo está despejado y con el radar Sentinel-1 como referencia. Dos zonas: el <b>contorno de análisis</b> (23,5 km de río aguas arriba de la barrera y 3,6 km aguas abajo, distancias por el cauce), que da las cifras principales, y la <b>zona del puerto</b> (2,5 km alrededor de la barrera), con su historia desde 2019. Mide presencia de material vegetal verde, no el esfuerzo de extracción; madera y residuos no se distinguen.</p></div>
   <div class="panel exec" id="ex-satelite" hidden></div>
   <div id="sat-msg" class="banner" hidden></div>
   <div id="sat-alert" class="banner" hidden></div>
@@ -553,13 +553,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
     <p class="note" id="vis-info"></p>
     <p class="note">Haga clic en un punto del gráfico de área para ver esa escena. Imagen base de alta resolución: Esri World Imagery (fecha de captura distinta a la de Sentinel). Línea roja: barrera identificada como el borde persistente de la vegetación flotante a la salida del estrecho (2022–2023, ±20 m); el punto informado queda unos 180 m al suroeste, en la orilla.</p>
   </div>
-  <div class="panel">
-    <h3>Corredor del río: 30 km aguas arriba y 15 km aguas abajo</h3>
-    <div class="chart"><canvas id="ch-cor"></canvas></div>
-    <div class="tbl"><table id="cor-tabla"></table></div>
-    <p class="note" id="cor-nota"></p>
-    <p class="note">Vegetación flotante (NDVI ≥ 0,30) dentro del agua de cada tramo, medida desde la barrera en dirección norte-sur. Sirve para ver qué viene río abajo; en las pruebas sobre 2022–2026 no mejoró el pronóstico semanal de extracción, por eso no entra al modelo.</p>
-  </div>
+  <!-- Corredor en línea recta retirado el 23-nov-2026: lo reemplaza el contorno de análisis (tramos por el cauce). -->
   <div class="grid">
     <div class="panel c6"><h3>Estacionalidad</h3><div class="chart sm"><canvas id="ch-sat-mes"></canvas></div>
       <p class="note">Mediana del área por mes calendario, escenas de Sentinel-2, Landsat y radar Sentinel-1 desde 2019. El número sobre cada barra es la cantidad de escenas.</p></div>
