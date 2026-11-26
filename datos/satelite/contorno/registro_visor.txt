@@ -4,7 +4,10 @@ visor S2: fechas por generar 0
   json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
 visor S2 listo
 grilla (2298, 696) contorno 1505.26 ha
-visor S1: fechas por generar 0
+visor S1: fechas por generar 2
+visor s1 0 2026-11-23
+/home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
 /home/runner/work/flotante-ituango/flotante-ituango/satelite/contorno.py:382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
   json.dump(dict(generado=dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), contorno="contorno_analisis.kml", bounds=b10, bounds20=b20,
 visor S1 listo
