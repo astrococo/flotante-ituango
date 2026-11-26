@@ -51,7 +51,7 @@ const charts={};
 function mk(id,cfg){return mkR(id,cfg)}
 function baseOpts(extra){
   const fg=css('--muted'),grid=css('--line');
-  Chart.defaults.font.family=css('--f-body').replace(/"/g,'');Chart.defaults.color=fg;
+  Chart.defaults.font.family=css('--f-body').replace(/"/g,"'");Chart.defaults.color=fg;
   return Object.assign({responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:false}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.y,c.parsed.y<10?2:0)}}},
     scales:{x:{grid:{color:grid,drawTicks:false},ticks:{maxRotation:0,autoSkipPadding:14}},y:{grid:{color:grid},beginAtZero:true,ticks:{callback:v=>nf(v,(Math.abs(v)<5&&!Number.isInteger(v))?2:0)}}}},extra||{});

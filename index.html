@@ -15,6 +15,7 @@
 <script src="vendor/supabase-2.119.0.js" defer></script>
 <script src="vendor/chart.umd.min.js" defer></script>
 <script src="app.js?v=2026111603" defer></script>
+<link rel="stylesheet" href="vendor/marca/marca.css">
 <style>
 /* Sistema visual alineado con HydroForecast Ituango: slate oscuro por defecto, acento "cauca" (sky), tarjetas translúcidas */
 :root{
@@ -29,8 +30,8 @@
   --ok-bd:rgba(16,185,129,.45);--warn-bd:rgba(249,115,22,.55);--bad-bd:rgba(239,68,68,.5);--info-bd:rgba(14,165,233,.45);
   --band:rgba(56,189,248,.16);
   --shadow:0 10px 30px -12px rgba(0,0,0,.6);
-  --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-display:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-body:var(--f-epm-texto);
+  --f-display:var(--f-epm-titulo);
   --f-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   --r:14px;color-scheme:dark}
 :root[data-theme="light"]{
@@ -47,16 +48,18 @@
 :root[data-theme="light"][data-contraste="alto"]{--bg-from:#fff;--bg-via:#fff;--bg-to:#fff;--surface:#fff;--surface2:#f0f0f0;--line:#999;--line2:#555;--fg:#000;--fg2:#1a1a1a;--muted:#444;--accent:#00507a;--accent-strong:#00507a;--accent-soft:rgba(0,80,122,.12);--on-accent:#fff}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg-from);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;min-height:100vh}
+body{--marca-bg:var(--bg-from);background:var(--bg-from);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;min-height:100vh}
 [hidden]{display:none!important}
 .wrap{max-width:80rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
 @media(min-width:640px){.wrap{padding-left:24px;padding-right:24px}}
+@media(min-width:1700px){.wrap{max-width:97.5rem}}
+@media(min-width:2400px){.wrap{max-width:137rem}body{font-size:16px}}
 /* encabezado */
-header.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg-via) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+header.top{position:sticky;top:0;z-index:20;border-top:4px solid var(--epm);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg-via) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.brand h1{font-size:20px;font-weight:700;margin:0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1{font-family:var(--f-display);font-size:20px;font-weight:700;margin:0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand p{margin:0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:640px){.logo{width:32px;height:32px;border-radius:10px}.brand h1{font-size:15px}.brand p{display:none}}
 .hact{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -193,7 +196,7 @@ code{font-family:var(--f-mono);font-size:12px;background:var(--surface2);padding
 .grupos::-webkit-scrollbar{display:none}
 .grupos button{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--surface);color:var(--fg2);border-radius:9999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer}
 .grupos button:hover{border-color:var(--accent)}
-.grupos button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.grupos button[aria-pressed="true"]{background:var(--epm);border-color:var(--epm);color:var(--on-epm);font-weight:700}
 .grupos svg{width:15px;height:15px}
 .guia{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:10px 16px}
 .guia summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--fg2);list-style:none;display:flex;align-items:center;gap:8px}
@@ -208,7 +211,7 @@ code{font-family:var(--f-mono);font-size:12px;background:var(--surface2);padding
 .sala{font-size:15px}.sala .kpi .val{font-size:32px}.sala .st .big{font-size:36px}
 .pill[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
 /* pantalla de acceso a los datos (token de lectura, como Turbinas Ituango) */
-.gate{position:fixed;inset:0;z-index:50;background:var(--bg-from);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
+.gate{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg-from) 80%,transparent);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
 .gate .caja{width:100%;max-width:440px}
 .gate .marca{display:flex;align-items:center;gap:10px;margin-bottom:18px}
 .gate .marca b{display:block;font-size:18px}.gate .marca span{font-size:12px;color:var(--muted)}
@@ -245,8 +248,10 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 </style>
 </head>
 <body>
+<div class="itu-fondo" aria-hidden="true"></div>
 <div class="gate" id="acceso" hidden>
   <div class="caja">
+    <img class="logo-epm" src="vendor/marca/logo-epm.png" alt="EPM" style="height:44px;margin:0 0 16px">
     <div class="marca"><div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/><path d="M2 20c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1" opacity=".55"/><circle cx="8" cy="8" r="2.2" fill="currentColor" stroke="none"/></svg></div>
       <div><b>Material Flotante Ituango</b><span>Acceso para personal de la organización</span></div></div>
     <div class="card" data-p="cargando"><p style="margin:0;text-align:center;color:var(--muted)">Verificando la sesión…</p></div>
@@ -286,7 +291,9 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;paddin
 <header class="top">
   <div class="wrap hrow">
     <div class="brand">
-      <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/><path d="M2 20c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1" opacity=".55"/><circle cx="8" cy="8" r="2.2" fill="currentColor" stroke="none"/><path d="M14 9.5l3-4 2.5 3" /></svg></div>
+      <img class="logo-epm" src="vendor/marca/logo-epm.png" alt="EPM">
+      <span class="logo-epm-sep" aria-hidden="true"></span>
+      <div class="logo logo-app-ocultable" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1"/><path d="M2 20c2.5-2.5 4.5-2.5 7 0s4.5 2.5 7 0 4.5-2.5 6-1" opacity=".55"/><circle cx="8" cy="8" r="2.2" fill="currentColor" stroke="none"/><path d="M14 9.5l3-4 2.5 3" /></svg></div>
       <div style="min-width:0">
         <h1>Material Flotante Ituango</h1>
         <p>Extracción en la cola del embalse y pronóstico con caudales del río Cauca · Proyecto Hidroeléctrico Ituango</p>
