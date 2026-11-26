@@ -1,7 +1,7 @@
 name: Actualizar la página desde el código privado
 
 # La página (index.html, app.js, sw.js, vendor/, íconos) se mantiene en el repositorio privado
-# astrococo/flotante-ituango-codigo. Esta tarea la copia aquí cada hora si cambió. Corre en el
+# astrococo/flotante-ituango-codigo (rama «publicado», ya probada). Esta tarea la copia aquí cada hora si cambió. Corre en el
 # repositorio público (minutos gratis) y solo necesita el secreto CODIGO_TOKEN (lectura).
 # No copia datos: los internos se leen en el navegador con el token de cada usuario.
 on:
@@ -26,6 +26,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: astrococo/flotante-ituango-codigo
+          # Solo la versión aprobada: la rama «publicado» avanza cuando el código pasa las
+          # barreras de calidad (secretos, sintaxis, ESLint y prueba de humo en Chrome).
+          ref: publicado
           token: ${{ secrets.CODIGO_TOKEN }}
           path: _codigo
           sparse-checkout: |
