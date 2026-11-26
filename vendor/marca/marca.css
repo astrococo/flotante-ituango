@@ -17,9 +17,9 @@
 :root[data-contraste="alto"]{--marca-opacidad:0}
 
 body{isolation:isolate}
-.itu-fondo{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(fondo-ituango.webp) center 38%/cover no-repeat;opacity:var(--marca-opacidad);filter:saturate(.85)}
+.itu-fondo{position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(fondo-ituango.webp?v=2) center 38%/cover no-repeat;opacity:var(--marca-opacidad);filter:saturate(.85)}
 .itu-fondo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--marca-bg,#0b1220) 20%,transparent) 0%,color-mix(in srgb,var(--marca-bg,#0b1220) 53%,transparent) 55%,color-mix(in srgb,var(--marca-bg,#0b1220) 93%,transparent) 100%)}
-@media(max-width:1280px){.itu-fondo{background-image:url(fondo-ituango-1280.webp)}}
+@media(max-width:800px){.itu-fondo{background-image:url(fondo-ituango-1280.webp?v=2)}}
 @media print{.itu-fondo{display:none}}
 .logo-epm{height:30px;width:auto;display:block;flex-shrink:0}
 .logo-epm-sep{width:1px;height:30px;background:var(--line2,#2a3852);flex-shrink:0}
