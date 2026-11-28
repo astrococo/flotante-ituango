@@ -1,3 +1,4 @@
 grilla (2298, 696) contorno 1505.26 ha
-fechas S2: 594
-S2 listo: nuevas 0 total 594
+fechas S2: 595
+s2 0 2026-11-26
+S2 listo: nuevas 1 total 595
